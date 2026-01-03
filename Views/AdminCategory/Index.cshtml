@@ -1,0 +1,92 @@
+@{
+  ViewData["Title"] = "Kategori";
+  Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+@section Styles {
+  <link rel="stylesheet" href="~/css/AdminCategory/Index.css" />
+}
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr class="header-row">
+        <th>Kategori</th>
+        <th>Topik</th>
+        <th>View Count</th>
+        <th class="action-header">
+          <!-- Kosong, tapi ada overlay di atasnya -->
+          <div class="search-overlay">
+            <i class="bi bi-funnel"></i>
+            <div class="search-wrapper">
+              <i class="bi bi-search search-icon"></i>
+              <input class="search-category" type="text" placeholder="Cari kategori...">
+            </div>
+            <button class="btn-add">
+              <i class="bi bi-plus-circle"></i>
+              Kategori
+            </button>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Programming</td>
+        <td>10 Topik</td>
+        <td class="view-count">1,234</td>
+        <td>
+          <div class="action-buttons">
+            <i class="bi bi-pencil-square"></i>
+            <i class="bi bi-trash3"></i>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Design</td>
+        <td>15 Topik</td>
+        <td class="view-count">856</td>
+        <td>
+          <div class="action-buttons">
+            <i class="bi bi-pencil-square"></i>
+            <i class="bi bi-trash3"></i>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Database</td>
+        <td>12 Topik</td>
+        <td class="view-count">2,105</td>
+        <td>
+          <div class="action-buttons">
+            <i class="bi bi-pencil-square"></i>
+            <i class="bi bi-trash3"></i>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Mobile Development</td>
+        <td>18 Topik</td>
+        <td class="view-count">678</td>
+        <td>
+          <div class="action-buttons">
+            <i class="bi bi-pencil-square"></i>
+            <i class="bi bi-trash3"></i>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Mobile Development</td>
+        <td>18 Topik</td>
+        <td class="view-count">678</td>
+        <td>
+          <div class="action-buttons">
+            <i class="bi bi-pencil-square"></i>
+            <i class="bi bi-trash3"></i>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
