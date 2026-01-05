@@ -1,0 +1,19 @@
+.modal p {
+  margin: 0;
+  padding: 1.5rem;
+}
+
+.btn-submit.delete {
+  padding: 0.6rem 1.5rem;
+  border: none;
+  background: #d92929;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-submit:hover {
+  background:  rgb(202, 35, 35);
+}
+

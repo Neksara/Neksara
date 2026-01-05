@@ -1,7 +1,231 @@
 @{
-  ViewData["Title"] = "Topik";
+  ViewData["Title"] = "Kategori";
   Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Topik Management</h1>
-<p>Konten topik di sini...</p>
+@section Styles {
+  <link rel="stylesheet" href="~/css/Admin/PageTable.css" />
+  <link rel="stylesheet" href="~/css/Admin/Form.css" />
+  <link rel="stylesheet" href="~/css/Admin/Delete.css" />
+  <link rel="stylesheet" href="~/css/Admin/Filter.css" />
+}
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr class="header-row">
+        <th>Topik</th>
+        <th>Kategori</th>
+        <th>Views</th>
+        <th class="action-header">
+          <!-- Kosong, tapi ada overlay di atasnya -->
+          <div class="search-overlay">
+            <button class="icon-button" onclick="openFilterModal()">
+              <i class="bi bi-funnel"></i>
+            </button>
+            <div class="search-wrapper">
+              <i class="bi bi-search search-icon"></i>
+              <input class="search-category" type="text" placeholder="Cari topik...">
+            </div>
+            <button class="btn-add" onclick="openModal()">
+              <i class="bi bi-plus-circle"></i>
+              Topik
+            </button>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="category-wrapper">
+            <span class="category-name">Belajar Product Management Untuk Pemula</span>
+            <span class="posted-date">Posted 3 days ago</span>
+          </div>
+        </td>
+        <td>Product Management</td>
+        <td class="view-count">1,234</td>
+        <td>
+          <div class="action-buttons">
+            <button class="icon-button" onclick="openEditModal()">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="icon-button delete" onclick="openDeleteModal()">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="category-wrapper">
+            <span class="category-name">Belajar Design Untuk Pemula</span>
+            <span class="posted-date">Posted 3 days ago</span>
+          </div>
+        </td>
+        <td>Design</td>
+        <td class="view-count">856</td>
+        <td>
+          <div class="action-buttons">
+            <button class="icon-button" onclick="openEditModal()">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="icon-button delete" onclick="openDeleteModal()">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="category-wrapper">
+            <span class="category-name">Belajar Database Untuk Pemula</span>
+            <span class="posted-date">Posted 5 days ago</span>
+          </div>
+        </td>
+        <td>Database</td>
+        <td class="view-count">2,105</td>
+        <td>
+          <div class="action-buttons">
+            <button class="icon-button" onclick="openEditModal()">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="icon-button delete" onclick="openDeleteModal()">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="category-wrapper">
+            <span class="category-name">Belajar Mobile Development Untuk Pemula</span>
+            <span class="posted-date">Posted 3 days ago</span>
+          </div>
+        </td>
+        <td>Mobile Development</td>
+        <td class="view-count">678</td>
+        <td>
+          <div class="action-buttons">
+            <button class="icon-button" onclick="openEditModal()">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="icon-button delete" onclick="openDeleteModal()">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="category-wrapper">
+            <span class="category-name">Belajar UI/UX Untuk Pemula</span>
+            <span class="posted-date">Posted 3 days ago</span>
+          </div>
+        </td>
+        <td>UI/UX</td>
+        <td class="view-count">1,102</td>
+        <td>
+          <div class="action-buttons">
+            <button class="icon-button" onclick="openEditModal()">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="icon-button delete" onclick="openDeleteModal()">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </table>
+
+  <div class="pagination-container">
+    @* <div class="pagination-info">
+      Menampilkan 1-10 dari 50 data
+    </div> *@
+
+    <div class="pagination-bullets">
+      <span class="page-dot active"></span>
+      <span class="page-dot"></span>
+      <span class="page-dot"></span>
+      <span class="page-dot"></span>
+      <span class="page-dot"></span>
+    </div>
+
+    <div class="pagination-arrows">
+      <button class="page-btn" disabled>
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <button class="page-btn">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+
+  </div>
+
+  @* <div class="items-per-page">
+      <label>
+        Tampilkan
+        <select>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        data
+      </label>
+    </div> *@
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const pageDots = document.querySelectorAll('.page-dot');
+    const prevBtn = document.querySelector('.page-btn:first-of-type');
+    const nextBtn = document.querySelector('.page-btn:last-of-type');
+
+    let currentPage = 1;
+    const totalPages = 5;
+
+    pageDots.forEach((dot, index) => {
+      dot.addEventListener('click', function () {
+        currentPage = index + 1;
+        updatePagination();
+      });
+    });
+
+    prevBtn.addEventListener('click', function () {
+      if (currentPage > 1) {
+        currentPage--;
+        updatePagination();
+      }
+    });
+
+    nextBtn.addEventListener('click', function () {
+      if (currentPage < totalPages) {
+        currentPage++;
+        updatePagination();
+      }
+    });
+
+    function updatePagination() {
+      pageDots.forEach((dot, index) => {
+        dot.classList.toggle('active', index + 1 === currentPage);
+      });
+
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages;
+
+      // Update info
+      const startItem = (currentPage - 1) * 10 + 1;
+      const endItem = Math.min(currentPage * 10, 50);
+      document.querySelector('.pagination-info').textContent =
+        `Menampilkan ${startItem}-${endItem} dari 50 data`;
+    }
+  });
+</script>
+
+@await Html.PartialAsync("_CreateForm")
+@await Html.PartialAsync("_EditForm")
+@await Html.PartialAsync("_DeleteRow")
+@await Html.PartialAsync("_FilterCategory")

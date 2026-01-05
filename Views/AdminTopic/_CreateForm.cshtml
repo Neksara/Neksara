@@ -1,0 +1,63 @@
+<div id="createModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Tambah Topik</h2>
+      <span class="close" onclick="closeModal()">&times;</span>
+    </div>
+
+    <form asp-action="Create" method="post" class="modal-form">
+      <div class="form-group">
+        <label>Tambah Sampul</label>
+        <input type="text" name="Name" required class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Kategori</label>
+        <input type="text" name="Name" required class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Judul Topik</label>
+        <input type="text" name="Name" required class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Deskripsi</label>
+        <textarea name="Description" class="form-control"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Video URL (YouTube)</label>
+        <input type="text" name="Name" required class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Published Date</label>
+        <input type="date" name="Name" disabled class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeModal()">Batal</button>
+        <button type="submit" class="btn-submit">Tambah</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openModal() {
+    document.getElementById('createModal').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('createModal').classList.remove('show');
+  }
+
+  // Close saat klik di luar modal
+  window.onclick = function (event) {
+    const modal = document.getElementById('createModal');
+    if (event.target === modal) {
+      closeModal();
+    }
+  }
+</script>
