@@ -19,6 +19,14 @@
     <button class="btn btn-primary">Filter</button>
 </form>
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        ✅ @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -41,6 +49,10 @@
                 <form asp-action="Restore" method="post">
                     <input type="hidden" name="id" value="@t.ArchiveTopicId" />
                     <button class="btn btn-success btn-sm">🔄 Restore</button>
+                </form>
+                <form asp-action="HardDeleteArchive" method="post">
+                    <input type="hidden" name="id" value="@t.ArchiveTopicId" />
+                    <button class="btn btn-danger btn-sm">🗑️ Delete Permanen</button>
                 </form>
             </td>
         </tr>

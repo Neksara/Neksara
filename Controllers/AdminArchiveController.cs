@@ -1,11 +1,8 @@
-using AspNetCoreGeneratedDocument;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Neksara.Data;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using Neksara.Models;
 
 namespace Neksara.Controllers
 {
@@ -23,10 +20,11 @@ namespace Neksara.Controllers
         // =========================
         // LIST ARCHIVE
         // =========================
-
         public async Task<IActionResult> Index(int page = 1, int? categoryId = null)
         {
-            var query = _context.ArchiveTopics.AsQueryable();
+            var query = _context.ArchiveTopics
+                .Include(a => a.Category)
+                .AsQueryable();
 
             if (categoryId.HasValue)
                 query = query.Where(a => a.CategoryId == categoryId.Value);
@@ -59,18 +57,36 @@ namespace Neksara.Controllers
             var archive = await _context.ArchiveTopics.FindAsync(id);
             if (archive == null) return NotFound();
 
-            _context.Topics.Add(new Models.Topic
+            _context.Topics.Add(new Topic
             {
                 TopicName = archive.TopicName,
                 Description = archive.Description,
                 VideoUrl = archive.VideoUrl,
                 CategoryId = archive.CategoryId,
                 CreatedAt = archive.CreatedAt,
-                ViewCount = archive.ViewCount
+                ViewCount = archive.ViewCount,
+                IsDeleted = false
             });
 
             _context.ArchiveTopics.Remove(archive);
             await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // =========================
+        // HARD DELETE (PERMANEN)
+        // =========================
+            [HttpPost]
+            public async Task<IActionResult> HardDeleteArchive(int id)
+        {
+            var archive = await _context.ArchiveTopics.FindAsync(id);
+            if (archive == null) return NotFound();
+
+            _context.ArchiveTopics.Remove(archive);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Archive telah berhasil dihapus";
 
             return RedirectToAction(nameof(Index));
         }

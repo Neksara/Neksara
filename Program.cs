@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Neksara.Data;
+using Neksara.Services;
+using Neksara.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,21 +16,23 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
-// ===== AUTHENTICATION & AUTHORIZATION =====
+// ===== AUTHENTICATION =====
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Auth/Login";         // halaman login
-        options.LogoutPath = "/Auth/Logout";       // halaman logout
-        options.AccessDeniedPath = "/Auth/AccessDenied"; // opsional
+        options.LoginPath = "/Auth/Login";
+        options.LogoutPath = "/Auth/Logout";
+        options.AccessDeniedPath = "/Auth/AccessDenied";
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
         options.SlidingExpiration = true;
     });
 
 builder.Services.AddAuthorization();
-
-// ===== MVC =====
 builder.Services.AddControllersWithViews();
+
+// ===== SERVICE =====
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ITopicService, TopicService>();
 
 var app = builder.Build();
 
@@ -41,10 +45,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
-// HARUS INI URUTAN
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -53,7 +54,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// ===== MIGRATE DATABASE OTOMATIS =====
+// ===== MIGRATE & SEED DATABASE =====
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -61,11 +62,15 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
         context.Database.Migrate();
+
+        // ✅ SEED ADMIN (opsional)
+        Neksara.Data.Seeders.UserSeeder.Seed(context);
+
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating the database.");
+        logger.LogError(ex, "Error saat migrasi atau seed DB.");
     }
 }
 

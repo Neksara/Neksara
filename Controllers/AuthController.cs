@@ -2,8 +2,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Neksara.Data;
+using Neksara.Models;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
+using BCrypt.Net;
 
 namespace Neksara.Controllers
 {
@@ -17,29 +18,23 @@ namespace Neksara.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(string returnUrl = null)
-        {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
-        }
+        public IActionResult Login() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Login(string username, string returnUrl = null)
+        public async Task<IActionResult> Login(string username, string password)
         {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.UserName == username && u.Role == "Admin");
+            var user = _context.Users.FirstOrDefault(u => u.UserName == username);
 
-            if (user == null)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
-                ViewBag.Error = "User tidak ditemukan atau bukan admin";
+                ViewBag.Error = "Username atau password salah!";
                 return View();
             }
 
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, user.Role),
-                new Claim("UserId", user.UserId.ToString())
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -47,18 +42,17 @@ namespace Neksara.Controllers
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            return RedirectToAction("AdminPanel", "Admin");
-        }
-
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync();
+            TempData["success"] = $"Selamat datang, {user.UserName}!";
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult AccessDenied()
+        [HttpPost]
+        public async Task<IActionResult> Logout()
         {
-            return View();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login");
         }
+
+        public IActionResult AccessDenied() => View();
     }
 }

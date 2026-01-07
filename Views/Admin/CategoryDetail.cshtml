@@ -1,0 +1,63 @@
+@model Neksara.ViewModels.CategoryDetailVM
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<a href="/Admin/CategoryIndex" class="btn btn-secondary mb-3">
+    ← Kembali
+</a>
+
+<h3>@Model.CategoryName</h3>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h6>Total Topik</h6>
+                <h3>@Model.TotalTopics</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h6>Total Views</h6>
+                <h3>@Model.TotalViews</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5>Daftar Topik</h5>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Nama Topik</th>
+            <th>Views</th>
+            <th>Tanggal</th>
+            <th width="120">Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var t in Model.Topics)
+    {
+        <tr>
+            <td>@t.TopicName</td>
+            <td>
+                <span class="badge bg-success">
+                    @t.ViewCount
+                </span>
+            </td>
+            <td>@t.CreatedAt.ToString("dd MMM yyyy")</td>
+            <td>
+                <a href="/Admin/TopicDetail/@t.TopicId"
+                   class="btn btn-sm btn-warning">
+                    Detail
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

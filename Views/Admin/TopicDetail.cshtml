@@ -1,0 +1,49 @@
+@model Neksara.ViewModels.TopicDetailVM
+@{
+    ViewData["Title"] = "Detail Topik";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="mb-3">📘 Detail Topik</h3>
+
+@if (!string.IsNullOrEmpty(Model.TopicPicture))
+{
+    <img src="@Model.TopicPicture"
+         class="img-fluid rounded mb-3"
+         style="max-height:260px; object-fit:cover;" />
+}
+
+<table class="table table-bordered">
+    <tr>
+        <th width="200">Nama Topik</th>
+        <td>@Model.TopicName</td>
+    </tr>
+    <tr>
+        <th>Kategori</th>
+        <td>@Model.CategoryName</td>
+    </tr>
+    <tr>
+        <th>View Count</th>
+        <td>@Model.ViewCount</td>
+    </tr>
+    <tr>
+        <th>Dibuat</th>
+        <td>@Model.CreatedAt.ToString("dd MMM yyyy")</td>
+    </tr>
+</table>
+
+<hr />
+
+<h5>📝 Deskripsi</h5>
+<div class="border rounded p-3 bg-light">
+    @Html.Raw(Model.Description)
+</div>
+
+@if (!string.IsNullOrEmpty(Model.VideoUrl))
+{
+    <hr />
+    <h5>🎬 Video</h5>
+    <a href="@Model.VideoUrl" target="_blank">
+        @Model.VideoUrl
+    </a>
+}

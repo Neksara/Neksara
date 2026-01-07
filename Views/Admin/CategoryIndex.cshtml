@@ -1,4 +1,4 @@
-@model List<Category>
+@model List<Neksara.ViewModels.CategoryIndexVM>
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
@@ -16,9 +16,9 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>Id</th>
-            <th>Nama</th>
-            <th>Deskripsi</th>
+            <th>Kategori</th>
+            <th>Topik</th>
+            <th>Total Views</th>
             <th>Aksi</th>
         </tr>
     </thead>
@@ -26,10 +26,15 @@
         @foreach (var c in Model)
         {
             <tr>
-                <td>@c.CategoryId</td>
                 <td>@c.CategoryName</td>
-                <td>@c.Description</td>
                 <td>
+                <span class="badge bg-info">
+                    @c.TotalTopics Topik
+                </span>
+                </td>
+                <td>@c.TotalViews Views</td>
+                <td>
+                    <a href="/Admin/CategoryDetail/@c.CategoryId" class="btn btn-sm btn-primary">Detail</a>                   
                     <a href="/Admin/EditCategory/@c.CategoryId" class="btn btn-sm btn-warning">Edit</a>
                     <a href="/Admin/DeleteCategory/@c.CategoryId" class="btn btn-sm btn-danger">Delete</a>
                 </td>

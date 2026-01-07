@@ -18,10 +18,11 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>Id</th>
             <th>Nama Topik</th>
             <th>Kategori</th>
             <th>Views</th>
+            <th>Tanggal Produksi</th>
+            <th>Tanggal Publikasi</th>
             <th width="160">Aksi</th>
         </tr>
     </thead>
@@ -29,11 +30,13 @@
     @foreach (var t in Model)
     {
         <tr>
-            <td>@t.TopicId</td>
             <td>@t.TopicName</td>
             <td>@t.Category?.CategoryName</td>
-            <td>@t.ViewCount</td>
+            <td>@t.ViewCount Views</td>
+            <td>@t.CreatedAt</td>
+            <td>@t.PublishedAt</td>
             <td>
+                <a href="/Admin/TopicDetail/@t.TopicId" class="btn btn-sm btn-primary">Detail</a>                   
                 <a href="/Admin/EditTopic/@t.TopicId" class="btn btn-sm btn-warning">Edit</a>
                 <form asp-action="DeleteTopic" asp-route-id="@t.TopicId"
                       method="post" class="d-inline">

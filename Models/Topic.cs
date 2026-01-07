@@ -13,7 +13,7 @@ namespace Neksara.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public int ViewCount { get; set; } = 0;
-        public DateTime PublishedAt { get; set; } = DateTime.Now;
+        public DateTime PublishedAt { get; set; }
         public bool IsDeleted { get; set; } = false;
 
         public int CategoryId { get; set; }
@@ -21,5 +21,6 @@ namespace Neksara.Models
 
         public ICollection<TopicView> TopicViews { get; set; } = new HashSet<TopicView>();
         public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
+
     }
 }

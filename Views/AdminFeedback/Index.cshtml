@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var categories = ViewBag.Categories as List<Category>;
 }
-<h3>Feedback Moderation</h3>
+<h3>Feedback Topik</h3>
 
 <form method="get" class="mb-3 d-flex gap-2">
    <select name="categoryId" class="form-control" style="max-width:250px">
@@ -31,11 +31,11 @@
     <thead>
         <tr>
             <th>Nama</th>
-            <th>Role</th>
+            <th>Pekerjaan</th>
             <th>Topik</th>
             <th>Kategori</th>
-            <th>Rating</th>
             <th>Comment</th>
+            <th>Rating</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -49,6 +49,8 @@
             <td>@f.TopicName</td>
             <td>@f.CategoryName</td>
 
+            <td>@f.Description</td>
+
             <td class="text-warning">
                 @for (int i = 1; i <= 5; i++)
                 {
@@ -56,8 +58,6 @@
                     else { <text>☆</text> }
                 }
             </td>
-
-            <td>@f.Description</td>
 
             <td>
                 <form asp-action="Approve" method="post" class="d-inline">
@@ -67,7 +67,7 @@
 
                 <form asp-action="Hide" method="post" class="d-inline">
                     <input type="hidden" name="id" value="@f.FeedbackId" />
-                    <button class="btn btn-danger btn-sm">Reject</button>
+                    <button class="btn btn-danger btn-sm">Hide</button>
                 </form>
             </td>
         </tr>
