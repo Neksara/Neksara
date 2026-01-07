@@ -35,24 +35,32 @@
           </a>
         </li>
         <li>
-          <i class="bi bi-envelope"></i>
-          <span>Feedback</span>
+          <a asp-controller="AdminFeedback" asp-action="Index">
+            <i class="bi bi-envelope"></i>
+            <span>Feedback</span>
+          </a>
         </li>
         <li>
-          <i class="bi bi-file-earmark-person"></i>
-          <span>Contact Us</span>
+          <a asp-controller="AdminTestimoni" asp-action="Index">
+            <i class="bi bi-inbox"></i>
+            <span>Testimoni</span>
+          </a>
         </li>
         <li>
-          <i class="bi bi-trash3"></i>
-          <span>Archived Pages</span>
+          <a asp-controller="AdminArchivedPages" asp-action="Index">
+            <i class="bi bi-trash3"></i>
+            <span>Archived Pages</span>
+          </a>
         </li>
         <li>
-          <i class="bi bi-box-arrow-left"></i>
-          <span>Log Out</span>
+          <a asp-controller="AdminFeedback" asp-action="Index">
+            <i class="bi bi-box-arrow-left"></i>
+            <span>Log Out</span>
+          </a>
         </li>
       </ul>
     </aside>
-  
+
     <div class="content">
       @RenderBody() <!-- h1 masuk sini -->
     </div>

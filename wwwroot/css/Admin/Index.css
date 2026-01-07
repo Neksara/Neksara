@@ -70,23 +70,26 @@ header button {
   list-style: none;
 }
 
-.sidebar li {
+.sidebar a {
   padding: 0.8rem 1rem;
-  /* margin-bottom: 0.5rem; */
   border-radius: 5px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.8rem;
   font-size: 0.9rem;
+  color: #2A4365;
+  text-decoration: none;
+  transition: background 0.2s;
 }
 
-.sidebar li:hover {
+.sidebar a:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.sidebar li.active {
+.sidebar li.active a {
   font-weight: bold;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .content {

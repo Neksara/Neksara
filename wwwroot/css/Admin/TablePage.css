@@ -8,21 +8,37 @@ table {
   border-collapse: collapse;
   font-size: 0.8rem;
   table-layout: fixed;
+  color: #2A4365;
 }
 
 /* Set width masing-masing kolom*/
-th:nth-child(1), td:nth-child(1) { width: 40%; } 
-th:nth-child(2), td:nth-child(2) { width: 20%; }
-th:nth-child(3), td:nth-child(3) { width: 20%; }
-th:nth-child(4), td:nth-child(4) { width: 20%; }
+th:nth-child(1),
+td:nth-child(1) {
+  width: 40%;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 20%;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 20%;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+  width: 20%;
+}
 
 th {
   text-align: left;
   padding: 0rem 1rem 1rem 1rem;
   font-weight: 600;
-  color: #495057;
+  /* color: #495057; */
   border-bottom: 1px solid #6c6f71;
-  box-sizing: border-box; 
+  box-sizing: border-box;
   background: white;
 }
 
@@ -47,13 +63,14 @@ tbody td {
 
 .category-name {
   font-weight: 500;
-  color: #000;
+  /* color: #000; */
   display: block;
 }
 
 .posted-date {
   position: absolute;
-  top: 100%; /* Tepat di bawah category-name */
+  top: 100%;
+  /* Tepat di bawah category-name */
   left: 0;
   font-size: 0.6rem;
   color: #a8acb1;
@@ -115,10 +132,11 @@ tbody tr {
   top: 50%;
   transform: translateY(-50%);
   color: #6c757d;
-  pointer-events: none; /* Icon tidak bisa diklik */
+  pointer-events: none;
+  /* Icon tidak bisa diklik */
 }
 
-.search-overlay{
+.search-overlay {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -138,7 +156,7 @@ tbody tr {
   padding: 0.5rem 1rem 0.5rem 1.5rem;
 }
 
-.bi-funnel{
+.bi-funnel {
   font-size: 1rem;
   cursor: pointer;
 }
@@ -174,7 +192,7 @@ tbody tr {
 }
 
 .icon-button:hover i {
-  color: #417C84;
+  color: #2A4365;
 }
 
 .icon-button.delete {
@@ -186,7 +204,7 @@ tbody tr {
 }
 
 .view-count {
-  color: #6c757d;
+  /* color: #6c757d; */
   font-weight: 500;
 }
 
@@ -205,14 +223,16 @@ tbody tr {
 }
 
 .pagination-bullets {
-  grid-column: 2; /* Kolom tengah */
+  grid-column: 2;
+  /* Kolom tengah */
   display: flex;
   gap: 0.5rem;
   justify-self: center;
 }
 
 .pagination-arrows {
-  grid-column: 3; /* Kolom kanan */
+  grid-column: 3;
+  /* Kolom kanan */
   display: flex;
   gap: 0.5rem;
   justify-self: end;
@@ -231,7 +251,7 @@ tbody tr {
 
 .page-btn:hover:not(:disabled) {
   background: #f8f9fa;
-  border-color: #417C84;
+  border-color: #2A4365;
 }
 
 .page-btn:disabled {
@@ -254,7 +274,7 @@ tbody tr {
 }
 
 .page-dot.active {
-  background: #417C84;
+  background: #2A4365;
   width: 24px;
   border-radius: 5px;
 }

@@ -1,0 +1,239 @@
+@{
+  ViewData["Title"] = "Kategori";
+  Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+  <link rel="stylesheet" href="~/css/Admin/TableFeedback.css" />
+  <link rel="stylesheet" href="~/css/Admin/Form.css" />
+  <link rel="stylesheet" href="~/css/Admin/Delete.css" />
+  <link rel="stylesheet" href="~/css/Admin/Filter.css" />
+}
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr class="header-row">
+        <th>Nama</th>
+        <th>Topik</th>
+        <th>Feedback</th>
+        <th>Rating</th>
+        <th>Show/Hide</th>
+        <th class="action-header">
+          <!-- Kosong, tapi ada overlay di atasnya -->
+          <div class="search-overlay">
+            <button class="icon-button filter-button" onclick="openFilterModal()">
+              <i class="bi bi-funnel"></i>
+            </button>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="category-wrapper">
+            <span class="category-name">Product Management</span>
+            <span class="posted-date">Posted 3 days ago</span>
+          </div>
+        </td>
+        <td>10 Topik</td>
+        <td class="view-count">1,234</td>
+        <td>⭐⭐⭐⭐</td>
+        <td>
+          <div class="action-buttons">
+            <button class="show-button" onclick="toggleShowHide(this)">
+              <i class="bi bi-eye"></i>
+              Show
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="category-wrapper">
+            <span class="category-name">Design</span>
+            <span class="posted-date">Posted 3 days ago</span>
+          </div>
+        </td>
+        <td>15 Topik</td>
+        <td class="view-count">856</td>
+        <td>⭐⭐⭐</td>
+        <td>
+          <div class="action-buttons">
+            <button class="show-button" onclick="toggleShowHide(this)">
+              <i class="bi bi-eye"></i>
+              Show
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="category-wrapper">
+            <span class="category-name">Database</span>
+            <span class="posted-date">Posted 3 days ago</span>
+          </div>
+        </td>
+        <td>12 Topik</td>
+        <td class="view-count">2,105</td>
+        <td>⭐⭐⭐⭐⭐</td>
+        <td>
+          <div class="action-buttons">
+            <button class="show-button" onclick="toggleShowHide(this)">
+              <i class="bi bi-eye"></i>
+              Show
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="category-wrapper">
+            <span class="category-name">Mobile Development</span>
+            <span class="posted-date">Posted 3 days ago</span>
+          </div>
+        </td>
+        <td>18 Topik</td>
+        <td class="view-count">678</td>
+        <td>⭐⭐⭐⭐⭐</td>
+        <td>
+          <div class="action-buttons">
+            <button class="show-button" onclick="toggleShowHide(this)">
+              <i class="bi bi-eye"></i>
+              Show
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="category-wrapper">
+            <span class="category-name">UI/UX</span>
+            <span class="posted-date">Posted 3 days ago</span>
+          </div>
+        </td>
+        <td>18 Topik</td>
+        <td class="view-count">1,102</td>
+        <td>⭐⭐⭐⭐⭐</td>
+        <td>
+          <div class="action-buttons">
+            <button class="show-button" onclick="toggleShowHide(this)">
+              <i class="bi bi-eye"></i>
+              Show
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </table>
+
+  <div class="pagination-container">
+    @* <div class="pagination-info">
+      Menampilkan 1-10 dari 50 data
+    </div> *@
+
+    <div class="pagination-bullets">
+      <span class="page-dot active"></span>
+      <span class="page-dot"></span>
+      <span class="page-dot"></span>
+      <span class="page-dot"></span>
+      <span class="page-dot"></span>
+    </div>
+
+    <div class="pagination-arrows">
+      <button class="page-btn" disabled>
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <button class="page-btn">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+
+  </div>
+
+  @* <div class="items-per-page">
+      <label>
+        Tampilkan
+        <select>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        data
+      </label>
+    </div> *@
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const pageDots = document.querySelectorAll('.page-dot');
+    const prevBtn = document.querySelector('.page-btn:first-of-type');
+    const nextBtn = document.querySelector('.page-btn:last-of-type');
+
+    let currentPage = 1;
+    const totalPages = 5;
+
+    pageDots.forEach((dot, index) => {
+      dot.addEventListener('click', function () {
+        currentPage = index + 1;
+        updatePagination();
+      });
+    });
+
+    prevBtn.addEventListener('click', function () {
+      if (currentPage > 1) {
+        currentPage--;
+        updatePagination();
+      }
+    });
+
+    nextBtn.addEventListener('click', function () {
+      if (currentPage < totalPages) {
+        currentPage++;
+        updatePagination();
+      }
+    });
+
+    function updatePagination() {
+      pageDots.forEach((dot, index) => {
+        dot.classList.toggle('active', index + 1 === currentPage);
+      });
+
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages;
+
+      // Update info
+      const startItem = (currentPage - 1) * 10 + 1;
+      const endItem = Math.min(currentPage * 10, 50);
+      document.querySelector('.pagination-info').textContent =
+        `Menampilkan ${startItem}-${endItem} dari 50 data`;
+    }
+  });
+
+</script>
+
+<script>
+  function toggleShowHide(button) {
+    button.classList.toggle('is-active');
+
+    const icon = button.querySelector('i');
+    const text = button.querySelector('span') || button.childNodes[2]; // Text node
+
+    if (button.classList.contains('is-active')) {
+      // Ganti ke Hide
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+      if (text.textContent) text.textContent = 'Hide';
+      else button.childNodes[2].textContent = ' Hide'; // Jika text bukan dalam span
+    } else {
+      // Ganti ke Show
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+      if (text.textContent) text.textContent = 'Show';
+      else button.childNodes[2].textContent = ' Show';
+    }
+  }
+</script>

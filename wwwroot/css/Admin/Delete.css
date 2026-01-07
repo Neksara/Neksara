@@ -13,7 +13,7 @@
   font-weight: 600;
 }
 
-.btn-submit:hover {
+.btn-submit.delete:hover {
   background:  rgb(202, 35, 35);
 }
 

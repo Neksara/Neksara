@@ -1,11 +1,10 @@
-
 @{
   ViewData["Title"] = "Kategori";
   Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 @section Styles {
-  <link rel="stylesheet" href="~/css/Admin/TablePage.css" />
+  <link rel="stylesheet" href="~/css/Admin/TableFeedback.css" />
   <link rel="stylesheet" href="~/css/Admin/Form.css" />
   <link rel="stylesheet" href="~/css/Admin/Delete.css" />
   <link rel="stylesheet" href="~/css/Admin/Filter.css" />
@@ -15,22 +14,16 @@
   <table>
     <thead>
       <tr class="header-row">
-        <th>Kategori</th>
-        <th>Topik</th>
-        <th>Views</th>
+        <th>Nama</th>
+        <th>Pekerjaan</th>
+        <th>Testimoni</th>
+        <th>Rating</th>
+        <th>Show/Hide</th>
         <th class="action-header">
           <!-- Kosong, tapi ada overlay di atasnya -->
           <div class="search-overlay">
-            <button class="icon-button" onclick="openFilterModal()">
+            <button class="icon-button filter-button" onclick="openFilterModal()">
               <i class="bi bi-funnel"></i>
-            </button>
-            <div class="search-wrapper">
-              <i class="bi bi-search search-icon"></i>
-              <input class="search-category" type="text" placeholder="Cari kategori...">
-            </div>
-            <button class="btn-add" onclick="openModal()">
-              <i class="bi bi-plus-circle"></i>
-              Kategori
             </button>
           </div>
         </th>
@@ -46,13 +39,12 @@
         </td>
         <td>10 Topik</td>
         <td class="view-count">1,234</td>
+        <td>⭐⭐⭐⭐</td>
         <td>
           <div class="action-buttons">
-            <button class="icon-button" onclick="openEditModal()">
-              <i class="bi bi-pencil-square"></i>
-            </button>
-            <button class="icon-button delete" onclick="openDeleteModal()">
-              <i class="bi bi-trash3"></i>
+            <button class="show-button" onclick="toggleShowHide(this)">
+              <i class="bi bi-eye"></i>
+              Show
             </button>
           </div>
         </td>
@@ -66,13 +58,12 @@
         </td>
         <td>15 Topik</td>
         <td class="view-count">856</td>
+        <td>⭐⭐⭐</td>
         <td>
           <div class="action-buttons">
-            <button class="icon-button" onclick="openEditModal()">
-              <i class="bi bi-pencil-square"></i>
-            </button>
-            <button class="icon-button delete" onclick="openDeleteModal()">
-              <i class="bi bi-trash3"></i>
+            <button class="show-button" onclick="toggleShowHide(this)">
+              <i class="bi bi-eye"></i>
+              Show
             </button>
           </div>
         </td>
@@ -86,13 +77,12 @@
         </td>
         <td>12 Topik</td>
         <td class="view-count">2,105</td>
+        <td>⭐⭐⭐⭐⭐</td>
         <td>
           <div class="action-buttons">
-            <button class="icon-button" onclick="openEditModal()">
-              <i class="bi bi-pencil-square"></i>
-            </button>
-            <button class="icon-button delete" onclick="openDeleteModal()">
-              <i class="bi bi-trash3"></i>
+            <button class="show-button" onclick="toggleShowHide(this)">
+              <i class="bi bi-eye"></i>
+              Show
             </button>
           </div>
         </td>
@@ -106,13 +96,12 @@
         </td>
         <td>18 Topik</td>
         <td class="view-count">678</td>
+        <td>⭐⭐⭐⭐⭐</td>
         <td>
           <div class="action-buttons">
-            <button class="icon-button" onclick="openEditModal()">
-              <i class="bi bi-pencil-square"></i>
-            </button>
-            <button class="icon-button delete" onclick="openDeleteModal()">
-              <i class="bi bi-trash3"></i>
+            <button class="show-button" onclick="toggleShowHide(this)">
+              <i class="bi bi-eye"></i>
+              Show
             </button>
           </div>
         </td>
@@ -126,13 +115,12 @@
         </td>
         <td>18 Topik</td>
         <td class="view-count">1,102</td>
+        <td>⭐⭐⭐⭐⭐</td>
         <td>
           <div class="action-buttons">
-            <button class="icon-button" onclick="openEditModal()">
-              <i class="bi bi-pencil-square"></i>
-            </button>
-            <button class="icon-button delete" onclick="openDeleteModal()">
-              <i class="bi bi-trash3"></i>
+            <button class="show-button" onclick="toggleShowHide(this)">
+              <i class="bi bi-eye"></i>
+              Show
             </button>
           </div>
         </td>
@@ -224,9 +212,28 @@
         `Menampilkan ${startItem}-${endItem} dari 50 data`;
     }
   });
+
 </script>
 
-@await Html.PartialAsync("_CreateForm")
-@await Html.PartialAsync("_EditForm")
-@await Html.PartialAsync("_DeleteRow")
-@await Html.PartialAsync("_FilterCategory")
+<script>
+  function toggleShowHide(button) {
+    button.classList.toggle('is-active');
+
+    const icon = button.querySelector('i');
+    const text = button.querySelector('span') || button.childNodes[2]; // Text node
+
+    if (button.classList.contains('is-active')) {
+      // Ganti ke Hide
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+      if (text.textContent) text.textContent = 'Hide';
+      else button.childNodes[2].textContent = ' Hide'; // Jika text bukan dalam span
+    } else {
+      // Ganti ke Show
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+      if (text.textContent) text.textContent = 'Show';
+      else button.childNodes[2].textContent = ' Show';
+    }
+  }
+</script>
