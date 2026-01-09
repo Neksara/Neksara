@@ -1,0 +1,63 @@
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Edit Topik</h2>
+      <span class="close" onclick="closeEditModal()">&times;</span>
+    </div>
+
+    <form asp-action="Edit" method="post" class="modal-form">
+      <div class="form-group">
+        <label>Tambah Sampul</label>
+        <input type="text" name="Name" required class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Kategori</label>
+        <input type="text" name="Name" required class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Judul Topik</label>
+        <input type="text" name="Name" required class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Deskripsi</label>
+        <textarea name="Description" class="form-control"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Video URL (YouTube)</label>
+        <input type="text" name="Name" required class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Published Date</label>
+        <input type="date" name="Name" disabled class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeModal()">Batal</button>
+        <button type="submit" class="btn-submit">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openModal() {
+    document.getElementById('editModal').classList.add('show');
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').classList.remove('show');
+  }
+
+  window.onclick = function (event) {
+    const modal = document.getElementById('createModal');
+    if (event.target === modal) {
+      closeEditModal();
+    }
+  }
+  
+</script>

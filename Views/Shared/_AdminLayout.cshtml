@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>@ViewData["Title"]</title>
+  <link rel="stylesheet" href="~/css/Admin/Index.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  @RenderSection("Styles", required: false)
+</head>
+
+<body>
+  <header>
+    <div id="header-container">
+      <button>Admin Panel</button>
+      <i class="bi bi-person-circle"></i>
+    </div>
+  </header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <h3>Manage</h3>
+      <ul>
+        <li
+          class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")">
+          <a asp-controller="AdminCategory" asp-action="Index">
+            <i class="bi bi-house-door"></i>
+            <span>Kategori</span>
+          </a>
+        </li>
+        <li
+          class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "Topic" ? "active" : "")">
+          <a asp-controller="AdminTopic" asp-action="Index">
+            <i class="bi bi-file-earmark-plus"></i>
+            <span>Topik</span>
+          </a>
+        </li>
+        <li>
+          <a asp-controller="AdminFeedback" asp-action="Index">
+            <i class="bi bi-envelope"></i>
+            <span>Feedback</span>
+          </a>
+        </li>
+        <li>
+          <a asp-controller="AdminTestimoni" asp-action="Index">
+            <i class="bi bi-inbox"></i>
+            <span>Testimoni</span>
+          </a>
+        </li>
+        <li>
+          <a asp-controller="AdminArchivedPages" asp-action="Index">
+            <i class="bi bi-trash3"></i>
+            <span>Archived Pages</span>
+          </a>
+        </li>
+        <li>
+          <a asp-controller="AdminFeedback" asp-action="Index">
+            <i class="bi bi-box-arrow-left"></i>
+            <span>Log Out</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <div class="content">
+      @RenderBody() <!-- h1 masuk sini -->
+    </div>
+  </div>
+</body>
+
+</html>

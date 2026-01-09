@@ -1,0 +1,31 @@
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Hapus Kategori</h2>
+      <span class="close" onclick="closeDeleteModal()">&times;</span>
+    </div>
+    <p>Apakah Anda yakin ingin menghapus <strong>kategori</strong> ini?</p>
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Batal</button>
+      <button type="submit" class="btn-submit delete">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openDeleteModal() {
+    document.getElementById('deleteModal').classList.add('show');
+  }
+
+  function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('show');
+  }
+
+  // Close saat klik di luar modal
+  window.onclick = function (event) {
+    const modal = document.getElementById('deleteModal');
+    if (event.target === modal) {
+      closeDeleteModal();
+    }
+  }
+</script>

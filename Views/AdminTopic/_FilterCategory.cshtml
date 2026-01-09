@@ -1,0 +1,126 @@
+<div class="modal fade" id="filterModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-funnel-fill"></i>
+          Filter & Urutkan
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="filter-group">
+          <label class="form-label">Pilih Urutan</label>
+          <div class="filter-options">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="sortFilter" id="abjadAsc" value="abjad-asc" checked>
+              <label class="form-check-label" for="abjadAsc">
+                <i class="bi bi-sort-alpha-down"></i>
+                Berdasarkan Abjad (A-Z)
+              </label>
+            </div>
+            
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="sortFilter" id="abjadDesc" value="abjad-desc">
+              <label class="form-check-label" for="abjadDesc">
+                <i class="bi bi-sort-alpha-up"></i>
+                Berdasarkan Abjad (Z-A)
+              </label>
+            </div>
+            
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="sortFilter" id="viewsDesc" value="views-desc">
+              <label class="form-check-label" for="viewsDesc">
+                <i class="bi bi-arrow-down-circle"></i>
+                Views Terbanyak
+              </label>
+            </div>
+            
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="sortFilter" id="viewsAsc" value="views-asc">
+              <label class="form-check-label" for="viewsAsc">
+                <i class="bi bi-arrow-up-circle"></i>
+                Views Paling Sedikit
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="resetFilter()">
+          <i class="bi bi-arrow-counterclockwise"></i>
+          Reset
+        </button>
+        <button type="button" class="btn btn-primary" onclick="applyFilter()">
+          <i class="bi bi-check-circle"></i>
+          Terapkan Filter
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  
+// Fungsi untuk membuka modal filter
+function openFilterModal() {
+  document.getElementById('filterModal').classList.add('show');
+}
+
+// Fungsi untuk reset filter
+function resetFilter() {
+  document.getElementById('abjadAsc').checked = true;
+}
+
+// Fungsi untuk menerapkan filter
+function applyFilter() {
+  const selectedFilter = document.querySelector('input[name="sortFilter"]:checked').value;
+  
+  console.log('Filter yang dipilih:', selectedFilter);
+  
+  // Implementasi sorting di sini
+  switch(selectedFilter) {
+    case 'abjad-asc':
+      sortByAlphabetAsc();
+      break;
+    case 'abjad-desc':
+      sortByAlphabetDesc();
+      break;
+    case 'views-desc':
+      sortByViewsDesc();
+      break;
+    case 'views-asc':
+      sortByViewsAsc();
+      break;
+  }
+  
+  // Tutup modal
+  function closeModal() {
+    document.getElementById('filterModal').classList.remove('show');
+  }
+  
+  // Tampilkan notifikasi
+  alert('Filter berhasil diterapkan!');
+}
+
+// Fungsi sorting - sesuaikan dengan data Anda
+function sortByAlphabetAsc() {
+  console.log('Sorting by alphabet A-Z');
+  // Implementasi sorting A-Z
+}
+
+function sortByAlphabetDesc() {
+  console.log('Sorting by alphabet Z-A');
+  // Implementasi sorting Z-A
+}
+
+function sortByViewsDesc() {
+  console.log('Sorting by views descending');
+  // Implementasi sorting views terbanyak
+}
+
+function sortByViewsAsc() {
+  console.log('Sorting by views ascending');
+  // Implementasi sorting views paling sedikit
+}
+</script>
