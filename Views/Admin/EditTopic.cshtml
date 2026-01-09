@@ -6,6 +6,18 @@
 
 <h3 class="mb-4">✏️ Edit Topik</h3>
 
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
 <form asp-controller="Admin"
       asp-action="EditTopic"
       method="post"
@@ -13,12 +25,18 @@
 
     @Html.AntiForgeryToken()
 
+    <!-- ID -->
     <input type="hidden" asp-for="TopicId" />
-    <input type="hidden" name="ExistingPicture" value="@Model.TopicPicture" />
 
+    <!-- EXISTING IMAGE (PENTING BANGEEET) -->
+    <input type="hidden"
+           name="ExistingPicture"
+           value="@Model.TopicPicture" />
+
+    <!-- KATEGORI -->
     <div class="mb-3">
         <label class="form-label fw-bold">Kategori</label>
-        <select asp-for="CategoryId" class="form-select">
+        <select asp-for="CategoryId" class="form-control">
             <option value="">-- Pilih Kategori --</option>
             @foreach (var c in ViewBag.Categories)
             {
@@ -31,20 +49,26 @@
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
 
+    <!-- NAMA TOPIK -->
     <div class="mb-3">
         <label class="form-label fw-bold">Nama Topik</label>
-        <input asp-for="TopicName" class="form-control" />
+        <input asp-for="TopicName"
+               class="form-control"
+               placeholder="Contoh: ASP.NET MVC Dasar" />
         <span asp-validation-for="TopicName" class="text-danger"></span>
     </div>
 
+    <!-- DESKRIPSI -->
     <div class="mb-3">
         <label class="form-label fw-bold">Isi Materi</label>
         <textarea asp-for="Description"
                   rows="5"
-                  class="form-control"></textarea>
+                  class="form-control"
+                  placeholder="Tuliskan isi materi topik..."></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
+    <!-- GAMBAR -->
     <div class="mb-3">
         <label class="fw-bold">Picture Topic</label>
         <input type="file" name="image" class="form-control" />
@@ -53,17 +77,23 @@
         {
             <div class="mt-2">
                 <small class="text-muted">Gambar saat ini:</small><br />
-                <img src="@Model.TopicPicture" width="120" class="rounded shadow-sm" />
+                <img src="@Model.TopicPicture"
+                     width="160"
+                     class="rounded shadow-sm mt-1" />
             </div>
         }
     </div>
 
+    <!-- VIDEO -->
     <div class="mb-3">
         <label class="form-label fw-bold">Video URL</label>
-        <input asp-for="VideoUrl" class="form-control" />
+        <input asp-for="VideoUrl"
+               class="form-control"
+               placeholder="https://youtube.com/..." />
         <span asp-validation-for="VideoUrl" class="text-danger"></span>
     </div>
 
+    <!-- ACTION -->
     <div class="d-flex gap-2">
         <button type="submit" class="btn btn-warning">
             💾 Update

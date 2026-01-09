@@ -8,14 +8,20 @@
     Data tidak akan hilang permanen.
 </div>
 
-<form asp-action="DeleteCategory" method="post">
-    <input type="hidden" asp-for="CategoryId" />
+<form asp-controller="Admin"
+      asp-action="DeleteCategory"
+      asp-route-id="@Model.CategoryId"
+      method="post">
+
+    @Html.AntiForgeryToken()
 
     <button type="submit" class="btn btn-danger">
         Ya, Hapus
     </button>
 
-    <a asp-action="Categories" class="btn btn-secondary ms-2">
+    <a asp-action="CategoryIndex"
+       asp-controller="Admin"
+       class="btn btn-secondary ms-2">
         Batal
     </a>
 </form>

@@ -50,21 +50,26 @@ namespace Neksara.Controllers
             return View(data);
         }
 
+        // ---------- CREATE ----------
+        [HttpGet]
         public IActionResult CreateCategory()
         {
-            return View();
+            return View(new Category());
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory(Category model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCategory(Category model, IFormFile? image)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            await _categoryService.CreateAsync(model);
+            await _categoryService.CreateAsync(model, image);
             return RedirectToAction(nameof(CategoryIndex));
         }
 
+        // ---------- EDIT ----------
+        [HttpGet]
         public async Task<IActionResult> EditCategory(int id)
         {
             var data = await _categoryService.GetByIdAsync(id);
@@ -74,20 +79,32 @@ namespace Neksara.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditCategory(Category model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditCategory(Category model, IFormFile? image)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            await _categoryService.UpdateAsync(model);
+            await _categoryService.UpdateAsync(model, image);
             return RedirectToAction(nameof(CategoryIndex));
         }
 
+        // ---------- DELETE ----------
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             await _categoryService.SoftDeleteAsync(id);
             return RedirectToAction(nameof(CategoryIndex));
+        }
+
+        // ---------- DETAIL ----------
+        public async Task<IActionResult> CategoryDetail(int id)
+        {
+            var data = await _categoryService.GetDetailAsync(id);
+            if (data == null) return NotFound();
+
+            return View(data);
         }
 
         // =========================
@@ -105,6 +122,8 @@ namespace Neksara.Controllers
             return View(data);
         }
 
+        // ---------- CREATE ----------
+        [HttpGet]
         public async Task<IActionResult> CreateTopic()
         {
             ViewBag.Categories = await _topicService.GetCategoriesAsync();
@@ -112,6 +131,7 @@ namespace Neksara.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateTopic(Topic model, IFormFile? image)
         {
             if (!ModelState.IsValid)
@@ -124,6 +144,8 @@ namespace Neksara.Controllers
             return RedirectToAction(nameof(TopicIndex));
         }
 
+        // ---------- EDIT ----------
+        [HttpGet]
         public async Task<IActionResult> EditTopic(int id)
         {
             var data = await _topicService.GetByIdAsync(id);
@@ -134,10 +156,11 @@ namespace Neksara.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTopic(
             Topic model,
             IFormFile? image,
-            string ExistingPicture)
+            string? ExistingPicture)
         {
             if (!ModelState.IsValid)
             {
@@ -149,21 +172,16 @@ namespace Neksara.Controllers
             return RedirectToAction(nameof(TopicIndex));
         }
 
+        // ---------- DELETE ----------
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteTopic(int id)
         {
             await _topicService.ArchiveAsync(id);
             return RedirectToAction(nameof(TopicIndex));
         }
 
-        public async Task<IActionResult> CategoryDetail(int id)
-        {
-            var data = await _categoryService.GetDetailAsync(id);
-            if (data == null) return NotFound();
-
-            return View(data);
-        }
-
+        // ---------- DETAIL ----------
         public async Task<IActionResult> TopicDetail(int id)
         {
             var data = await _topicService.GetDetailAsync(id);
@@ -171,6 +189,5 @@ namespace Neksara.Controllers
 
             return View(data);
         }
-
     }
 }

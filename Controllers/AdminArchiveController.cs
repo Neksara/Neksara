@@ -61,9 +61,11 @@ namespace Neksara.Controllers
             {
                 TopicName = archive.TopicName,
                 Description = archive.Description,
+                TopicPicture = archive.TopicPicture,
                 VideoUrl = archive.VideoUrl,
                 CategoryId = archive.CategoryId,
                 CreatedAt = archive.CreatedAt,
+                UpdatedAt = archive.UpdatedAt,
                 ViewCount = archive.ViewCount,
                 IsDeleted = false
             });

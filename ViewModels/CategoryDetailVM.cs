@@ -7,7 +7,7 @@ namespace Neksara.ViewModels
     {
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = string.Empty;
-
+        public string? CategoryPicture { get; set; }
         public int TotalTopics { get; set; }
         public int TotalViews { get; set; }
 

@@ -1,50 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Admin Panel - Neksara</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Admin Panel Neksara</title>
+
+    <!-- BOOTSTRAP CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- OPTIONAL: ICON -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
 
 <div class="d-flex">
-    <!-- SIDEBAR -->
-    <aside style="width:240px;background:#0783e2;min-height:100vh;">
-        <div class="p-3 text-white fw-bold">Manage</div>
-        <ul class="nav flex-column px-2">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="text-white"
+           style="width:240px; background:#0783e2; min-height:100vh;">
+
+        <div class="p-3 fw-bold border-bottom">
+            ⚙️ Admin Panel
+        </div>
+
+        <ul class="nav flex-column px-2 mt-2">
+
             <li class="nav-item">
-                <a class="nav-link text-white" href="/Home/Index">Home</a>
+                <a class="nav-link text-white" href="/Home/Index">
+                    🏠 Home
+                </a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link text-white" href="/Admin/CategoryIndex">Kategori</a>
+                <a class="nav-link text-white" href="/AdminEcatalog/Index">
+                    📚 E-Katalog
+                </a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link text-white" href="/Admin/TopicIndex">Topik</a>
+                <a class="nav-link text-white" href="/Admin/CategoryIndex">
+                    🗂️ Kategori
+                </a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link text-white" href="/AdminFeedback/Index">Feedback</a>
+                <a class="nav-link text-white" href="/Admin/TopicIndex">
+                    📄 Topik
+                </a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link text-white" href="/AdminArchive/Index">Archive</a>
+                <a class="nav-link text-white" href="/AdminFeedback/Index">
+                    💬 Feedback
+                </a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link text-white" href="/Auth/Logout">Logout</a>
+                <a class="nav-link text-white" href="/AdminTestimoni/Index">
+                    💬 Testimoni
+                </a>
             </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link text-white" href="/AdminArchive/Index">
+                    🗄️ Archive
+                </a>
+            </li>
+
+            <li class="nav-item mt-3">
+                <form method="post" action="/Auth/Logout">
+                    <button class="btn btn-sm btn-light w-100">
+                        🚪 Logout
+                    </button>
+                </form>
+            </li>
+
         </ul>
     </aside>
 
-    <!-- MAIN -->
+    <!-- ================= MAIN ================= -->
     <main class="flex-fill">
-        <header class="p-3 bg-teal text-white d-flex justify-content-between">
-            <span>Neksara Admin Panel</span>
-            <span>@User.Identity.Name</span>
+
+        <!-- HEADER -->
+        <header class="p-3 bg-dark text-white d-flex justify-content-between align-items-center">
+            <span class="fw-semibold">
+                Neksara Admin Panel
+            </span>
+            <span>
+                👤 @User.Identity?.Name
+            </span>
         </header>
 
-        <div class="p-4">
+        <!-- CONTENT -->
+        <section class="p-4">
             @RenderBody()
-        </div>
+        </section>
+
     </main>
 </div>
+
+<!-- ================= JS ================= -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- 🔥 WAJIB: SECTION SCRIPTS -->
+@RenderSection("Scripts", required: false)
 
 </body>
 </html>

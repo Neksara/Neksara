@@ -1,44 +1,44 @@
-@model Neksara.Models.Category
-@{
-    ViewData["Title"] = "Tambah Kategori";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
-}
+    @model Neksara.Models.Category
+    @{
+        ViewData["Title"] = "Tambah Kategori";
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
 
-<h3 class="mb-4">➕ Tambah Kategori</h3>
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        <ul>
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <li>@error.ErrorMessage</li>
-        }
-        </ul>
-    </div>
-}
-<form asp-controller="Admin" asp-action="CreateCategory" method="post">
-    @Html.AntiForgeryToken()
+    <h3 class="mb-4">➕ Tambah Kategori</h3>
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+            </ul>
+        </div>
+    }
+    <form asp-controller="Admin"asp-action="CreateCategory"method="post"enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
 
-    <div class="mb-3">
-        <label class="form-label fw-bold">Nama Kategori</label>
-        <input asp-for="CategoryName" class="form-control" placeholder="Nama kategori" />
-        <span asp-validation-for="CategoryName" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label class="form-label fw-bold">Deskripsi</label>
-        <input asp-for="Description" class="form-control" placeholder="Deskripsi kategori" />
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
         <div class="mb-3">
-        <label class="fw-bold">Picture Topic</label>
-        <input type="file" name="image" class="form-control" />
-    </div>
-    <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-success">
-            💾 Simpan
-        </button>
-        <a href="/Admin/CategoryIndex" class="btn btn-secondary">
-            ⬅️ Kembali
-        </a>
-    </div>
-</form>
+            <label class="form-label fw-bold">Nama Kategori</label>
+            <input asp-for="CategoryName" class="form-control" placeholder="Nama kategori" />
+            <span asp-validation-for="CategoryName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-bold">Deskripsi</label>
+            <input asp-for="Description" class="form-control" placeholder="Deskripsi kategori" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label class="fw-bold">Picture Topic</label>
+            <input type="file" name="image" class="form-control" />
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success">
+                💾 Simpan
+            </button>
+            <a href="/Admin/CategoryIndex" class="btn btn-secondary">
+                ⬅️ Kembali
+            </a>
+        </div>
+    </form>

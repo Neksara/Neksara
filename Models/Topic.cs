@@ -11,9 +11,9 @@ namespace Neksara.Models
         public string Description { get; set; } = string.Empty;
         public string VideoUrl { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime? UpdatedAt { get; set; } // NULL = belum di edit
         public int ViewCount { get; set; } = 0;
-        public DateTime PublishedAt { get; set; }
+        public DateTime? PublishedAt { get; set; } // NULL = belum publish
         public bool IsDeleted { get; set; } = false;
 
         public int CategoryId { get; set; }

@@ -22,8 +22,8 @@
             <th>Kategori</th>
             <th>Views</th>
             <th>Tanggal Produksi</th>
-            <th>Tanggal Publikasi</th>
-            <th width="160">Aksi</th>
+            <th>Tanggal Update</th>
+            <th width="200px">Aksi</th>
         </tr>
     </thead>
     <tbody>
@@ -34,7 +34,7 @@
             <td>@t.Category?.CategoryName</td>
             <td>@t.ViewCount Views</td>
             <td>@t.CreatedAt</td>
-            <td>@t.PublishedAt</td>
+            <td>@t.UpdatedAt</td>
             <td>
                 <a href="/Admin/TopicDetail/@t.TopicId" class="btn btn-sm btn-primary">Detail</a>                   
                 <a href="/Admin/EditTopic/@t.TopicId" class="btn btn-sm btn-warning">Edit</a>
@@ -50,3 +50,17 @@
     }
     </tbody>
 </table>
+<!-- PAGINATION -->
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link"
+                   href="?page=@i&search=@ViewBag.CurrentSearch">
+                    @i
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

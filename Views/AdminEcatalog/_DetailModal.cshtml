@@ -1,15 +1,13 @@
 @model Neksara.ViewModels.TopicDetailVM
-@{
-    ViewData["Title"] = "Detail Topik";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
-}
 
-<!-- BACK BUTTON -->
-<a href="/Admin/TopicIndex" class="btn btn-outline-secondary mb-3">
-    ← Kembali
-</a>
+<div class="modal-header">
+    <h5 class="modal-title">📘 Detail Topik</h5>
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"></button>
+</div>
 
-<h3 class="mb-3">📘 Detail Topik</h3>
+<div class="modal-body">
 
 @if (!string.IsNullOrEmpty(Model.TopicPicture))
 {
@@ -20,7 +18,7 @@
 
 <table class="table table-bordered">
     <tr>
-        <th width="200">Nama Topik</th>
+        <th width="180">Nama Topik</th>
         <td>@Model.TopicName</td>
     </tr>
     <tr>
@@ -35,15 +33,15 @@
         <th>Dibuat</th>
         <td>@Model.CreatedAt.ToString("dd MMM yyyy")</td>
     </tr>
-        <tr>
-        <th>Diperbarui</th>
+    <tr>
+        <th>Dipublish</th>
         <td>@(Model.UpdatedAt?.ToString("dd MMM yyyy") ?? "-")</td>
     </tr>
 </table>
 
 <hr />
 
-<h5>📝 Deskripsi</h5>
+<h6>📝 Deskripsi</h6>
 <div class="border rounded p-3 bg-light">
     @Html.Raw(Model.Description)
 </div>
@@ -51,8 +49,10 @@
 @if (!string.IsNullOrEmpty(Model.VideoUrl))
 {
     <hr />
-    <h5>🎬 Video</h5>
+    <h6>🎬 Video</h6>
     <a href="@Model.VideoUrl" target="_blank">
         @Model.VideoUrl
     </a>
 }
+
+</div>

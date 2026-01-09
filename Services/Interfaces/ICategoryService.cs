@@ -7,9 +7,9 @@ public interface ICategoryService
     Task<(List<CategoryIndexVM> data, int totalData)>
     GetCategorySummaryAsync(string search, int page, int pageSize);
     Task<CategoryDetailVM?> GetDetailAsync(int categoryId);
-    Task CreateAsync(Category category);
+    Task CreateAsync(Category category, IFormFile? image);
     Task<Category?> GetByIdAsync(int id);
-    Task UpdateAsync(Category category);    
+    Task UpdateAsync(Category category, IFormFile? image);  
     Task SoftDeleteAsync(int id);
     
 }
