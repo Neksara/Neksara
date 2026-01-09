@@ -50,43 +50,89 @@
 </div>
 <div class="container">
 
-    <!-- A-Z Filter as right-aligned dropdown -->
-    <div class="row mb-3">
-        <div class="col-12 d-flex">
-            <div class="ms-auto">
-                <div id="az-filter" class="dropdown">
-                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="azDropdown"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Filter: All
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="azDropdown">
-                        <li><a class="dropdown-item az-letter active" href="#" data-letter="all">All</a></li>
-                        @{
-                            for (char c = 'A'; c <= 'Z'; c++)
-                            {
-                                <text>
-                                    <li><a class="dropdown-item az-letter" href="#" data-letter="@c">@c</a></li>
-                                </text>
-                            }
 
-                        }
-                    </ul>
+    <!-- Topics Section -->
+    <section id="topics" class="recent-blog-postst section light-background">
+        <div class="container">
+            
+            <!-- Header Section -->
+            <div class="row align-items-center mb-4">
+                <!-- Bagian Kiri: Judul Topik -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="section-header-left" data-aos="fade-up">
+                        <h2>Topik</h2>
+                    </div>
+                </div>
+
+                <!-- Bagian Kanan: Filter -->
+                <div class="col-lg-6 col-md-8 offset-md-2">
+                    <div class="topics-filter" data-aos="fade-up" data-aos-delay="100">
+                        <div class="d-flex justify-content-end align-items-center gap-1">
+                            <!-- Filter Populer -->
+                            <div class="filter-item">
+                                <button class="btn btn-sm filter-btn filter-popular active" type="button"
+                                    data-filter="all">
+                                    <i class="bi bi-fire me-1"></i>Populer
+                                </button>
+                            </div>
+
+                            <!-- Filter Kategori (Dropdown) -->
+                            <div class="filter-item">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm filter-btn dropdown-toggle d-flex align-items-center"
+                                        type="button" id="categoryFilter" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <i class="bi bi-tag me-1"></i>Kategori
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="categoryFilter">
+                                        <li><a class="dropdown-item category-filter active" href="#"
+                                                data-category="all">Semua Kategori</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item category-filter" href="#"
+                                                data-category="design">Design</a></li>
+                                        <li><a class="dropdown-item category-filter" href="#"
+                                                data-category="development">Development</a></li>
+                                        <li><a class="dropdown-item category-filter" href="#"
+                                                data-category="business">Business</a></li>
+                                        <li><a class="dropdown-item category-filter" href="#"
+                                                data-category="marketing">Marketing</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Filter A-Z (Dropdown) -->
+                            <div class="filter-item">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm filter-btn dropdown-toggle d-flex align-items-center"
+                                        type="button" id="azFilter" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-sort-alpha-down me-1"></i>A-Z
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="azFilter">
+                                        <li><a class="dropdown-item az-filter active" href="#" data-sort="all">Semua</a>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item az-filter" href="#" data-letter="A">A</a></li>
+                                        <li><a class="dropdown-item az-filter" href="#" data-letter="B">B</a></li>
+                                        <li><a class="dropdown-item az-filter" href="#" data-letter="C">C</a></li>
+                                        <li><a class="dropdown-item az-filter" href="#" data-letter="D">D</a></li>
+                                        <li><a class="dropdown-item az-filter" href="#" data-letter="E">E</a></li>
+                                        <!-- Tambahkan huruf lain sesuai kebutuhan -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Topics Grid -->
+            <div class="row g-4" id="topics-row">
+                <!-- Topic Cards akan dimasukkan di sini -->
+                @await Html.PartialAsync("_Topics")
+            </div>
         </div>
-    </div>
-
-  <!-- Topics Section -->
-            <section id="recent-blog-postst" class="recent-blog-postst section light-background">
-
-                <!-- Section Title -->
-                <div class="container section-title" data-aos="fade-up">
-                    <h2>Kategori</h2>
-                    <p>Paling Populer</p>
-                </div><!-- End Section Title -->
-
-                <div class="container">
-
-                    <div class="row gy-5">
-
-@await Html.PartialAsync("_Topics")
+    </section><!-- End Topics Section -->

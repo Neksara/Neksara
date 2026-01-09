@@ -5,21 +5,13 @@
     <div class="container">
         <div class="row gy-4">
             <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center" data-aos="zoom-out">
-                <div class="hero-tagline">
-                    <span class="hero-subtitle">Learn Without Limits</span>
-                </div>
                 <h1>Learn a New Skill<br><span class="highlight">Everyday, Anytime, and Anywhere.</span></h1>
-                <p class="hero-description">
-                    1000+ Courses covering all tech domains for you to learn and explore new opportunities. 
+                <p class="hero-description text-dark">
+                    <span class="stat-number">1000+</span> Courses covering all tech domains for you to learn and explore new opportunities. 
                     Learn from Industry Experts and become an Expert in your field.
                 </p>
                 <div class="hero-cta">
-                    <a href="#categories" class="btn-get-started">Learn Now</a>
-                    <a href="https://www.youtube.com/watch?v=example" 
-                       class="glightbox btn-watch-video d-flex align-items-center">
-                        <i class="bi bi-play-circle"></i>
-                        <span>Watch Intro</span>
-                    </a>
+                    <a href="@Url.Action("Category", "ELearning")" class="btn-get-started text-dark">Learn Now</a>
                 </div>
                 
                 <!-- Stats -->
@@ -27,21 +19,21 @@
                     <div class="row">
                         <div class="col-4">
                             <div class="stat-item">
-                                <h3>1000+</h3>
-                                <p>Courses to Choose from</p>
+                                <h3><span class="stat-number stat-yellow">1000+</span></h3>
+                                <p class="stat-label">Courses to Choose from</p>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="stat-item">
-                                <h3>200+</h3>
-                                <p>Employees Trained</p>
+                                <h3><span class="stat-number stat-blue">5000+</span></h3>
+                                <p class="stat-label">Employees Trained</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-out" data-aos-delay="200">
-                <img src="~/assets/img/illustration/illustration-10.webp" class="img-fluid animated" alt="Online Learning">
+                <img src="~/assets/img/hero.png" class="img-fluid animated" alt="Online Learning">
             </div>
         </div>
     </div>

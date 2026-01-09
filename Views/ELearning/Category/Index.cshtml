@@ -52,32 +52,40 @@
 
 <!-- Categories Section -->
 <section id="services" class="services section light-background">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Kategori</h2>
-        <p>Kategori yang paling dimintai oleh karyawan</p>
-      </div><!-- End Section Title -->
-            <div class="container">
-
-                <!-- A-Z Filter as right-aligned dropdown -->
-                <div class="row mb-3">
-                    <div class="col-12 d-flex">
-                        <div class="ms-auto">
-                            <div id="az-filter" class="dropdown">
-                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="azDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Filter: All
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="azDropdown">
-                                    <li><a class="dropdown-item az-letter active" href="#" data-letter="all">All</a></li>
-                                    @{ for (char c = 'A'; c <= 'Z'; c++) { <text><li><a class="dropdown-item az-letter" href="#" data-letter="@c">@c</a></li></text> } }
-                                </ul>
-                            </div>
-                        </div>
+    <div class="container">
+        <div class="row">
+            <!-- Bagian Kiri: Judul Kategori -->
+            <div class="col-lg-8">
+                <div class="section-header-left" data-aos="fade-up">
+                    <h2>Kategori</h2>
+                    <p class="lead">Kategori yang paling dimintai oleh karyawan</p>
+                </div>
+            </div>
+            
+           <!-- Bagian Kanan: Filter -->
+            <div class="col-lg-4">
+                <div class="d-flex justify-content-lg-end mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div id="az-filter" class="dropdown">
+                        <button class="btn btn-sm btn-outline-primary dropdown-toggle d-flex align-items-center" type="button" id="azDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-filter-circle me-2"></i>
+                            Filter: All
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="azDropdown">
+                            <li><a class="dropdown-item az-letter active" href="#" data-letter="all">All</a></li>
+                            @for (char c = 'A'; c <= 'Z'; c++) {
+                                <li><a class="dropdown-item az-letter" href="#" data-letter="@c">@c</a></li>
+                            }
+                        </ul>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="row gy-4" id="categories-row">
 
-@await Html.PartialAsync("_Categories")
+        <!-- Card Kategori -->
+        <div class="row gy-4" id="categories-row">
+            @await Html.PartialAsync("_Categories-landing")
+        </div>
+    </div>
+</section><!-- End Categories Section -->
 

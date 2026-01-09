@@ -1,104 +1,43 @@
 @* Views/Shared/_Topics.cshtml *@
 
-<!-- Recent Blog Postst Section -->
+@for (int i = 1; i <= 6; i++)
+{
+    <div class="col-xl-3 col-lg-4 col-md-6 topic-card-item"
+     data-aos="fade-up"
+     data-aos-delay="400">
+        <div class="post-item h-100">
 
-
-            <div class="col-xl-4 col-md-6">
-                <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="100">
-
-                    <div class="post-img position-relative overflow-hidden">
-                        <img src="@Url.Content("~/assets/img/blog/blog-post-1.webp")" class="img-fluid" alt="">
-                        <span class="post-date">Frontend</span>
-                    </div>
-
-                    <div class="post-content d-flex flex-column">
-
-                        <h3 class="post-title">Panduan Pemula untuk menjadi Frontend Profesional</h3>
-
-                        <div class="meta d-flex align-items-center">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-calendar3"></i> <span class="ps-2">12/02/2025</span>
-                            </div>
-                            <span class="px-3 text-black-50">/</span>
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-eye"></i> <span class="ps-2">400 view</span>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <a href="blog-details.html" class="readmore stretched-link"><span>Learn Now</span><i
-                                class="bi bi-arrow-right"></i></a>
-
-                    </div>
-
-                </div>
-            </div><!-- End post item -->
-
-            <div class="col-xl-4 col-md-6">
-                <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="200">
-
-                    <div class="post-img position-relative overflow-hidden">
-                        <img src="@Url.Content("~/assets/img/blog/blog-post-2.webp")" class="img-fluid" alt="">
-                        <span class="post-date">Frontend</span>
-                    </div>
-
-                    <div class="post-content d-flex flex-column">
-
-                        <h3 class="post-title">Panduan Pemula untuk menjadi Frontend Profesional</h3>
-
-                        <div class="meta d-flex align-items-center">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-calendar3"></i> <span class="ps-2">12/02/2025</span>
-                            </div>
-                            <span class="px-3 text-black-50">/</span>
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-eye"></i> <span class="ps-2">400 view</span>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <a href="blog-details.html" class="readmore stretched-link"><span>Learn Now</span><i
-                                class="bi bi-arrow-right"></i></a>
-
-                    </div>
-
-                </div>
-            </div><!-- End post item -->
-
-            <div class="col-xl-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                <div class="post-item position-relative h-100">
-
-                    <div class="post-img position-relative overflow-hidden">
-                        <img src="@Url.Content("~/assets/img/blog/blog-post-3.webp")" class="img-fluid" alt="">
-                        <span class="post-date">Frontend</span>
-                    </div>
-
-                    <div class="post-content d-flex flex-column">
-
-                        <h3 class="post-title">Panduan Pemula untuk menjadi Frontend Profesional</h3>
-
-                        <div class="meta d-flex align-items-center">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-calendar3"></i> <span class="ps-2">12/02/2025</span>
-                            </div>
-                            <span class="px-3 text-black-50">/</span>
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-eye"></i> <span class="ps-2">400 view</span>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <a href="blog-details.html" class="readmore stretched-link"><span>Learn Now</span><i
-                                class="bi bi-arrow-right"></i></a>
-
-                    </div>
-                </div><!-- End post item -->
-
+            <div class="post-img position-relative overflow-hidden">
+                <img src="@Url.Content($"~/assets/img/blog/blog-post-{(i % 3) + 1}.webp")" class="img-fluid" alt="">
+                <span class="post-date">Frontend</span>
             </div>
 
-        </div>
+            <div class="post-content d-flex flex-column">
 
-</section><!-- /Recent Blog Postst Section -->
+                <h3 class="post-title">
+                    Panduan Pemula untuk Menjadi Frontend Profesional
+                </h3>
+
+                <hr>
+
+                <a href="blog-details.html" class="readmore stretched-link">
+                    <span class="learn-now-text">Learn Now</span>
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+
+                <div class="meta-bottom">
+                    <span class="meta-date">
+                        <i class="bi bi-calendar3"></i>
+                        <span class="meta-text">12/02/2025</span>
+                    </span>
+
+                    <span class="meta-view">
+                        <span class="meta-text">400 view</span>
+                        <i class="bi bi-eye"></i>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
