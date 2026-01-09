@@ -6,28 +6,39 @@
 
 <h3 class="mb-4">✏️ Edit Kategori</h3>
 
-<form asp-controller="Admin" asp-action="EditCategory" method="post">
+<form asp-controller="Admin"asp-action="EditCategory"method="post"enctype="multipart/form-data">
     @Html.AntiForgeryToken()
     
     <input type="hidden" asp-for="CategoryId" />
 
-        <div class="mb-3">
+    <div class="mb-3">
         <label class="form-label fw-bold">Nama Kategori</label>
         <input asp-for="CategoryName" class="form-control" />
         <span asp-validation-for="CategoryName" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
+    </div>
+    <div class="mb-3">
         <label class="form-label fw-bold">Deskripsi</label>
         <input asp-for="Description" class="form-control" />
         <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
+    </div>
+<div class="mb-3">
+        <label class="fw-bold">Picture Topic</label>
+        <input type="file" name="image" class="form-control" />
 
+        @if (!string.IsNullOrEmpty(Model.CategoryPicture))
+        {
+            <div class="mt-2">
+                <small class="text-muted">Gambar saat ini:</small><br />
+                <img src="@Model.CategoryPicture" width="120" class="rounded shadow-sm" />
+            </div>
+        }
+    </div>
 
     <div class="d-flex gap-2">
         <button type="submit" class="btn btn-warning">
             💾 Update
         </button>
-        <a href="/Admin/Topics" class="btn btn-secondary">
+        <a href="/Admin/CategoryIndex" class="btn btn-secondary">
             ❌ Batal
         </a>
     </div>

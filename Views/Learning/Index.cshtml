@@ -1,13 +1,14 @@
 @model List<Neksara.Models.Topic>
 @{
     ViewData["Title"] = "E-Learning";
+    var ratings = ViewBag.Ratings as Dictionary<int, double>;
 }
 
 <h2 class="mb-4">📚 E-Learning</h2>
 
 <!-- ================= FILTER KATEGORI ================= -->
 <div class="mb-4">
-    <a href="/Learning" class="btn btn-outline-dark me-2">
+    <a href="/Learning" class="btn btn-outline-dark me-2 @(ViewBag.CurrentCategory == null ? "active" : "")">
         Semua
     </a>
 
@@ -24,6 +25,7 @@
 <div class="row">
 @foreach (var t in Model)
 {
+    var rating = ratings != null && ratings.ContainsKey(t.TopicId) ? ratings[t.TopicId] : 0.0;
     <div class="col-md-4 mb-4">
         <div class="card shadow-sm h-100">
             <img src="@t.TopicPicture" class="card-img-top">
@@ -39,18 +41,40 @@
                 <p class="card-text text-muted">
                     @(t.Description.Length > 120 ? t.Description.Substring(0,120) + "..." : t.Description)
                 </p>
-            </div>
 
-            <div class="card-footer bg-white border-0">
+                <!-- ⭐ RATING -->
+                <p class="mb-1">
+                    <strong>@rating.ToString("0.0")</strong> / 5
+                    <span class="text-warning ms-2">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= Math.Floor(rating))
+                            {
+                                <text>★</text>
+                            }
+                            else
+                            {
+                                <text>☆</text>
+                            }
+                        }
+                    </span>
+                </p>
+                <!-- 📅 PUBLISH DATE -->
+                <p class="text-muted mb-0">
+                   Date publish: @(t.PublishedAt.HasValue ? t.PublishedAt.Value.ToString("dd MMM yyyy") : "-")
+                </p>
+
+            <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
                 <a href="/Learning/Detail/@t.TopicId" class="btn btn-sm btn-primary">
                     📖 Pelajari
                 </a>
-                <span class="float-end text-muted">
+                <span class="text-muted">
                     👁 @t.ViewCount
                 </span>
             </div>
+            </div>
+            </div>
         </div>
-    </div>
 }
 </div>
 

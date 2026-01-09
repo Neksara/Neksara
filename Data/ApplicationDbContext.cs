@@ -200,6 +200,12 @@ namespace Neksara.Data
                   entity.Property(e => e.Description)
                         .IsRequired();
 
+                  entity.Property(e => e.TopicPicture)
+                      .HasMaxLength(255);
+
+                  entity.Property(e => e.CategoryPicture)
+                      .HasMaxLength(255);
+
                   entity.Property(e => e.VideoUrl)
                         .HasMaxLength(255);
 

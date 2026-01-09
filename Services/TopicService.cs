@@ -86,37 +86,43 @@ public class TopicService : ITopicService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Topic?> GetByIdAsync(int id)
-        => await _context.Topics.FindAsync(id);
+            public async Task<Topic?> GetByIdAsync(int id)
+                => await _context.Topics.FindAsync(id);
 
-    public async Task UpdateAsync(Topic model, IFormFile? image, string existingPicture)
-    {
-        var topic = await _context.Topics.FindAsync(model.TopicId);
-        if (topic == null) return;
-
-        topic.TopicName = model.TopicName;
-        topic.Description = model.Description;
-        topic.VideoUrl = model.VideoUrl;
-        topic.CategoryId = model.CategoryId;
-        topic.UpdatedAt = DateTime.Now;
-
-        if (image != null)
+            public async Task UpdateAsync(
+            Topic model,
+            IFormFile? image,
+            string? existingPicture)
         {
-            var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
-            var path = Path.Combine("wwwroot/images", fileName);
+            var topic = await _context.Topics.FindAsync(model.TopicId);
+            if (topic == null) return;
 
-            using var stream = new FileStream(path, FileMode.Create);
-            await image.CopyToAsync(stream);
+            topic.TopicName = model.TopicName;
+            topic.Description = model.Description;
+            topic.VideoUrl = model.VideoUrl;
+            topic.CategoryId = model.CategoryId;
+            topic.UpdatedAt = DateTime.Now;
 
-            topic.TopicPicture = "/images/" + fileName;
+            if (image != null)
+            {
+                var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+                var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                Directory.CreateDirectory(folder);
+
+                var path = Path.Combine(folder, fileName);
+                using var stream = new FileStream(path, FileMode.Create);
+                await image.CopyToAsync(stream);
+
+                topic.TopicPicture = "/images/" + fileName;
+            }
+            else if (!string.IsNullOrEmpty(existingPicture))
+            {
+                topic.TopicPicture = existingPicture;
+            }
+            // else: biarin kosong, gak masalah
+
+            await _context.SaveChangesAsync();
         }
-        else
-        {
-            topic.TopicPicture = existingPicture;
-        }
-
-        await _context.SaveChangesAsync();
-    }
 
     public async Task ArchiveAsync(int id)
     {
@@ -130,6 +136,7 @@ public class TopicService : ITopicService
         {
             TopicName = topic.TopicName,
             Description = topic.Description,
+            TopicPicture = topic.TopicPicture,
             VideoUrl = topic.VideoUrl,
             CategoryId = topic.CategoryId,
             CreatedAt = topic.CreatedAt,

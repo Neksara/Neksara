@@ -1,0 +1,140 @@
+@model List<Neksara.Models.Topic>
+@{
+    ViewData["Title"] = "E-Catalog";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="mb-3">📦 E-Katalog Konten</h3>
+
+<!-- FILTER -->
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <input name="search"
+               value="@ViewBag.Search"
+               class="form-control"
+               placeholder="Cari Topik / Kategori">
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary w-100">🔍 Cari</button>
+    </div>
+    <div class="col-md-2">
+        <select name="sort" class="form-control">
+            <option value="">Default</option>
+            <option value="az">A - Z</option>
+            <option value="za">Z - A</option>
+        </select>
+    </div>
+</form>
+
+<form method="post">
+
+    <!-- ACTION BUTTON -->
+    <div class="d-flex gap-2 mb-3">
+        <button type="button"
+                id="btnSelectAll"
+                class="btn btn-outline-secondary">
+            ☑ Select All
+        </button>
+
+        <button formaction="/AdminEcatalog/Publish"
+                class="btn btn-success">
+            🚀 Publish
+        </button>
+
+        <button formaction="/AdminEcatalog/Withdraw"
+                class="btn btn-warning">
+            ⏸ Withdraw
+        </button>
+
+        <button formaction="/AdminEcatalog/Delete"
+                class="btn btn-danger"
+                onclick="return confirm('Yakin hapus data terpilih?')">
+            🗑 Delete
+        </button>
+    </div>
+
+    <!-- TABLE -->
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th width="40"></th>
+                <th>Topik</th>
+                <th>Kategori</th>
+                <th>Created</th>
+                <th>Published</th>
+                <th>Status</th>
+                <th width="160">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+@foreach (var t in Model)
+{
+            <tr>
+                <td>
+                    <input type="checkbox"
+                           class="row-check"
+                           name="topicIds"
+                           value="@t.TopicId" />
+                </td>
+                <td>@t.TopicName</td>
+                <td>@t.Category?.CategoryName</td>
+                <td>@t.CreatedAt.ToString("dd MMM yyyy")</td>
+                <td>@(t.PublishedAt?.ToString("dd MMM yyyy") ?? "-")</td>
+                <td>
+                    @if (t.PublishedAt.HasValue)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Not Active</span>
+                    }
+                </td>
+                <td>
+                    <button type="button"
+                            class="btn btn-info btn-sm"
+                            onclick="openDetail(@t.TopicId)">
+                        👁 Detail
+                    </button>
+
+                    <a href="/Admin/EditTopic/@t.TopicId"
+                       class="btn btn-warning btn-sm">
+                        ✏️ Edit
+                    </a>
+                </td>
+            </tr>
+}
+        </tbody>
+    </table>
+</form>
+
+<!-- MODAL -->
+<div class="modal fade" id="detailModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content" id="modalContent"></div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // SELECT ALL
+    document.getElementById("btnSelectAll")
+        .addEventListener("click", function () {
+            const checks = document.querySelectorAll(".row-check");
+            const allChecked = [...checks].every(c => c.checked);
+            checks.forEach(c => c.checked = !allChecked);
+        });
+
+    // LOAD DETAIL MODAL
+    function openDetail(id) {
+        fetch('/AdminEcatalog/Detail/' + id)
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById("modalContent").innerHTML = html;
+                new bootstrap.Modal(
+                    document.getElementById("detailModal")
+                ).show();
+            });
+    }
+</script>
+}

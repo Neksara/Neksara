@@ -34,10 +34,13 @@
             </span>
         </p>
 
-        <p class="text-muted">
+        <p class="text-muted mb-1">
             👁 @Model.ViewCount kali dilihat
         </p>
 
+        <p class="text-muted mb-3">
+            Date publish: @(Model.PublishedAt.HasValue ? Model.PublishedAt.Value.ToString("dd MMM yyyy") : "-")
+        </p>
         <hr />
 
         @if (!string.IsNullOrEmpty(Model.VideoUrl))

@@ -33,6 +33,8 @@ builder.Services.AddControllersWithViews();
 // ===== SERVICE =====
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ITopicService, TopicService>();
+builder.Services.AddScoped<IAdminEcatalogService, AdminEcatalogService>();
+builder.Services.AddScoped<ILearningService, LearningService>();
 
 var app = builder.Build();
 
