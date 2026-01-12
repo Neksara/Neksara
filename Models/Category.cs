@@ -13,6 +13,8 @@ namespace Neksara.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public int ViewCount { get; set; } = 0;
+        public string Slug { get; set; } = string.Empty;
+
 
         
         public ICollection<Topic> Topics { get; set; } = new HashSet<Topic>();

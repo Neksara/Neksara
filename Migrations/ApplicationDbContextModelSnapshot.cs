@@ -41,6 +41,10 @@ namespace Neksara.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("AdminId");
 
                     b.ToTable("Admins");
@@ -139,6 +143,10 @@ namespace Neksara.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -263,7 +271,8 @@ namespace Neksara.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("IsApproved")
                         .ValueGeneratedOnAdd()
@@ -275,17 +284,17 @@ namespace Neksara.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<string>("Name")
+                    b.Property<string>("TestimoniName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Rating")
+                    b.Property<int>("TestimoniRating")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<string>("Role")
+                    b.Property<string>("TestimoniRole")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -321,6 +330,10 @@ namespace Neksara.Migrations
 
                     b.Property<DateTime?>("PublishedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TopicName")
                         .IsRequired()

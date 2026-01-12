@@ -1,41 +1,64 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Neksara.Models;
+using Neksara.Models.ViewModels;
+using Neksara.Services.Interfaces;
 
-namespace Neksara.Controllers;
-
-public class HomeController : Controller
+namespace Neksara.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public class HomeController : Controller
     {
-        _logger = logger;
-    }
+        private readonly ILogger<HomeController> _logger;
+        private readonly ICategoryService _categoryService;
+        private readonly ITopicService _topicService;
+        private readonly ITestimoniService _testimoniService;
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+        public HomeController(
+            ILogger<HomeController> logger,
+            ICategoryService categoryService,
+            ITopicService topicService,
+            ITestimoniService testimoniService)
+        {
+            _logger = logger;
+            _categoryService = categoryService;
+            _topicService = topicService;
+            _testimoniService = testimoniService;
+        }
 
-     public IActionResult Learning()
-    {
-        return View();
-    }
+        public async Task<IActionResult> Index()
+        {
 
-     public IActionResult About()
-    {
-        return View();
-    }
+            {
+                ViewBag.PopularCategories = await _categoryService.GetPopularAsync();
+                ViewBag.PopularTopics = await _topicService.GetPopularAsync();
+                ViewBag.Testimonials = await _testimoniService.GetPublishedAsync(null);
+            };
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+            return View();
+        }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        public IActionResult Learning()
+        {
+            return View();
+        }
+
+        public IActionResult About()
+        {
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
+        }
     }
 }

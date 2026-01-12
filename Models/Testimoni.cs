@@ -6,14 +6,20 @@ namespace Neksara.Models
     {
         [Key]
         public int TestimoniId { get; set; }
-        [Required]
-        public string Name { get; set; }
-        public string Role { get; set; }
-         public int Rating { get; set; } = 0;
-        public string Description { get; set; } = string.Empty;
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public bool IsApproved { get; set; } = false;
-        public bool IsVisible { get; set; } = true;
 
+        [Required]
+        public string TestimoniName { get; set; }
+
+        public string TestimoniRole { get; set; }
+
+        public int TestimoniRating { get; set; } = 0;
+
+        public string Description { get; set; } = string.Empty;
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public bool IsApproved { get; set; } = false;
+
+        public bool IsVisible { get; set; } = true;
     }
 }

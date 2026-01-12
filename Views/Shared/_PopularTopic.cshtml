@@ -1,0 +1,148 @@
+@using Neksara.Models
+@{
+    var topics = ViewBag.PopularTopics as List<Topic>;
+    int pageSize = 4;
+}
+
+<section class="py-5">
+    <div class="container position-relative">
+
+        <h4 class="fw-bold mb-4">
+            Topik <span class="text-primary">Paling Populer</span>
+        </h4>
+
+        @if (topics != null && topics.Any())
+        {
+            <div class="position-relative">
+
+                <!-- ================= CARD GRID ================= -->
+                <div class="row g-4" id="popularTopicGrid">
+                    @for (int i = 0; i < topics.Count; i++)
+                    {
+                        var t = topics[i];
+                        var rating = t.Feedbacks != null && t.Feedbacks.Any()
+                            ? Math.Round(t.Feedbacks.Average(f => f.Rating), 1)
+                            : 0;
+
+                        var count = t.Feedbacks?.Count ?? 0;
+
+                        <div class="col-md-3 popular-topic-item"
+                             data-index="@i">
+                            <div class="card h-100 shadow-sm">
+
+                                <img src="@t.TopicPicture"
+                                     class="card-img-top"
+                                     alt="@t.TopicName" />
+
+                                <div class="card-body">
+                                    <span class="badge bg-secondary mb-2">
+                                        @t.Category?.CategoryName
+                                    </span>
+
+                                    <h6 class="fw-bold mt-2">
+                                        @t.TopicName
+                                    </h6>
+
+                                    <!-- ⭐ RATING -->
+                                    <p class="mb-1">
+                                        <strong>@rating.ToString("0.0")</strong> / 5
+                                        <span class="text-warning ms-1">
+                                            @for (int s = 1; s <= 5; s++)
+                                            {
+                                                if (s <= Math.Floor(rating))
+                                                { <text>★</text> }
+                                                else
+                                                { <text>☆</text> }
+                                            }
+                                        </span>
+                                        <small class="text-muted">
+                                            (@count)
+                                        </small>
+                                    </p>
+
+                                    <small class="text-muted">
+                                        👁 @t.ViewCount Views
+                                    </small>
+                                </div>
+
+                                <div class="card-footer bg-white border-0">
+                                    <a href="/Learning/Detail/@t.TopicId"
+                                       class="btn btn-sm btn-primary w-100">
+                                        📖 Lihat Materi
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- ================= NAV BUTTON ================= -->
+                <button id="btnPrev"
+                        class="btn btn-outline-secondary position-absolute top-50 start-0 translate-middle-y">
+                    ◀
+                </button>
+
+                <button id="btnNext"
+                        class="btn btn-outline-secondary position-absolute top-50 end-0 translate-middle-y">
+                    ▶
+                </button>
+
+                <!-- ================= DOT PAGINATION ================= -->
+                <div class="d-flex justify-content-center mt-4 gap-2"
+                     id="topicDots">
+                </div>
+
+            </div>
+        }
+    </div>
+</section>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+    const items = document.querySelectorAll('.popular-topic-item');
+    const pageSize = @pageSize;
+    const totalPages = Math.ceil(items.length / pageSize);
+    let currentPage = 0;
+
+    const dotsContainer = document.getElementById('topicDots');
+
+    function renderDots() {
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < totalPages; i++) {
+            const dot = document.createElement('span');
+            dot.innerHTML = '●';
+            dot.style.cursor = 'pointer';
+            dot.style.fontSize = '14px';
+            dot.style.color = i === currentPage ? '#0d6efd' : '#ccc';
+            dot.onclick = () => goToPage(i);
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    function renderPage() {
+        items.forEach((item, index) => {
+            const start = currentPage * pageSize;
+            const end = start + pageSize;
+            item.style.display =
+                index >= start && index < end ? 'block' : 'none';
+        });
+        renderDots();
+    }
+
+    function goToPage(page) {
+        if (page < 0 || page >= totalPages) return;
+        currentPage = page;
+        renderPage();
+    }
+
+    document.getElementById('btnPrev').onclick = () => {
+        if (currentPage > 0) goToPage(currentPage - 1);
+    };
+
+    document.getElementById('btnNext').onclick = () => {
+        if (currentPage < totalPages - 1) goToPage(currentPage + 1);
+    };
+
+    renderPage();
+</script>

@@ -225,11 +225,15 @@ namespace Neksara.Data
                  {
                  entity.HasKey(cm => cm.TestimoniId);
 
-                 entity.Property(cm => cm.Name)
+                 entity.Property(cm => cm.TestimoniName)
                         .IsRequired()
                         .HasMaxLength(100);
 
-                 entity.Property(e => e.Rating)
+                 entity.Property(e => e.Description)
+                      .IsRequired()
+                      .HasMaxLength(500);
+
+                 entity.Property(e => e.TestimoniRating)
                         .HasDefaultValue(0);
 
                 entity.Property(e => e.IsApproved)
