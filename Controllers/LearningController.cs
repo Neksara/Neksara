@@ -17,6 +17,7 @@ namespace Neksara.Controllers
         public async Task<IActionResult> Categories()
         {
             var categories = await _service.GetCategoryCardsAsync();
+            
             return View(categories);
         }
 
