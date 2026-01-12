@@ -1,11 +1,11 @@
 using Neksara.Models;
-using System.Collections.Generic;
 
-namespace Neksara.ViewModels
+namespace Neksara.Models.ViewModels
 {
     public class HomeViewModel
     {
-        public List<Topic> PopularTopics { get; set; } = new List<Topic>();
-        public List<Category> Category { get; set; } = new List<Category>();
+        public List<Category> PopularCategories { get; set; } = new();
+        public List<Topic> PopularTopics { get; set; } = new();
+        public List<Testimoni> Testimonials { get; set; } = new();
     }
 }

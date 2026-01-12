@@ -1,0 +1,186 @@
+@model List<Neksara.Models.Testimoni>
+
+@if (Model == null || !Model.Any())
+{
+    <p class="text-muted text-center">Belum ada testimoni</p>
+    return;
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["Success"]
+        <button class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<section class="py-5 testimoni-modern">
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold">
+                    <span class="text-primary">Testimoni</span>
+                </h3>
+                <p class="text-muted mb-0">
+                    Testimoni dari user setelah menggunakan website ini
+                </p>
+            </div>
+
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#testimoniModal">
+                + Testimoni
+            </button>
+        </div>
+
+        <!-- SWIPER HORIZONTAL -->
+            <div class="position-relative">
+            <div class="swiper testimoniSwiper">
+                <div class="swiper-wrapper">
+
+                    @foreach (var t in Model)
+                    {
+                        <div class="swiper-slide">
+                            <div class="testimoni-card">                                
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="avatar-circle me-3">
+                                        @t.TestimoniName.Substring(0,1).ToUpper()
+                                    </div>
+                                    <div>
+                                        <strong>@t.TestimoniName</strong>
+                                        <div class="text-muted small">@t.TestimoniRole</div>
+                                    </div>
+                                    <div class="ms-auto text-warning">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <text>@(i <= t.TestimoniRating ? "★" : "☆")</text>
+                                        }
+                                    </div>
+                                </div>
+                                <p class="text-muted small mb-0">
+                                    @t.Description
+                                </p>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- NAVIGATION BUTTONS -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                
+                <!-- PAGINATION DOTS -->
+                <div class="swiper-pagination mt-4"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MODAL TAMBAH TESTIMONI -->
+<div class="modal fade" id="testimoniModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="Testimoni" asp-action="Create" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Testimoni</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input name="TestimoniName" class="form-control mb-2" placeholder="Nama" required />
+                    <input name="TestimoniRole" class="form-control mb-2" placeholder="Pekerjaan" />
+
+                    <div class="mb-2">
+                        <label>Rating</label>
+                        <select name="TestimoniRating" class="form-control">
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                <option value="@i">@i ⭐</option>
+                            }
+                        </select>
+                    </div>
+
+                    <textarea name="Description" class="form-control" placeholder="Komentar" required></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+new Swiper(".testimoniSwiper", {
+    slidesPerView: 3,       // Jumlah card yang terlihat horizontal
+    spaceBetween: 24,       // Jarak antar card
+    loop: false,            // Bisa geser ke akhir
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev"
+    },
+    pagination: {
+        el: ".swiper-pagination",
+        clickable: true
+    },
+    breakpoints: {          // Responsive
+        0: { slidesPerView: 1 },
+        768: { slidesPerView: 2 },
+        1200: { slidesPerView: 3 }
+    }
+});
+</script>
+
+<style>
+.testimoni-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    height: 100%;
+    box-shadow: 0 10px 30px rgba(0,0,0,.05);
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#4f46e5,#3b82f6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.swiper-slide {
+    height: auto;
+}
+
+.custom-nav {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #2563eb;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+
+.custom-nav::after {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.swiper-button-prev {
+    left: -10px;
+}
+.swiper-button-next {
+    right: -10px;
+}
+
+.swiper-pagination-bullet {
+    background: #cbd5e1;
+    opacity: 1;
+}
+.swiper-pagination-bullet-active {
+    background: #2563eb;
+}</style>

@@ -1,10 +1,10 @@
 @using Neksara.Models
-@model List<AdminFeedbackVM>
+@model List<Testimoni>
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    var testimonis = ViewBag.Testimonies as List<Testimoni>;
 }
+
 <h3>Testimoni</h3>
 
 <table class="table table-bordered">
@@ -12,54 +12,63 @@
         <tr>
             <th>Nama</th>
             <th>Pekerjaan</th>
-            <th>Comment</th>
+            <th>Komentar</th>
             <th>Rating</th>
+            <th>Status</th>
             <th>Action</th>
         </tr>
     </thead>
 
     <tbody>
-    @foreach (var f in Model)
+    @foreach (var t in Model)
     {
         <tr>
-            <td>@(string.IsNullOrEmpty(f.Name) ? "Anon" : f.Name)</td>
-            <td>@f.Role</td>
-            <td>@f.Description</td>
+            <td>@(string.IsNullOrEmpty(t.TestimoniName) ? "Anon" : t.TestimoniName)</td>
+            <td>@t.TestimoniRole</td>
+            <td>@t.Description</td>
 
             <td class="text-warning">
                 @for (int i = 1; i <= 5; i++)
                 {
-                    if (i <= f.Rating) { <text>★</text> }
-                    else { <text>☆</text> }
+                    <text>@(i <= t.TestimoniRating ? "★" : "☆")</text>
                 }
             </td>
 
             <td>
-                <form asp-action="Approve" method="post" class="d-inline">
-                    <input type="hidden" name="id" value="@f.FeedbackId" />
-                    <button class="btn btn-success btn-sm">Approve</button>
-                </form>
+                @if (t.IsApproved)
+                {
+                    <span class="badge bg-success">Approved</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning">Pending</span>
+                }
 
-                <form asp-action="Hide" method="post" class="d-inline">
-                    <input type="hidden" name="id" value="@f.FeedbackId" />
-                    <button class="btn btn-danger btn-sm">Hide</button>
+                @if (!t.IsVisible)
+                {
+                    <span class="badge bg-danger ms-1">Hidden</span>
+                }
+            </td>
+
+            <td>
+                @* Approve button hanya untuk pending *@
+                @if (!t.IsApproved)
+                {
+                    <form asp-action="Approve" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@t.TestimoniId" />
+                        <button class="btn btn-sm btn-success">Approve</button>
+                    </form>
+                }
+
+                @* Toggle visibility: hide/show *@
+                <form asp-action="ToggleVisibility" method="post" class="d-inline">
+                    <input type="hidden" name="id" value="@t.TestimoniId" />
+                    <button class="btn btn-sm @(t.IsVisible ? "btn-danger" : "btn-primary")">
+                        @(t.IsVisible ? "Hide" : "Show")
+                    </button>
                 </form>
             </td>
         </tr>
     }
     </tbody>
 </table>
-
-<nav>
-    <ul class="pagination justify-content-center">
-        @for (int i = 1; i <= ViewBag.TotalPages; i++)
-        {
-            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-                <a class="page-link"
-                   href="?page=@i&categoryId=@ViewBag.CategoryId">
-                    @i
-                </a>
-            </li>
-        }
-    </ul>
-</nav>

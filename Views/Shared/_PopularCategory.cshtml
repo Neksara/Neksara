@@ -1,0 +1,23 @@
+<section class="py-5 bg-light">
+    <div class="container">
+
+        <h4 class="fw-bold mb-4">
+            Kategori <span class="text-primary">Paling Populer</span>
+        </h4>
+
+        <div class="row g-3">
+            @foreach (var c in ViewBag.PopularCategories)
+            {
+                <div class="col-md-3">
+                  <a asp-controller="Category"
+                    asp-action="Detail"
+                    asp-route-id="@c.CategoryId"
+                    class="btn btn-outline-primary w-100">
+                        @c.CategoryName →
+                </a>
+                </div>
+            }
+        </div>
+
+    </div>
+</section>

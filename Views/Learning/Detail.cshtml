@@ -43,11 +43,22 @@
         </p>
         <hr />
 
-        @if (!string.IsNullOrEmpty(Model.VideoUrl))
+        @{
+        string? embedUrl = null;
+
+        if (!string.IsNullOrEmpty(Model.VideoUrl))
         {
-            <a href="@Model.VideoUrl" target="_blank" class="btn btn-danger mb-3">
-                ▶️ Tonton Video
-            </a>
+            embedUrl = Model.VideoUrl
+                .Replace("watch?v=", "embed/")
+                .Replace("youtu.be/", "www.youtube.com/embed/");
+        }
+        }
+
+        @if (embedUrl != null)
+        {
+            <div class="ratio ratio-16x9 mb-4">
+                <iframe src="@embedUrl" allowfullscreen></iframe>
+            </div>
         }
 
         <p style="white-space: pre-line;">
@@ -87,7 +98,7 @@
                     </div>
 
                     <div class="mb-2">
-                        <label>Role</label>
+                        <label>Pekerjaan</label>
                         <input name="Role" class="form-control" required />
                     </div>
 

@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using Neksara.Models;
 using Neksara.Data;
+using Neksara.Models;
 using Neksara.Services.Interfaces;
 using Neksara.ViewModels;
 
-namespace Neksara.Services.Interfaces;
+namespace Neksara.Services;
+
 public class TopicService : ITopicService
 {
     private readonly ApplicationDbContext _context;
@@ -14,31 +15,8 @@ public class TopicService : ITopicService
         _context = context;
     }
 
-    public async Task<TopicDetailVM?> GetDetailAsync(int topicId)
-    {
-        var topic = await _context.Topics
-            .Include(t => t.Category)
-            .FirstOrDefaultAsync(t =>
-                t.TopicId == topicId &&
-                !t.IsDeleted);
-
-        if (topic == null) return null;
-
-        return new TopicDetailVM
-        {
-            TopicId = topic.TopicId,
-            TopicName = topic.TopicName,
-            CategoryName = topic.Category!.CategoryName,
-
-            TopicPicture = topic.TopicPicture,
-            Description = topic.Description,
-            VideoUrl = topic.VideoUrl,
-
-            ViewCount = topic.ViewCount,
-            CreatedAt = topic.CreatedAt
-        };
-    }
-    public async Task<(List<Topic>, int)> GetPagedAsync(string search, int page, int pageSize)
+    public async Task<(List<Topic> Items, int TotalData)>
+        GetPagedAsync(string? search, string? sort, int page, int pageSize)
     {
         var query = _context.Topics
             .Include(t => t.Category)
@@ -47,22 +25,46 @@ public class TopicService : ITopicService
         if (!string.IsNullOrEmpty(search))
             query = query.Where(t => t.TopicName.Contains(search));
 
+        query = sort switch
+        {
+            "az" => query.OrderBy(t => t.TopicName),
+            "za" => query.OrderByDescending(t => t.TopicName),
+            "views" => query.OrderByDescending(t => t.ViewCount),
+            _ => query.OrderByDescending(t => t.CreatedAt)
+        };
+
         int total = await query.CountAsync();
 
-        var data = await query
-            .OrderByDescending(t => t.CreatedAt)
+        var items = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
 
-        return (data, total);
+        return (items, total);
     }
 
     public async Task<List<Category>> GetCategoriesAsync()
+        => await _context.Categories.Where(c => !c.IsDeleted).ToListAsync();
+
+    public async Task<TopicDetailVM?> GetDetailAsync(int topicId)
     {
-        return await _context.Categories
-            .Where(c => !c.IsDeleted)
-            .ToListAsync();
+        var topic = await _context.Topics
+            .Include(t => t.Category)
+            .FirstOrDefaultAsync(t => t.TopicId == topicId && !t.IsDeleted);
+
+        if (topic == null) return null;
+
+        return new TopicDetailVM
+        {
+            TopicId = topic.TopicId,
+            TopicName = topic.TopicName,
+            CategoryName = topic.Category!.CategoryName,
+            TopicPicture = topic.TopicPicture,
+            Description = topic.Description,
+            VideoUrl = topic.VideoUrl,
+            ViewCount = topic.ViewCount,
+            CreatedAt = topic.CreatedAt
+        };
     }
 
     public async Task CreateAsync(Topic model, IFormFile? image)
@@ -70,9 +72,11 @@ public class TopicService : ITopicService
         if (image != null)
         {
             var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
-            var path = Path.Combine("wwwroot/images", fileName);
+            var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+            Directory.CreateDirectory(folder);
 
-            using var stream = new FileStream(path, FileMode.Create);
+            using var stream =
+                new FileStream(Path.Combine(folder, fileName), FileMode.Create);
             await image.CopyToAsync(stream);
 
             model.TopicPicture = "/images/" + fileName;
@@ -86,50 +90,46 @@ public class TopicService : ITopicService
         await _context.SaveChangesAsync();
     }
 
-            public async Task<Topic?> GetByIdAsync(int id)
-                => await _context.Topics.FindAsync(id);
+    public async Task<Topic?> GetByIdAsync(int id)
+        => await _context.Topics.FindAsync(id);
 
-            public async Task UpdateAsync(
-            Topic model,
-            IFormFile? image,
-            string? existingPicture)
+    public async Task UpdateAsync(
+        Topic model,
+        IFormFile? image,
+        string? existingPicture)
+    {
+        var topic = await _context.Topics.FindAsync(model.TopicId);
+        if (topic == null) return;
+
+        topic.TopicName = model.TopicName;
+        topic.Description = model.Description;
+        topic.VideoUrl = model.VideoUrl;
+        topic.CategoryId = model.CategoryId;
+        topic.UpdatedAt = DateTime.Now;
+
+        if (image != null)
         {
-            var topic = await _context.Topics.FindAsync(model.TopicId);
-            if (topic == null) return;
+            var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+            var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+            Directory.CreateDirectory(folder);
 
-            topic.TopicName = model.TopicName;
-            topic.Description = model.Description;
-            topic.VideoUrl = model.VideoUrl;
-            topic.CategoryId = model.CategoryId;
-            topic.UpdatedAt = DateTime.Now;
+            using var stream =
+                new FileStream(Path.Combine(folder, fileName), FileMode.Create);
+            await image.CopyToAsync(stream);
 
-            if (image != null)
-            {
-                var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
-                var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
-                Directory.CreateDirectory(folder);
-
-                var path = Path.Combine(folder, fileName);
-                using var stream = new FileStream(path, FileMode.Create);
-                await image.CopyToAsync(stream);
-
-                topic.TopicPicture = "/images/" + fileName;
-            }
-            else if (!string.IsNullOrEmpty(existingPicture))
-            {
-                topic.TopicPicture = existingPicture;
-            }
-            // else: biarin kosong, gak masalah
-
-            await _context.SaveChangesAsync();
+            topic.TopicPicture = "/images/" + fileName;
         }
+        else if (!string.IsNullOrEmpty(existingPicture))
+        {
+            topic.TopicPicture = existingPicture;
+        }
+
+        await _context.SaveChangesAsync();
+    }
 
     public async Task ArchiveAsync(int id)
     {
-        var topic = await _context.Topics
-            .Include(t => t.Category)
-            .FirstOrDefaultAsync(t => t.TopicId == id);
-
+        var topic = await _context.Topics.FirstOrDefaultAsync(t => t.TopicId == id);
         if (topic == null) return;
 
         _context.ArchiveTopics.Add(new ArchiveTopic
@@ -146,17 +146,29 @@ public class TopicService : ITopicService
 
         _context.Topics.Remove(topic);
         await _context.SaveChangesAsync();
-
-        
     }
-            public async Task HardDeleteArchiveAsync(int archiveTopicId)
-        {
-            var archive = await _context.ArchiveTopics
-                .FirstOrDefaultAsync(a => a.ArchiveTopicId == archiveTopicId);
 
-            if (archive == null) return;
+    public async Task HardDeleteArchiveAsync(int archiveTopicId)
+    {
+        var archive = await _context.ArchiveTopics
+            .FirstOrDefaultAsync(a => a.ArchiveTopicId == archiveTopicId);
 
-            _context.ArchiveTopics.Remove(archive);
-            await _context.SaveChangesAsync();
-        }
+        if (archive == null) return;
+
+        _context.ArchiveTopics.Remove(archive);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<Topic>> GetPopularAsync(int take = 8)
+    {
+        return await _context.Topics
+            .Include(t => t.Category)
+            .Include(t => t.Feedbacks
+                .Where(f => f.IsApproved && f.IsVisible))
+            .Where(t => !t.IsDeleted)
+            .OrderByDescending(t => t.ViewCount)
+            .Take(take)
+            .ToListAsync();
+    }
+
 }

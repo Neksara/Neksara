@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Neksara.Models;
 using Neksara.Services;
 
 namespace Neksara.Controllers
@@ -7,37 +6,28 @@ namespace Neksara.Controllers
     public class LearningController : Controller
     {
         private readonly ILearningService _service;
-        private const int PageSize = 6;
+        private const int PageSize = 8;
 
         public LearningController(ILearningService service)
         {
             _service = service;
         }
 
-        // ================= LIST + FILTER + PAGINATION =================
-        public async Task<IActionResult> Index(int? categoryId, int page = 1)
+        // ================= KATEGORI PAGE =================
+        public async Task<IActionResult> Categories()
         {
-            var categories = await _service.GetCategoriesAsync();
-            var (topics, totalPages) = await _service.GetTopicsAsync(categoryId, page, PageSize);
-
-            // Hitung rating per topik
-            var ratingsDict = topics.ToDictionary(
-                t => t.TopicId,
-                t => t.Feedbacks != null && t.Feedbacks.Any()
-                     ? t.Feedbacks.Average(f => f.Rating)
-                     : 0.0
-            );
-
-            ViewBag.Category = categories;
-            ViewBag.CurrentCategory = categoryId;
-            ViewBag.CurrentPage = page;
-            ViewBag.TotalPages = totalPages;
-            ViewBag.Ratings = ratingsDict;
-
-            return View(topics);
+            var categories = await _service.GetCategoryCardsAsync();
+            return View(categories);
         }
 
-        // ================= DETAIL TOPIK =================
+        // ================= TOPIC PAGE =================
+        public async Task<IActionResult> Topics(int? categoryId, int page = 1)
+        {
+            var vm = await _service.GetTopicCardsAsync(categoryId, page, PageSize);
+            return View(vm);
+        }
+
+        // ================= DETAIL TOPIC =================
         public async Task<IActionResult> Detail(int id)
         {
             var topic = await _service.GetTopicDetailAsync(id);

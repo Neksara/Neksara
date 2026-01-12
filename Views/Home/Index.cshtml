@@ -2,60 +2,8 @@
     ViewData["Title"] = "Home";
 }
 
-<section class="container py-5">
-    <div class="row align-items-center g-5">
-        <div class="col-lg-6">
-            <h1 class="display-5 fw-bold mb-3">
-                Belajar Digital Skill  
-                <span class="text-primary">Tanpa Ribet</span>
-            </h1>
+<partial name="_HeroSection" />
+<partial name="_PopularCategory" />
+<partial name="_PopularTopic" />
+<partial name="_Testimonial" model="ViewBag.Testimonials" />
 
-            <p class="lead text-muted mb-4">
-                Neksara adalah platform e-learning modern untuk belajar teknologi,
-                pengembangan diri, dan skill masa depan.
-            </p>
-
-            <div class="d-flex gap-3">
-                <a href="/Learning/Index" class="btn btn-primary btn-lg px-4">
-                    🚀 Mulai Belajar
-                </a>
-                <a href="/Home/About" class="btn btn-outline-secondary btn-lg px-4">
-                    Tentang Kami
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="bg-white py-5">
-    <div class="container">
-        <div class="row text-center g-4">
-            <div class="col-md-4">
-                <div class="p-4 shadow-sm rounded bg-light h-100">
-                    <h5 class="fw-bold">📚 Materi Terstruktur</h5>
-                    <p class="text-muted">
-                        Topik rapi, kategori jelas, mudah dipahami.
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="p-4 shadow-sm rounded bg-light h-100">
-                    <h5 class="fw-bold">🎥 Video & Artikel</h5>
-                    <p class="text-muted">
-                        Belajar lewat teks dan video berkualitas.
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="p-4 shadow-sm rounded bg-light h-100">
-                    <h5 class="fw-bold">🚀 Skill Siap Pakai</h5>
-                    <p class="text-muted">
-                        Cocok buat pemula sampai advance.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
