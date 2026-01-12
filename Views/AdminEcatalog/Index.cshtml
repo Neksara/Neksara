@@ -18,12 +18,15 @@
         <button class="btn btn-primary w-100">🔍 Cari</button>
     </div>
     <div class="col-md-2">
-        <select name="sort" class="form-control">
+        <select name="sort"
+            class="form-control"
+            onchange="this.form.submit()">
             <option value="">Default</option>
-            <option value="az">A - Z</option>
-            <option value="za">Z - A</option>
+            <option value="az" selected="@(ViewBag.Sort == "az")">A - Z</option>
+            <option value="za" selected="@(ViewBag.Sort == "za")">Z - A</option>
         </select>
     </div>
+    <input type="hidden" name="search" value="@ViewBag.Search" />
 </form>
 
 <form method="post">

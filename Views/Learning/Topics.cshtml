@@ -1,0 +1,151 @@
+@model Neksara.ViewModels.TopicListVM
+@{
+    ViewData["Title"] = "Topik E-Learning";
+}
+<h2 class="fw-bold mb-4">📘 Topik Pembelajaran</h2>
+
+<!-- ================= FILTER ================= -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <input type="text"
+               id="searchInput"
+               class="form-control"
+               placeholder="🔍 Cari topik..." />
+    </div>
+
+    <div class="col-md-3">
+        <select id="sortSelect" class="form-select">
+            <option value="popular">🔥 Terpopuler</option>
+            <option value="rating">⭐ Rating Tertinggi</option>
+            <option value="az">A - Z</option>
+            <option value="za">Z - A</option>
+        </select>
+    </div>
+</div>
+
+<!-- ================= CARD GRID ================= -->
+<div class="row g-4" id="topicGrid">
+@foreach (var t in Model.Topics)
+{
+    <div class="col-md-3 topic-item"
+         data-name="@t.TopicName"
+         data-rating="@t.Rating"
+         data-view="@t.ViewCount">
+
+        <div class="card h-100 shadow-sm">
+
+            <img src="@t.TopicPicture"
+                 class="card-img-top"
+                 alt="@t.TopicName"
+                 style="height:180px; object-fit:cover;" />
+
+            <div class="card-body">
+
+                <span class="badge bg-secondary mb-2">
+                    @t.CategoryName
+                </span>
+
+                <h6 class="fw-bold mt-2">@t.TopicName</h6>
+
+                <!-- ⭐ RATING -->
+                <p class="mb-1">
+                    <strong>@t.Rating.ToString("0.0")</strong> / 5
+                    <span class="text-warning ms-1">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= Math.Floor(t.Rating))
+                            { <text>★</text> }
+                            else
+                            { <text>☆</text> }
+                        }
+                    </span>
+                    <small class="text-muted">
+                        (@t.ReviewCount)
+                    </small>
+                </p>
+
+                <small class="text-muted">
+                    👁 @t.ViewCount views
+                </small>
+                    <p class="text-muted mb-3">
+                    Date publish: @(t.PublishedAt.HasValue ? t.PublishedAt.Value.ToString("dd MMM yyyy") : "-")
+                    </p>
+            </div>
+
+            <div class="card-footer bg-white border-0">
+                <a href="/Learning/Detail/@t.TopicId"
+                   class="btn btn-sm btn-primary w-100">
+                    📖 Pelajari
+                </a>
+            </div>
+
+        </div>
+    </div>
+}
+</div>
+
+<!-- ================= PAGINATION ================= -->
+@if (Model.TotalPages > 1)
+{
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       href="/Learning/Topics?page=@i&categoryId=@Model.CurrentCategory">
+                        @i
+                    </a>
+                </li>
+            }
+
+        </ul>
+    </nav>
+}
+
+<!-- ================= SCRIPT ================= -->
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    const items = [...document.querySelectorAll('.topic-item')];
+    const grid = document.getElementById('topicGrid');
+
+    // SEARCH
+    searchInput.addEventListener('keyup', () => {
+        const keyword = searchInput.value.toLowerCase();
+        items.forEach(item => {
+            const name = item.dataset.name.toLowerCase();
+            item.style.display = name.includes(keyword) ? 'block' : 'none';
+        });
+    });
+
+    // SORT
+    sortSelect.addEventListener('change', () => {
+        let sorted = [];
+
+        switch (sortSelect.value) {
+            case 'rating':
+                sorted = items.sort((a, b) =>
+                    b.dataset.rating - a.dataset.rating);
+                break;
+
+            case 'az':
+                sorted = items.sort((a, b) =>
+                    a.dataset.name.localeCompare(b.dataset.name));
+                break;
+
+            case 'za':
+                sorted = items.sort((a, b) =>
+                    b.dataset.name.localeCompare(a.dataset.name));
+                break;
+
+            default: // popular
+                sorted = items.sort((a, b) =>
+                    b.dataset.view - a.dataset.view);
+        }
+
+        grid.innerHTML = '';
+        sorted.forEach(i => grid.appendChild(i));
+    });
+</script>

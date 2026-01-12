@@ -1,0 +1,32 @@
+@model Neksara.ViewModels.TopicCardVM
+
+<div class="card h-100 shadow-sm">
+    <img src="@Model.TopicPicture" class="card-img-top">
+
+    <div class="card-body">
+        <span class="badge bg-secondary">@Model.CategoryName</span>
+
+        <h6 class="fw-bold mt-2">@Model.TopicName</h6>
+
+        <p class="mb-1">
+            <strong>@Model.Rating</strong> / 5
+            <span class="text-warning">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    if (i <= Math.Floor(Model.Rating)) { <text>★</text> }
+                    else { <text>☆</text> }
+                }
+            </span>
+            <small class="text-muted">(@Model.ReviewCount)</small>
+        </p>
+
+        <small class="text-muted">👁 @Model.ViewCount</small>
+    </div>
+
+    <div class="card-footer bg-white border-0">
+        <a href="/Learning/Detail/@Model.TopicId"
+           class="btn btn-sm btn-primary w-100">
+            📖 Pelajari
+        </a>
+    </div>
+</div>

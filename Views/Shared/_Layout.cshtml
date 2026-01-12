@@ -4,63 +4,168 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Neksara</title>
-    <script type="importmap"></script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Neksara.styles.css" asp-append-version="true" />
+
+    <style>
+        .navbar-custom {
+            background-color: #3f7f8;
+        }
+
+        .navbar-custom .nav-link,
+        .navbar-custom .navbar-brand,
+        .navbar-custom .dropdown-item {
+            color: #08c0d1;
+        }
+
+        .navbar-custom .nav-link:hover,
+        .navbar-custom .dropdown-item:hover {
+            color: #eaeaea;
+            background-color: transparent;
+        }
+
+        .dropdown-menu {
+            background-color: #3f7f8;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Neksara</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Learning" asp-action="Index">E-Learning</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="contact">Contact Us</a>
-                        </li>
-                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                        {
-                        <li class="nav-item">
-                        <a class="btn btn-dark px-4" href="/Admin">Admin Panel</a>
-                          </li>
-                         }
-                         else
-                         {
-                         <li class="nav-item">
-                        <a class="btn btn-outline-dark px-4" href="/Auth/Login">Login</a>
-                        </li>
-                        }
-                    </ul>
-                                    
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+<header>
+    <nav class="navbar navbar-expand-sm navbar-custom shadow-sm mb-3">
+        <div class="container-fluid">
 
-    <!-- Footer Component -->
-    <partial name="_Footer" />
-    
-    @await RenderSectionAsync("Scripts", required: false)
-    
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+            <!-- LOGO -->
+            <a class="navbar-brand d-flex align-items-center gap-2"
+               asp-controller="Home"
+               asp-action="Index">
+                <img src="/assets/img/Neksara - logo New.png"
+                     alt="Neksara Logo"
+                     height="40" />
+                <strong>Neksara</strong>
+            </a>
+
+            <!-- TOGGLER -->
+            <button class="navbar-toggler text-white"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           asp-controller="Home"
+                           asp-action="Index">
+                            Home
+                        </a>
+                    </li>
+
+                    <!-- DROPDOWN E-LEARNING -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"
+                           href="#"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            E-Learning
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item"
+                                   asp-controller="Learning"
+                                   asp-action="Categories">
+                                    📂 Kategori
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                   asp-controller="Learning"
+                                   asp-action="Topics">
+                                    📘 Topic
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="contactLink">
+                                Contact Us
+                        </a>                    
+                    </li>
+
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="btn btn-light fw-bold px-4"
+                               href="/Admin">
+                                Admin Panel
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light px-4"
+                               href="/Auth/Login">
+                                Login
+                            </a>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+<!-- Footer -->
+<partial name="_Footer" />
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
+<script>
+    const contactLink = document.getElementById("contactLink");
+    const footer = document.getElementById("siteFooter");
+
+    // Smooth scroll ketika klik
+    contactLink.addEventListener("click", function(e) {
+        e.preventDefault();
+        if (footer) {
+            const offset = 70; // tinggi navbar
+            const topPos = footer.getBoundingClientRect().top + window.pageYOffset - offset;
+            window.scrollTo({ top: topPos, behavior: 'smooth' });
+        }
+    });
+
+    // Auto highlight menu ketika scroll
+    window.addEventListener("scroll", function() {
+        if (!footer) return;
+
+        const offset = 80; // toleransi sebelum footer
+        const scrollPos = window.pageYOffset + offset;
+        const footerTop = footer.offsetTop;
+
+        if (scrollPos >= footerTop) {
+            contactLink.classList.add("active");
+        } else {
+            contactLink.classList.remove("active");
+        }
+    });
+</script>
 </body>
 </html>

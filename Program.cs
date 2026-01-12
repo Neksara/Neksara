@@ -28,13 +28,26 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddAuthorization();
+
+// ===== CONTROLLERS & VIEWS =====
 builder.Services.AddControllersWithViews();
 
-// ===== SERVICE =====
+// ===== CACHE & SESSION =====
+builder.Services.AddDistributedMemoryCache(); // wajib kalau mau pakai session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // session berlaku 30 menit
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// ===== REGISTER SERVICES =====
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddScoped<IAdminEcatalogService, AdminEcatalogService>();
 builder.Services.AddScoped<ILearningService, LearningService>();
+builder.Services.AddScoped<IAdminTestimoniService, AdminTestimoniService>();
+builder.Services.AddScoped<ITestimoniService, TestimoniService>();
 
 var app = builder.Build();
 
@@ -48,6 +61,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+// **PASTIKAN SESSION DIPANGGIL SEBELUM AUTHENTICATION**
+app.UseSession();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

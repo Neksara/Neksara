@@ -5,21 +5,30 @@
 
 <h4 class="mb-3">Daftar Kategori</h4>
 
-<form method="get" class="mb-3 d-flex gap-2">
+<form method="get" class="mb-3 d-flex gap-2 align-items-center">
     <input name="search"
            class="form-control"
-           placeholder="Cari Kategori..."
-           value="@ViewBag.CurrentSearch" />
+           placeholder="Cari Category..."
+           value="@ViewBag.Search" />
+
+    <select name="sort"
+            class="form-select w-auto"
+            onchange="this.form.submit()">
+        <option value="">Default</option>
+        <option value="az" selected="@(ViewBag.Sort == "az")">A - Z</option>
+        <option value="za" selected="@(ViewBag.Sort == "za")">Z - A</option>
+        <option value="views" selected="@(ViewBag.Sort == "views")">View Terbanyak</option>
+    </select>
 
     <button class="btn btn-primary">Cari</button>
 
-    <a href="/Admin/CreateCategory" class="btn btn-dark">
-        + Tambah Kategori
+    <a href="/Admin/CreateCategory" class="btn btn-success ms-auto">
+        + Tambah Category
     </a>
 </form>
 
 <table class="table table-bordered table-striped align-middle">
-    <thead class="table-dark">
+    <thead class="text-muted">
         <tr>
             <th>Kategori</th>
             <th>Topik</th>

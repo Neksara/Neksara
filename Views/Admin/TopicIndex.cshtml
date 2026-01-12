@@ -3,53 +3,96 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<form method="get" class="mb-3 d-flex">
-    <input name="search" class="form-control me-2"
+<h4 class="mb-3">Daftar Topik</h4>
+
+<form method="get" class="mb-3 d-flex gap-2 align-items-center">
+    <input name="search"
+           class="form-control"
            placeholder="Cari Topik..."
            value="@ViewBag.Search" />
+
+    <select name="sort"
+            class="form-select w-auto"
+            onchange="this.form.submit()">
+        <option value="">Default</option>
+        <option value="az" selected="@(ViewBag.Sort == "az")">A - Z</option>
+        <option value="za" selected="@(ViewBag.Sort == "za")">Z - A</option>
+        <option value="views" selected="@(ViewBag.Sort == "views")">View Terbanyak</option>
+    </select>
+
     <button class="btn btn-primary">Cari</button>
-    <a href="/Admin/CreateTopic" class="btn btn-success ms-2">
+
+    <a href="/Admin/CreateTopic" class="btn btn-success ms-auto">
         + Tambah Topik
     </a>
 </form>
 
-<h3>Daftar Topik</h3>
+<div class="table-responsive">
+    <table class="table align-middle border-0"
+           style="background:#f9f9f7; border-radius:12px; overflow:hidden;">
+        <thead style="background:#efefeb;">
+            <tr>
+                <th>Topik</th>
+                <th>Kategori</th>
+                <th class="text-center">Views</th>
+                <th>Tanggal Produksi</th>
+                <th>Tanggal Update</th>
+                <th style="width:210px">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var t in Model)
+        {
+            <tr style="border-bottom:1px solid #e6e6e6">
+                <td>
+                    <strong>@t.TopicName</strong>
+                </td>
+                <td>
+                    <span class="badge bg-secondary">
+                        @t.Category?.CategoryName
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span class="badge bg-info">
+                        @t.ViewCount Views
+                    </span>
+                </td>
+                <td>
+                    @t.CreatedAt.ToString("dd MMM yyyy")
+                </td>
+                <td>
+                    @(t.UpdatedAt.HasValue
+                        ? t.UpdatedAt.Value.ToString("dd MMM yyyy")
+                        : "-")
+                </td>
+                <td class="d-flex gap-1">
+                    <a href="/Admin/TopicDetail/@t.TopicId"
+                       class="btn btn-sm btn-primary">
+                        Detail
+                    </a>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Nama Topik</th>
-            <th>Kategori</th>
-            <th>Views</th>
-            <th>Tanggal Produksi</th>
-            <th>Tanggal Update</th>
-            <th width="200px">Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var t in Model)
-    {
-        <tr>
-            <td>@t.TopicName</td>
-            <td>@t.Category?.CategoryName</td>
-            <td>@t.ViewCount Views</td>
-            <td>@t.CreatedAt</td>
-            <td>@t.UpdatedAt</td>
-            <td>
-                <a href="/Admin/TopicDetail/@t.TopicId" class="btn btn-sm btn-primary">Detail</a>                   
-                <a href="/Admin/EditTopic/@t.TopicId" class="btn btn-sm btn-warning">Edit</a>
-                <form asp-action="DeleteTopic" asp-route-id="@t.TopicId"
-                      method="post" class="d-inline">
-                    <button class="btn btn-sm btn-danger"
-                            onclick="return confirm('Yakin hapus topik?')">
-                        Delete
-                    </button>
-                </form>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+                    <a href="/Admin/EditTopic/@t.TopicId"
+                       class="btn btn-sm btn-warning">
+                        Edit
+                    </a>
+
+                    <form asp-action="DeleteTopic"
+                          asp-route-id="@t.TopicId"
+                          method="post"
+                          class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-sm btn-danger"
+                                onclick="return confirm('Yakin hapus topik?')">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
 <!-- PAGINATION -->
 <nav class="mt-4">
     <ul class="pagination justify-content-center">
@@ -57,7 +100,7 @@
         {
             <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
                 <a class="page-link"
-                   href="?page=@i&search=@ViewBag.CurrentSearch">
+                   href="?page=@i&search=@ViewBag.Search&sort=@ViewBag.Sort">
                     @i
                 </a>
             </li>

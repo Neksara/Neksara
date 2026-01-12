@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Neksara.Data;
 using Neksara.Models;
+using Neksara.ViewModels;
 
 namespace Neksara.Services
 {
@@ -13,44 +14,96 @@ namespace Neksara.Services
             _context = context;
         }
 
-        public async Task<List<Category>> GetCategoriesAsync()
+        // ================= CATEGORY CARD =================
+        public async Task<List<CategoryCardVM>> GetCategoryCardsAsync()
         {
             return await _context.Categories
                 .Where(c => !c.IsDeleted)
+                .Select(c => new CategoryCardVM
+                {
+                    CategoryId = c.CategoryId,
+                    CategoryName = c.CategoryName,
+                    CategoryPicture = c.CategoryPicture,
+                    Description = c.Description,
+                    TotalTopics = c.Topics
+                        .Count(t => !t.IsDeleted && t.PublishedAt != null)
+                })
+                .OrderBy(c => c.CategoryName)
                 .ToListAsync();
         }
 
-        public async Task<(List<Topic> Topics, int TotalPages)> GetTopicsAsync(int? categoryId, int page, int pageSize)
+        // ================= TOPIC CARD =================
+        public async Task<TopicListVM> GetTopicCardsAsync(
+            int? categoryId, int page, int pageSize)
         {
             var query = _context.Topics
-                .Include(t => t.Category)
-                .Include(t => t.Feedbacks)
-                .Where(t => !t.IsDeleted && t.PublishedAt != default)
-                .AsQueryable();
+                .Where(t => !t.IsDeleted && t.PublishedAt != null);
 
             if (categoryId.HasValue)
-                query = query.Where(t => t.CategoryId == categoryId.Value);
+                query = query.Where(t => t.CategoryId == categoryId);
 
-            int totalItems = await query.CountAsync();
-            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            int total = await query.CountAsync();
 
             var topics = await query
-                .OrderByDescending(t => t.PublishedAt)
+                .OrderByDescending(t => t.ViewCount)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
+                .Select(t => new TopicCardVM
+                {
+                    TopicId = t.TopicId,
+                    TopicName = t.TopicName,
+                    TopicPicture = t.TopicPicture,
+                    CategoryName = t.Category!.CategoryName,
+                    ViewCount = t.ViewCount,
+                    PublishedAt = t.PublishedAt,
+
+                    // 💬 JUMLAH REVIEW (FIX)
+                    ReviewCount = _context.Feedbacks.Count(f =>
+                        f.TargetType == "Topic" &&
+                        f.TargetId == t.TopicId &&
+                        f.IsApproved &&
+                        f.IsVisible
+                    ),
+
+                    // ⭐ RATING RATA-RATA (FIX)
+                    Rating = _context.Feedbacks
+                        .Where(f =>
+                            f.TargetType == "Topic" &&
+                            f.TargetId == t.TopicId &&
+                            f.IsApproved &&
+                            f.IsVisible
+                        )
+                        .Any()
+                            ? _context.Feedbacks
+                                .Where(f =>
+                                    f.TargetType == "Topic" &&
+                                    f.TargetId == t.TopicId &&
+                                    f.IsApproved &&
+                                    f.IsVisible
+                                )
+                                .Average(f => f.Rating)
+                            : 0
+                })
                 .ToListAsync();
 
-            return (topics, totalPages);
+            return new TopicListVM
+            {
+                Topics = topics,
+                CurrentCategory = categoryId,
+                CurrentPage = page,
+                TotalPages = (int)Math.Ceiling(total / (double)pageSize)
+            };
         }
 
+        // ================= DETAIL =================
         public async Task<Topic?> GetTopicDetailAsync(int topicId)
         {
             return await _context.Topics
                 .Include(t => t.Category)
-                .Include(t => t.Feedbacks)
-                .FirstOrDefaultAsync(t => t.TopicId == topicId &&
-                                          !t.IsDeleted &&
-                                          t.PublishedAt != default);
+                .FirstOrDefaultAsync(t =>
+                    t.TopicId == topicId &&
+                    !t.IsDeleted &&
+                    t.PublishedAt != null);
         }
 
         public async Task IncrementViewCountAsync(Topic topic)
@@ -62,10 +115,11 @@ namespace Neksara.Services
         public async Task<double> GetAverageRatingAsync(int topicId)
         {
             var avg = await _context.Feedbacks
-                .Where(f => f.TargetType == "Topic" &&
-                            f.TargetId == topicId &&
-                            f.IsApproved &&
-                            f.IsVisible)
+                .Where(f =>
+                    f.TargetType == "Topic" &&
+                    f.TargetId == topicId &&
+                    f.IsApproved &&
+                    f.IsVisible)
                 .AverageAsync(f => (double?)f.Rating) ?? 0;
 
             return Math.Round(avg, 1);
