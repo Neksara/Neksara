@@ -47,17 +47,56 @@
 
         if (!string.IsNullOrEmpty(Model.VideoUrl))
         {
-            embedUrl = Model.VideoUrl
-                .Replace("watch?v=", "embed/")
-                .Replace("youtu.be/", "www.youtube.com/embed/");
+            var url = Model.VideoUrl.Trim();
+
+            // If admin pasted a full iframe HTML, render it raw (admin-only feature)
+            var trimmed = url.TrimStart();
+            if (trimmed.StartsWith("<iframe", System.StringComparison.OrdinalIgnoreCase))
+            {
+                embedUrl = null; // signal to render raw HTML below
+            }
+            else if (url.Contains("youtube.com") || url.Contains("youtu.be"))
+            {
+                embedUrl = url
+                    .Replace("watch?v=", "embed/")
+                    .Replace("youtu.be/", "www.youtube.com/embed/");
+
+                if (!embedUrl.StartsWith("http", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    embedUrl = "https://" + embedUrl;
+                }
+            }
+            else if (url.Contains("wordwall.net"))
+            {
+                var match = System.Text.RegularExpressions.Regex.Match(url, "/resource/(\\d+)");
+                if (match.Success)
+                {
+                    var id = match.Groups[1].Value;
+                    embedUrl = $"https://wordwall.net/resource/{id}/embed";
+                }
+            }
+            else
+            {
+                embedUrl = url;
+            }
         }
         }
 
-        @if (embedUrl != null)
+        @if (!string.IsNullOrEmpty(Model.VideoUrl))
         {
-            <div class="ratio ratio-16x9 mb-4">
-                <iframe src="@embedUrl" allowfullscreen></iframe>
-            </div>
+            var trimmed = Model.VideoUrl.TrimStart();
+            if (trimmed.StartsWith("<iframe", System.StringComparison.OrdinalIgnoreCase))
+            {
+                <div class="ratio ratio-16x9 mb-4">
+                    @Html.Raw(Model.VideoUrl)
+                </div>
+            }
+            else if (embedUrl != null)
+            {
+                <div class="ratio ratio-16x9 mb-4">
+                    <iframe src="@embedUrl" allowfullscreen></iframe>
+                </div>
+            }
         }
 
         <p style="white-space: pre-line;">

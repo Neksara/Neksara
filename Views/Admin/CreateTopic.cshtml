@@ -59,10 +59,12 @@
     </div>
 
     <div class="mb-3">
-        <label class="form-label fw-bold">Video URL</label>
-        <input asp-for="VideoUrl"
-               class="form-control"
-               placeholder="https://youtube.com/..." />
+        <label class="form-label fw-bold">Video URL / Embed</label>
+        <textarea asp-for="VideoUrl"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Paste a video URL (YouTube, Wordwall) or a full <iframe> embed here"></textarea>
+        <small class="text-muted">Admin only: you may paste a full &lt;iframe&gt; embed. Scripts will be stripped.</small>
         <span asp-validation-for="VideoUrl" class="text-danger"></span>
     </div>
 
