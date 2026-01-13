@@ -14,10 +14,19 @@ namespace Neksara.Controllers
         }
 
         // ================= KATEGORI PAGE =================
-        public async Task<IActionResult> Categories()
+        public async Task<IActionResult> Categories(int? categoryId)
         {
             var categories = await _service.GetCategoryCardsAsync();
-            
+
+            if (categoryId.HasValue)
+            {
+                categories = categories
+                    .Where(c => c.CategoryId == categoryId.Value)
+                    .ToList();
+            }
+
+            ViewBag.SelectedCategoryId = categoryId;
+
             return View(categories);
         }
 
@@ -39,5 +48,6 @@ namespace Neksara.Controllers
 
             return View(topic);
         }
+
     }
 }

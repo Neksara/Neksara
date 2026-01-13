@@ -1,39 +1,70 @@
 @model List<Neksara.ViewModels.CategoryCardVM>
 @{
     ViewData["Title"] = "Kategori E-Learning";
+    int? selectedId = ViewBag.SelectedCategoryId as int?;
 }
 
 <h2 class="fw-bold mb-4">📂 Kategori E-Learning</h2>
 
-<!-- ================= SEARCH + FILTER ================= -->
+<!-- ================= DROPDOWN FILTER ================= -->
 <div class="row mb-4">
-    <div class="col-md-6">
-        <input type="text"
-               id="searchInput"
-               class="form-control"
-               placeholder="🔍 Cari kategori..." />
-    </div>
+    <div class="col-md-4">
+        <select class="form-select"
+                onchange="location = this.value">
+            <option value="/Learning/Categories">
+                🔽 Semua Kategori
+            </option>
 
-    <div class="col-md-3">
-        <select id="sortSelect" class="form-select">
-            <option value="az">A - Z</option>
-            <option value="za">Z - A</option>
-        </select>
+            @foreach (var c in Model)
+{
+    if (selectedId == c.CategoryId)
+    {
+        <option value="/Learning/Categories?categoryId=@c.CategoryId" selected>
+            @c.CategoryName
+        </option>
+    }
+    else
+    {
+        <option value="/Learning/Categories?categoryId=@c.CategoryId">
+            @c.CategoryName
+        </option>
+    }
+}        </select>
     </div>
 </div>
 
-<!-- ================= CARD GRID ================= -->
-<div class="row g-4" id="categoryGrid">
-@foreach (var c in Model)
+@if (selectedId == null)
 {
-    <div class="col-md-4 category-item"
-         data-name="@c.CategoryName">
-        <div class="card h-100 shadow-sm">
+<!-- ================= SEARCH + SORT ================= -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <input type="text"
+                    id="searchInput"
+                    class="form-control"
+                    placeholder="🔍 Cari kategori..." />
+            </div>
 
-            <img src="@c.CategoryPicture"
-                 class="card-img-top"
-                 alt="@c.CategoryName"
-                 style="height:200px; object-fit:cover;" />
+            <div class="col-md-3">
+                <select id="sortSelect" class="form-select">
+                    <option value="az">A - Z</option>
+                    <option value="za">Z - A</option>
+                </select>
+            </div>
+        </div>
+        }
+
+        <!-- ================= CARD GRID ================= -->
+        <div class="row g-4" id="categoryGrid">
+        @foreach (var c in Model)
+        {
+            <div class="col-md-4 category-item"
+                data-name="@c.CategoryName">
+            <div class="card h-100 shadow-sm">
+
+                <img src="@c.CategoryPicture"
+                    class="card-img-top"
+                    alt="@c.CategoryName"
+                    style="height:200px; object-fit:cover;" />
 
             <div class="card-body">
                 <h5 class="fw-bold">@c.CategoryName</h5>
@@ -63,6 +94,8 @@
 }
 </div>
 
+@if (selectedId == null)
+{
 <!-- ================= SCRIPT ================= -->
 <script>
     const searchInput = document.getElementById('searchInput');
@@ -70,7 +103,6 @@
     const items = document.querySelectorAll('.category-item');
     const grid = document.getElementById('categoryGrid');
 
-    // SEARCH
     searchInput.addEventListener('keyup', () => {
         const keyword = searchInput.value.toLowerCase();
         items.forEach(item => {
@@ -79,7 +111,6 @@
         });
     });
 
-    // SORT
     sortSelect.addEventListener('change', () => {
         const sorted = [...items].sort((a, b) => {
             const nameA = a.dataset.name.toLowerCase();
@@ -93,3 +124,4 @@
         sorted.forEach(i => grid.appendChild(i));
     });
 </script>
+}
