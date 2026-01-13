@@ -15,5 +15,7 @@ namespace Neksara.Services
         Task<Topic?> GetTopicDetailAsync(int topicId);
         Task IncrementViewCountAsync(Topic topic);
         Task<double> GetAverageRatingAsync(int topicId);
+         Task<List<TopicCardVM>> GetPopularTopicsAsync(int take);
+
     }
 }

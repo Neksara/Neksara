@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Neksara.Models;
 using Neksara.Models.ViewModels;
+using Neksara.Services;
 using Neksara.Services.Interfaces;
 
 namespace Neksara.Controllers
@@ -10,29 +11,28 @@ namespace Neksara.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ICategoryService _categoryService;
-        private readonly ITopicService _topicService;
+        private readonly ILearningService _learningService;
         private readonly ITestimoniService _testimoniService;
 
         public HomeController(
             ILogger<HomeController> logger,
             ICategoryService categoryService,
-            ITopicService topicService,
+            ILearningService learningService,
             ITestimoniService testimoniService)
         {
             _logger = logger;
             _categoryService = categoryService;
-            _topicService = topicService;
+            _learningService = learningService;
             _testimoniService = testimoniService;
         }
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.PopularCategories = await _categoryService.GetPopularAsync();
 
-            {
-                ViewBag.PopularCategories = await _categoryService.GetPopularAsync();
-                ViewBag.PopularTopics = await _topicService.GetPopularAsync();
-                ViewBag.Testimonials = await _testimoniService.GetPublishedAsync(null);
-            };
+            ViewBag.PopularTopics = await _learningService.GetPopularTopicsAsync(8);
+
+            ViewBag.Testimonials = await _testimoniService.GetPublishedAsync(null);
 
             return View();
         }
