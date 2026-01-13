@@ -5,105 +5,179 @@
 
 <h4 class="mb-3">Daftar Topik</h4>
 
-<form method="get" class="mb-3 d-flex gap-2 align-items-center">
-    <input name="search"
-           class="form-control"
-           placeholder="Cari Topik..."
-           value="@ViewBag.Search" />
+<!-- ================= SEARCH BAR (RESPONSIVE) ================= -->
+<div class="row mb-3 g-2 align-items-center search-bar">
 
-    <select name="sort"
-            class="form-select w-auto"
-            onchange="this.form.submit()">
-        <option value="">Default</option>
-        <option value="az" selected="@(ViewBag.Sort == "az")">A - Z</option>
-        <option value="za" selected="@(ViewBag.Sort == "za")">Z - A</option>
-        <option value="views" selected="@(ViewBag.Sort == "views")">View Terbanyak</option>
-    </select>
+    <!-- SEARCH -->
+    <div class="col-12 col-md-5">
+        <input type="text"
+               id="searchInput"
+               class="form-control"
+               placeholder="🔍 Cari topik atau kategori..." />
+    </div>
 
-    <button class="btn btn-primary">Cari</button>
+    <!-- FILTER KATEGORI -->
+    <div class="col-12 col-md-3">
+        <select id="categoryFilter" class="form-select">
+            <option value="">Semua Kategori</option>
+            @foreach (var c in ViewBag.Categories)
+            {
+                <option value="@c.CategoryName">
+                    @c.CategoryName
+                </option>
+            }
+        </select>
+    </div>
 
-    <a href="/Admin/CreateTopic" class="btn btn-success ms-auto">
-        + Tambah Topik
-    </a>
-</form>
+    <!-- SORT -->
+    <div class="col-12 col-md-2">
+        <select id="sortSelect" class="form-select">
+            <option value="default">Default</option>
+            <option value="az">A - Z</option>
+            <option value="za">Z - A</option>
+            <option value="views">View Terbanyak</option>
+        </select>
+    </div>
 
-<div class="table-responsive">
-    <table class="table align-middle border-0"
-           style="background:#f9f9f7; border-radius:12px; overflow:hidden;">
-        <thead style="background:#efefeb;">
-            <tr>
-                <th>Topik</th>
-                <th>Kategori</th>
-                <th class="text-center">Views</th>
-                <th>Tanggal Produksi</th>
-                <th>Tanggal Update</th>
-                <th style="width:210px">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var t in Model)
-        {
-            <tr style="border-bottom:1px solid #e6e6e6">
-                <td>
-                    <strong>@t.TopicName</strong>
-                </td>
-                <td>
-                    <span class="badge bg-secondary">
-                        @t.Category?.CategoryName
-                    </span>
-                </td>
-                <td class="text-center">
-                    <span class="badge bg-info">
-                        @t.ViewCount Views
-                    </span>
-                </td>
-                <td>
-                    @t.CreatedAt.ToString("dd MMM yyyy")
-                </td>
-                <td>
-                    @(t.UpdatedAt.HasValue
-                        ? t.UpdatedAt.Value.ToString("dd MMM yyyy")
-                        : "-")
-                </td>
-                <td class="d-flex gap-1">
-                    <a href="/Admin/TopicDetail/@t.TopicId"
-                       class="btn btn-sm btn-primary">
-                        Detail
-                    </a>
+    <!-- BUTTON -->
+    <div class="col-12 col-md-2 text-md-end">
+        <a href="/Admin/CreateTopic" class="btn btn-success w-100">
+            + Tambah Topik
+        </a>
+    </div>
 
-                    <a href="/Admin/EditTopic/@t.TopicId"
-                       class="btn btn-sm btn-warning">
-                        Edit
-                    </a>
-
-                    <form asp-action="DeleteTopic"
-                          asp-route-id="@t.TopicId"
-                          method="post"
-                          class="d-inline">
-                        @Html.AntiForgeryToken()
-                        <button class="btn btn-sm btn-danger"
-                                onclick="return confirm('Yakin hapus topik?')">
-                            Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
 </div>
 
-<!-- PAGINATION -->
-<nav class="mt-4">
-    <ul class="pagination justify-content-center">
-        @for (int i = 1; i <= ViewBag.TotalPages; i++)
-        {
-            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-                <a class="page-link"
-                   href="?page=@i&search=@ViewBag.Search&sort=@ViewBag.Sort">
-                    @i
+<!-- ================= TABLE ================= -->
+<table class="table table-bordered table-striped align-middle">
+    <thead class="text-muted">
+        <tr>
+            <th>Topik</th>
+            <th>Kategori</th>
+            <th class="text-center">Views</th>
+            <th>Tanggal Produksi</th>
+            <th>Tanggal Update</th>
+            <th>Tanggal Publish</th>
+            <th>Status</th>
+            <th style="width:210px">Aksi</th>
+        </tr>
+    </thead>
+
+    <tbody id="topicTable">
+    @foreach (var t in Model)
+    {
+        <tr class="topic-row"
+            data-name="@t.TopicName"
+            data-category="@t.Category?.CategoryName"
+            data-views="@t.ViewCount">
+
+            <td><strong>@t.TopicName</strong></td>
+
+            <td>
+                <span class="badge bg-secondary">
+                    @t.Category?.CategoryName
+                </span>
+            </td>
+
+            <td class="text-center">
+                <span class="badge bg-info">
+                    @t.ViewCount Views
+                </span>
+            </td>
+
+            <td>@t.CreatedAt.ToString("dd MMM yyyy")</td>
+
+            <td>
+                @(t.UpdatedAt.HasValue
+                    ? t.UpdatedAt.Value.ToString("dd MMM yyyy")
+                    : "-")
+            </td>
+
+            <td>@(t.PublishedAt?.ToString("dd MMM yyyy") ?? "-")</td>
+
+            <td>
+                @if (t.PublishedAt.HasValue)
+                {
+                    <span class="badge bg-success">Active</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">Not Active</span>
+                }
+            </td>
+
+            <td class="d-flex gap-1">
+                <a href="/Admin/TopicDetail/@t.TopicId"
+                   class="btn btn-sm btn-primary">
+                    Detail
                 </a>
-            </li>
-        }
-    </ul>
-</nav>
+
+                <a href="/Admin/EditTopic/@t.TopicId"
+                   class="btn btn-sm btn-warning">
+                    Edit
+                </a>
+
+                <form asp-action="DeleteTopic"
+                      asp-route-id="@t.TopicId"
+                      method="post"
+                      class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button class="btn btn-sm btn-danger"
+                            onclick="return confirm('Yakin hapus topik?')">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const sortSelect = document.getElementById('sortSelect');
+    const rows = document.querySelectorAll('.topic-row');
+    const tableBody = document.getElementById('topicTable');
+
+    function filterTable() {
+        const keyword = searchInput.value.toLowerCase();
+        const category = categoryFilter.value.toLowerCase();
+
+        rows.forEach(row => {
+            const name = row.dataset.name.toLowerCase();
+            const cat = row.dataset.category.toLowerCase();
+
+            const matchKeyword =
+                name.includes(keyword) || cat.includes(keyword);
+
+            const matchCategory =
+                category === '' || cat === category;
+
+            row.style.display =
+                matchKeyword && matchCategory ? '' : 'none';
+        });
+    }
+
+    searchInput.addEventListener('keyup', filterTable);
+    categoryFilter.addEventListener('change', filterTable);
+
+    sortSelect.addEventListener('change', () => {
+        const sorted = [...rows].sort((a, b) => {
+            if (sortSelect.value === 'az')
+                return a.dataset.name.localeCompare(b.dataset.name);
+
+            if (sortSelect.value === 'za')
+                return b.dataset.name.localeCompare(a.dataset.name);
+
+            if (sortSelect.value === 'views')
+                return b.dataset.views - a.dataset.views;
+
+            return 0;
+        });
+
+        tableBody.innerHTML = '';
+        sorted.forEach(r => tableBody.appendChild(r));
+    });
+</script>

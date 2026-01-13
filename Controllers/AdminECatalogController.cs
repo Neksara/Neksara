@@ -8,65 +8,73 @@ namespace Neksara.Controllers;
 public class AdminEcatalogController : Controller
 {
     private readonly IAdminEcatalogService _service;
-    private const int PAGE_SIZE = 10;
+    private const int PageSize = 10;
 
     public AdminEcatalogController(IAdminEcatalogService service)
     {
         _service = service;
     }
 
+    // =========================
+    // INDEX
+    // =========================
     public async Task<IActionResult> Index(
         string? search,
         string? sort,
         int page = 1)
     {
-        var (data, total) = await _service
-            .GetPagedAsync(search, sort, page, PAGE_SIZE);
+        var (data, total) = await _service.GetPagedAsync(
+            search,
+            sort,
+            page,
+            PageSize
+        );
 
         ViewBag.Search = search;
         ViewBag.Sort = sort;
         ViewBag.CurrentPage = page;
-        ViewBag.TotalPages = Math.Ceiling(total / (double)PAGE_SIZE);
+        ViewBag.TotalPages = (int)Math.Ceiling(total / (double)PageSize);
 
         return View(data);
     }
 
+    // =========================
+    // PUBLISH (BULK)
+    // =========================
     [HttpPost]
     public async Task<IActionResult> Publish(int[] topicIds)
     {
-        if (topicIds.Length == 0)
+        if (topicIds == null || topicIds.Length == 0)
             return RedirectToAction(nameof(Index));
 
         await _service.PublishAsync(topicIds);
+
         return RedirectToAction(nameof(Index));
     }
 
-    // 🔥 INI YANG KEMARIN HILANG
-    [HttpPost]
-    public async Task<IActionResult> Withdraw(int[] topicIds)
-    {
-        if (topicIds.Length == 0)
-            return RedirectToAction(nameof(Index));
-
-        await _service.WithdrawAsync(topicIds);
-        return RedirectToAction(nameof(Index));
-    }
-
+    // =========================
+    // DELETE → ARCHIVE
+    // =========================
     [HttpPost]
     public async Task<IActionResult> Delete(int[] topicIds)
     {
-        if (topicIds.Length == 0)
+        if (topicIds == null || topicIds.Length == 0)
             return RedirectToAction(nameof(Index));
 
         await _service.ArchiveAsync(topicIds);
+
         return RedirectToAction(nameof(Index));
     }
 
+    // =========================
+    // DETAIL (MODAL)
+    // =========================
     public async Task<IActionResult> Detail(int id)
     {
         var data = await _service.GetDetailAsync(id);
-        if (data == null) return NotFound();
+        if (data == null)
+            return NotFound();
 
-        return PartialView("_DetailModal", data);
+        return PartialView("_TopicDetail", data);
     }
 }

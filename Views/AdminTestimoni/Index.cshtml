@@ -5,24 +5,108 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h3>Testimoni</h3>
+<h3 class="mb-3">Testimoni</h3>
 
-<table class="table table-bordered">
-    <thead>
+<!-- ================= TOP BAR ================= -->
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+
+    <!-- SEARCH BAR SAKTI -->
+    <input type="text"
+           id="searchInput"
+           class="form-control"
+           style="max-width:260px"
+           placeholder="🔍 Cari nama / komentar..." />
+
+    <!-- SORT A-Z Z-A -->
+    <select id="sortSelect"
+            class="form-select"
+            style="max-width:140px">
+        <option value="">Sort Nama</option>
+        <option value="az">A - Z</option>
+        <option value="za">Z - A</option>
+    </select>
+
+    <!-- FILTER STATUS -->
+    <select id="statusFilter"
+            class="form-select"
+            style="max-width:150px">
+        <option value="">All Status</option>
+        <option value="approved">Approved</option>
+        <option value="pending">Pending</option>
+    </select>
+
+    <!-- FILTER RATING -->
+    <select id="ratingFilter"
+            class="form-select"
+            style="max-width:150px">
+        <option value="">All Rating</option>
+        @for (int i = 5; i >= 1; i--)
+        {
+        <option value="@i">
+        @((new string('★', i) + new string('☆', 5 - i)))
+        </option>   
+        }
+    </select>
+</div>
+
+<form method="post">
+
+<!-- ================= ACTION BAR ================= -->
+<div class="d-flex align-items-center gap-2 mb-3">
+    <button type="button"
+            id="btnSelectAll"
+            class="btn btn-outline-primary btn-sm">
+        ☑️ Select All
+    </button>
+
+    <button asp-action="ApproveSelected"
+            class="btn btn-success btn-sm"
+            onclick="return confirm('Approve testimoni terpilih?')">
+        ✅ Approve
+    </button>
+
+    <button asp-action="HideSelected"
+            class="btn btn-danger btn-sm"
+            onclick="return confirm('Hide testimoni terpilih?')">
+        🚫 Hide
+    </button>
+
+    <button asp-action="ShowSelected"
+            class="btn btn-primary btn-sm"
+            onclick="return confirm('Show testimoni terpilih?')">
+        👁 Show
+    </button>
+</div>
+
+<!-- ================= TABLE ================= -->
+<table class="table table-bordered table-striped">
+    <thead class="text-muted">
         <tr>
+            <th style="width:40px"></th>
             <th>Nama</th>
             <th>Pekerjaan</th>
             <th>Komentar</th>
             <th>Rating</th>
             <th>Status</th>
-            <th>Action</th>
         </tr>
     </thead>
 
-    <tbody>
+    <tbody id="testimoniTable">
     @foreach (var t in Model)
     {
-        <tr>
+        <tr class="testimoni-row"
+            data-name="@(t.TestimoniName ?? "anon")"
+            data-desc="@t.Description"
+            data-status="@(t.IsApproved ? "approved" : "pending")"
+            data-rating="@t.TestimoniRating">
+
+            <td class="text-center">
+                <input type="checkbox"
+                       name="selectedIds"
+                       value="@t.TestimoniId"
+                       class="row-check" />
+            </td>
+
             <td>@(string.IsNullOrEmpty(t.TestimoniName) ? "Anon" : t.TestimoniName)</td>
             <td>@t.TestimoniRole</td>
             <td>@t.Description</td>
@@ -49,26 +133,68 @@
                     <span class="badge bg-danger ms-1">Hidden</span>
                 }
             </td>
-
-            <td>
-                @* Approve button hanya untuk pending *@
-                @if (!t.IsApproved)
-                {
-                    <form asp-action="Approve" method="post" class="d-inline">
-                        <input type="hidden" name="id" value="@t.TestimoniId" />
-                        <button class="btn btn-sm btn-success">Approve</button>
-                    </form>
-                }
-
-                @* Toggle visibility: hide/show *@
-                <form asp-action="ToggleVisibility" method="post" class="d-inline">
-                    <input type="hidden" name="id" value="@t.TestimoniId" />
-                    <button class="btn btn-sm @(t.IsVisible ? "btn-danger" : "btn-primary")">
-                        @(t.IsVisible ? "Hide" : "Show")
-                    </button>
-                </form>
-            </td>
         </tr>
     }
     </tbody>
 </table>
+</form>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+const searchInput = document.getElementById('searchInput');
+const sortSelect = document.getElementById('sortSelect');
+const statusFilter = document.getElementById('statusFilter');
+const ratingFilter = document.getElementById('ratingFilter');
+const btnSelectAll = document.getElementById('btnSelectAll');
+
+const rows = document.querySelectorAll('.testimoni-row');
+const checks = document.querySelectorAll('.row-check');
+
+let allSelected = false;
+
+// SELECT ALL
+btnSelectAll.addEventListener('click', () => {
+    allSelected = !allSelected;
+    checks.forEach(c => c.checked = allSelected);
+    btnSelectAll.innerText = allSelected ? '❌ Unselect All' : '☑️ Select All';
+});
+
+// FILTER + SEARCH
+function applyFilter() {
+    const keyword = searchInput.value.toLowerCase();
+    const status = statusFilter.value;
+    const rating = ratingFilter.value;
+
+    rows.forEach(r => {
+        const matchKeyword =
+            r.dataset.name.toLowerCase().includes(keyword) ||
+            r.dataset.desc.toLowerCase().includes(keyword);
+
+        const matchStatus =
+            !status || r.dataset.status === status;
+
+        const matchRating =
+            !rating || r.dataset.rating === rating;
+
+        r.style.display =
+            matchKeyword && matchStatus && matchRating ? '' : 'none';
+    });
+}
+
+searchInput.addEventListener('keyup', applyFilter);
+statusFilter.addEventListener('change', applyFilter);
+ratingFilter.addEventListener('change', applyFilter);
+
+// SORT
+sortSelect.addEventListener('change', () => {
+    const tbody = document.getElementById('testimoniTable');
+    const sorted = [...rows].sort((a, b) => {
+        return sortSelect.value === 'az'
+            ? a.dataset.name.localeCompare(b.dataset.name)
+            : b.dataset.name.localeCompare(a.dataset.name);
+    });
+
+    tbody.innerHTML = '';
+    sorted.forEach(r => tbody.appendChild(r));
+});
+</script>

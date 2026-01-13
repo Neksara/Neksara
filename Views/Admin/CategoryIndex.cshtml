@@ -5,28 +5,33 @@
 
 <h4 class="mb-3">Daftar Kategori</h4>
 
-<form method="get" class="mb-3 d-flex gap-2 align-items-center">
-    <input name="search"
-           class="form-control"
-           placeholder="Cari Category..."
-           value="@ViewBag.Search" />
+<!-- ================= SEARCH BAR SAKTI ================= -->
+<div class="mb-3 d-flex flex-wrap gap-2 align-items-center">
 
-    <select name="sort"
-            class="form-select w-auto"
-            onchange="this.form.submit()">
+    <!-- SEARCH -->
+    <div class="col-12 col-md-5">
+        <input type="text"
+               id="searchInput"
+               class="form-control"
+               placeholder="🔍 Cari kategori..." />
+    </div>
+
+    <!-- SORT -->
+    <select id="sortSelect" class="form-select w-auto">
         <option value="">Default</option>
-        <option value="az" selected="@(ViewBag.Sort == "az")">A - Z</option>
-        <option value="za" selected="@(ViewBag.Sort == "za")">Z - A</option>
-        <option value="views" selected="@(ViewBag.Sort == "views")">View Terbanyak</option>
+        <option value="az">A - Z</option>
+        <option value="za">Z - A</option>
+        <option value="views">View Terbanyak</option>
+        <option value="topics">Topik Terbanyak</option>
     </select>
 
-    <button class="btn btn-primary">Cari</button>
-
-    <a href="/Admin/CreateCategory" class="btn btn-success ms-auto">
+    <a href="/Admin/CreateCategory"
+       class="btn btn-success ms-auto">
         + Tambah Category
     </a>
-</form>
+</div>
 
+<!-- ================= TABLE ================= -->
 <table class="table table-bordered table-striped align-middle">
     <thead class="text-muted">
         <tr>
@@ -36,57 +41,98 @@
             <th style="width:200px">Aksi</th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var c in Model)
-        {
-            <tr>
-                <td>@c.CategoryName</td>
-                <td>
-                    <span class="badge bg-info">
-                        @c.TotalTopics Topik
-                    </span>
-                </td>
-                <td>@c.TotalViews Views</td>
-                <td class="d-flex gap-1">
-                    <a href="/Admin/CategoryDetail/@c.CategoryId"
-                       class="btn btn-sm btn-primary">
-                        Detail
-                    </a>
 
-                    <a href="/Admin/EditCategory/@c.CategoryId"
-                       class="btn btn-sm btn-warning">
-                        Edit
-                    </a>
+    <tbody id="categoryTable">
+@foreach (var c in Model)
+{
+        <tr class="category-row"
+            data-name="@c.CategoryName.ToLower()"
+            data-views="@c.TotalViews"
+            data-topics="@c.TotalTopics">
 
-                    <form asp-controller="Admin"
-                          asp-action="DeleteCategory"
-                          asp-route-id="@c.CategoryId"
-                          method="post"
-                          class="d-inline">
-                        @Html.AntiForgeryToken()
-                        <button type="submit"
-                                class="btn btn-sm btn-danger"
-                                onclick="return confirm('Yakin hapus kategori ini?')">
-                            Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        }
+            <td>@c.CategoryName</td>
+
+            <td>
+                <span class="badge bg-info">
+                    @c.TotalTopics Topik
+                </span>
+            </td>
+
+            <td>
+                <span class="badge bg-warning text-dark">
+                    @c.TotalViews Views
+                </span>
+            </td>
+
+            <td class="d-flex gap-1">
+                <a href="/Admin/CategoryDetail/@c.CategoryId"
+                   class="btn btn-sm btn-primary">
+                    Detail
+                </a>
+
+                <a href="/Admin/EditCategory/@c.CategoryId"
+                   class="btn btn-sm btn-warning">
+                    Edit
+                </a>
+
+                <form asp-controller="Admin"
+                      asp-action="DeleteCategory"
+                      asp-route-id="@c.CategoryId"
+                      method="post"
+                      class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button type="submit"
+                            class="btn btn-sm btn-danger"
+                            onclick="return confirm('Yakin hapus kategori ini?')">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+}
     </tbody>
 </table>
 
-<!-- PAGINATION -->
-<nav class="mt-4">
-    <ul class="pagination justify-content-center">
-        @for (int i = 1; i <= ViewBag.TotalPages; i++)
-        {
-            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-                <a class="page-link"
-                   href="?page=@i&search=@ViewBag.CurrentSearch">
-                    @i
-                </a>
-            </li>
-        }
-    </ul>
-</nav>
+<!-- ================= SCRIPT SEARCH & SORT ================= -->
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    const tableBody = document.getElementById('categoryTable');
+
+    function getRows() {
+        return Array.from(document.querySelectorAll('.category-row'));
+    }
+
+    // SEARCH
+    searchInput.addEventListener('keyup', () => {
+        const keyword = searchInput.value.toLowerCase();
+
+        getRows().forEach(row => {
+            const name = row.dataset.name;
+            row.style.display = name.includes(keyword) ? '' : 'none';
+        });
+    });
+
+    // SORT
+    sortSelect.addEventListener('change', () => {
+        const rows = getRows();
+
+        rows.sort((a, b) => {
+            switch (sortSelect.value) {
+                case 'az':
+                    return a.dataset.name.localeCompare(b.dataset.name);
+                case 'za':
+                    return b.dataset.name.localeCompare(a.dataset.name);
+                case 'views':
+                    return b.dataset.views - a.dataset.views;
+                case 'topics':
+                    return b.dataset.topics - a.dataset.topics;
+                default:
+                    return 0;
+            }
+        });
+
+        tableBody.innerHTML = '';
+        rows.forEach(r => tableBody.appendChild(r));
+    });
+</script>

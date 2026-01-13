@@ -12,9 +12,6 @@ public interface IAdminEcatalogService
         int pageSize);
 
     Task PublishAsync(int[] topicIds);
-    Task WithdrawAsync(int[] topicIds);
     Task ArchiveAsync(int[] topicIds);
-
-    // 🔥 UBAH RETURN TYPE
     Task<TopicDetailVM?> GetDetailAsync(int id);
 }
