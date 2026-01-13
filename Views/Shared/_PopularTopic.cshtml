@@ -1,6 +1,6 @@
-@using Neksara.Models
+@using Neksara.ViewModels
 @{
-    var topics = ViewBag.PopularTopics as List<Topic>;
+    var topics = ViewBag.PopularTopics as List<TopicCardVM>;
     int pageSize = 4;
 }
 
@@ -20,11 +20,6 @@
                     @for (int i = 0; i < topics.Count; i++)
                     {
                         var t = topics[i];
-                        var rating = t.Feedbacks != null && t.Feedbacks.Any()
-                            ? Math.Round(t.Feedbacks.Average(f => f.Rating), 1)
-                            : 0;
-
-                        var count = t.Feedbacks?.Count ?? 0;
 
                         <div class="col-md-3 popular-topic-item"
                              data-index="@i">
@@ -32,11 +27,13 @@
 
                                 <img src="@t.TopicPicture"
                                      class="card-img-top"
-                                     alt="@t.TopicName" />
+                                     alt="@t.TopicName"
+                                     style="height:180px; object-fit:cover;" />
 
                                 <div class="card-body">
+
                                     <span class="badge bg-secondary mb-2">
-                                        @t.Category?.CategoryName
+                                        @t.CategoryName
                                     </span>
 
                                     <h6 class="fw-bold mt-2">
@@ -45,18 +42,18 @@
 
                                     <!-- ⭐ RATING -->
                                     <p class="mb-1">
-                                        <strong>@rating.ToString("0.0")</strong> / 5
+                                        <strong>@t.Rating.ToString("0.0")</strong> / 5
                                         <span class="text-warning ms-1">
                                             @for (int s = 1; s <= 5; s++)
                                             {
-                                                if (s <= Math.Floor(rating))
+                                                if (s <= Math.Floor(t.Rating))
                                                 { <text>★</text> }
                                                 else
                                                 { <text>☆</text> }
                                             }
                                         </span>
                                         <small class="text-muted">
-                                            (@count)
+                                            (@t.ReviewCount)
                                         </small>
                                     </p>
 
@@ -94,6 +91,10 @@
                 </div>
 
             </div>
+        }
+        else
+        {
+            <p class="text-muted">Belum ada topik populer.</p>
         }
     </div>
 </section>

@@ -2,8 +2,28 @@
     ViewData["Title"] = "Home";
 }
 
+<!-- NOTIF MESSAGE -->
+@if (TempData["Success"] != null)
+{
+    <div class="container mt-3">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Yeaay!</strong> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="container mt-3">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Oops!</strong> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+}
+
 <partial name="_HeroSection" />
 <partial name="_PopularCategory" />
 <partial name="_PopularTopic" />
 <partial name="_Testimonial" model="ViewBag.Testimonials" />
-

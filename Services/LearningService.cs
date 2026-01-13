@@ -124,5 +124,49 @@ namespace Neksara.Services
 
             return Math.Round(avg, 1);
         }
+        public async Task<List<TopicCardVM>> GetPopularTopicsAsync(int take)
+        {
+            return await _context.Topics
+                .Where(t => !t.IsDeleted && t.PublishedAt != null)
+                .OrderByDescending(t => t.ViewCount)
+                .Take(take)
+                .Select(t => new TopicCardVM
+                {
+                    TopicId = t.TopicId,
+                    TopicName = t.TopicName,
+                    TopicPicture = t.TopicPicture,
+                    CategoryName = t.Category!.CategoryName,
+                    ViewCount = t.ViewCount,
+                    PublishedAt = t.PublishedAt,
+
+                    ReviewCount = _context.Feedbacks.Count(f =>
+                        f.TargetType == "Topic" &&
+                        f.TargetId == t.TopicId &&
+                        f.IsApproved &&
+                        f.IsVisible
+                    ),
+
+                    Rating = _context.Feedbacks
+                        .Where(f =>
+                            f.TargetType == "Topic" &&
+                            f.TargetId == t.TopicId &&
+                            f.IsApproved &&
+                            f.IsVisible
+                        )
+                        .Any()
+                            ? _context.Feedbacks
+                                .Where(f =>
+                                    f.TargetType == "Topic" &&
+                                    f.TargetId == t.TopicId &&
+                                    f.IsApproved &&
+                                    f.IsVisible
+                                )
+                                .Average(f => f.Rating)
+                            : 0
+                })
+                .ToListAsync();
+        }
+
     }
+    
 }

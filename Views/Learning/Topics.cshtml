@@ -2,11 +2,12 @@
 @{
     ViewData["Title"] = "Topik E-Learning";
 }
+
 <h2 class="fw-bold mb-4">📘 Topik Pembelajaran</h2>
 
-<!-- ================= FILTER ================= -->
-<div class="row mb-4">
-    <div class="col-md-6">
+<!-- ================= FILTER BAR ================= -->
+<div class="row mb-4 align-items-end">
+    <div class="col-md-5">
         <input type="text"
                id="searchInput"
                class="form-control"
@@ -21,6 +22,15 @@
             <option value="za">Z - A</option>
         </select>
     </div>
+
+    <div class="col-md-4">
+        <!-- BUTTON MODAL -->
+        <button class="btn btn-outline-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#categoryFilterModal">
+            🏷 Filter Kategori
+        </button>
+    </div>
 </div>
 
 <!-- ================= CARD GRID ================= -->
@@ -30,7 +40,8 @@
     <div class="col-md-3 topic-item"
          data-name="@t.TopicName"
          data-rating="@t.Rating"
-         data-view="@t.ViewCount">
+         data-view="@t.ViewCount"
+         data-category="@t.CategoryName">
 
         <div class="card h-100 shadow-sm">
 
@@ -47,7 +58,6 @@
 
                 <h6 class="fw-bold mt-2">@t.TopicName</h6>
 
-                <!-- ⭐ RATING -->
                 <p class="mb-1">
                     <strong>@t.Rating.ToString("0.0")</strong> / 5
                     <span class="text-warning ms-1">
@@ -64,12 +74,13 @@
                     </small>
                 </p>
 
+                <p class="text-muted mb-2">
+                    📅 @(t.PublishedAt?.ToString("dd MMM yyyy") ?? "-")
+                </p>
+
                 <small class="text-muted">
                     👁 @t.ViewCount views
                 </small>
-                    <p class="text-muted mb-3">
-                    Date publish: @(t.PublishedAt.HasValue ? t.PublishedAt.Value.ToString("dd MMM yyyy") : "-")
-                    </p>
             </div>
 
             <div class="card-footer bg-white border-0">
@@ -78,10 +89,33 @@
                     📖 Pelajari
                 </a>
             </div>
-
         </div>
     </div>
 }
+</div>
+
+<!-- ================= MODAL FILTER ================= -->
+<div class="modal fade" id="categoryFilterModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">🏷 Pilih Kategori</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div id="categoryCheckboxes" class="d-flex flex-column gap-2">
+                    <!-- JS akan generate semua kategori -->
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btnCancelFilter">Cancel</button>
+                <button class="btn btn-primary" id="btnApplyFilter">Apply</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ================= PAGINATION ================= -->
@@ -89,7 +123,6 @@
 {
     <nav class="mt-5">
         <ul class="pagination justify-content-center">
-
             @for (int i = 1; i <= Model.TotalPages; i++)
             {
                 <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
@@ -99,53 +132,89 @@
                     </a>
                 </li>
             }
-
         </ul>
     </nav>
 }
 
 <!-- ================= SCRIPT ================= -->
 <script>
-    const searchInput = document.getElementById('searchInput');
-    const sortSelect = document.getElementById('sortSelect');
-    const items = [...document.querySelectorAll('.topic-item')];
-    const grid = document.getElementById('topicGrid');
+const items = [...document.querySelectorAll('.topic-item')];
+const grid = document.getElementById('topicGrid');
+const searchInput = document.getElementById('searchInput');
+const sortSelect = document.getElementById('sortSelect');
 
-    // SEARCH
-    searchInput.addEventListener('keyup', () => {
-        const keyword = searchInput.value.toLowerCase();
-        items.forEach(item => {
-            const name = item.dataset.name.toLowerCase();
-            item.style.display = name.includes(keyword) ? 'block' : 'none';
-        });
+const uniqueCategories = [...new Set(items.map(i => i.dataset.category))];
+const categoryBox = document.getElementById('categoryCheckboxes');
+
+// Ambil CurrentCategory dari server
+const currentCategory = '@(Model.CurrentCategory?.ToString() ?? "")';
+
+// Generate semua kategori di modal dan cek otomatis jika ada filter
+uniqueCategories.forEach(cat => {
+    const isChecked = (cat === currentCategory) ? 'checked' : '';
+    const html = `
+        <label class="form-check">
+            <input class="form-check-input category-check"
+                   type="checkbox"
+                   value="${cat}" ${isChecked}>
+            <span class="form-check-label">${cat}</span>
+        </label>`;
+    categoryBox.innerHTML += html;
+});
+
+// ===== SEARCH =====
+searchInput.addEventListener('keyup', () => {
+    const key = searchInput.value.toLowerCase();
+    items.forEach(i => {
+        i.style.display =
+            i.dataset.name.toLowerCase().includes(key) ? 'block' : 'none';
+    });
+});
+
+// ===== SORT =====
+sortSelect.addEventListener('change', () => {
+    let sorted = [...items];
+    if (sortSelect.value === 'rating')
+        sorted.sort((a, b) => b.dataset.rating - a.dataset.rating);
+    else if (sortSelect.value === 'az')
+        sorted.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
+    else if (sortSelect.value === 'za')
+        sorted.sort((a, b) => b.dataset.name.localeCompare(a.dataset.name));
+    else
+        sorted.sort((a, b) => b.dataset.view - a.dataset.view);
+
+    grid.innerHTML = '';
+    sorted.forEach(i => grid.appendChild(i));
+});
+
+// ===== CATEGORY FILTER APPLY =====
+document.getElementById('btnApplyFilter').onclick = () => {
+    const selected = [...document.querySelectorAll('.category-check:checked')]
+        .map(c => c.value);
+
+    items.forEach(i => {
+        i.style.display =
+            selected.length === 0 || selected.includes(i.dataset.category)
+            ? 'block'
+            : 'none';
     });
 
-    // SORT
-    sortSelect.addEventListener('change', () => {
-        let sorted = [];
+    bootstrap.Modal.getInstance(
+        document.getElementById('categoryFilterModal')
+    ).hide();
+};
 
-        switch (sortSelect.value) {
-            case 'rating':
-                sorted = items.sort((a, b) =>
-                    b.dataset.rating - a.dataset.rating);
-                break;
+// ===== CATEGORY FILTER CANCEL =====
+document.getElementById('btnCancelFilter').onclick = () => {
+    // Uncheck semua checkbox
+    document.querySelectorAll('.category-check')
+        .forEach(c => c.checked = false);
 
-            case 'az':
-                sorted = items.sort((a, b) =>
-                    a.dataset.name.localeCompare(b.dataset.name));
-                break;
+    // Show semua topik
+    items.forEach(i => i.style.display = 'block');
 
-            case 'za':
-                sorted = items.sort((a, b) =>
-                    b.dataset.name.localeCompare(a.dataset.name));
-                break;
-
-            default: // popular
-                sorted = items.sort((a, b) =>
-                    b.dataset.view - a.dataset.view);
-        }
-
-        grid.innerHTML = '';
-        sorted.forEach(i => grid.appendChild(i));
-    });
+    bootstrap.Modal.getInstance(
+        document.getElementById('categoryFilterModal')
+    ).hide();
+};
 </script>
