@@ -1,18 +1,20 @@
 using Neksara.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Neksara.Services.Interfaces;
-
-public interface IAdminTestimoniService
+namespace Neksara.Services.Interfaces
 {
-    // Ambil semua testimoni (untuk Admin Panel)
-    Task<List<Testimoni>> GetAllAsync();
+    public interface IAdminTestimoniService
+    {
+        // ===== GET ALL TESTIMONI (ADMIN) =====
+        Task<List<Testimoni>> GetAllAsync(int? rating = null, string status = null);
 
-    // Ambil testimoni yang visible & approved (untuk Homepage)
-    Task<List<Testimoni>> GetApprovedVisibleAsync(int take = 6);
+        // ===== BULK ACTION =====
+        Task ApproveManyAsync(int[] ids);
+        Task HideManyAsync(int[] ids);
+        Task ShowManyAsync(int[] ids);
 
-    // Approve testimoni tertentu
-    Task ApproveAsync(int id);
-
-    // Toggle visibility testimoni (hide <-> show)
-    Task ToggleVisibilityAsync(int id);
+        // ===== PUBLIC / HOMEPAGE =====
+        Task<List<Testimoni>> GetApprovedVisibleAsync(int take = 6);
+    }
 }

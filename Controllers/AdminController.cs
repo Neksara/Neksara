@@ -57,7 +57,6 @@ namespace Neksara.Controllers
             return View(result.Items);
         }
 
-        // ---------- CREATE ----------
         [HttpGet]
         public IActionResult CreateCategory()
         {
@@ -75,7 +74,6 @@ namespace Neksara.Controllers
             return RedirectToAction(nameof(CategoryIndex));
         }
 
-        // ---------- EDIT ----------
         [HttpGet]
         public async Task<IActionResult> EditCategory(int id)
         {
@@ -96,7 +94,6 @@ namespace Neksara.Controllers
             return RedirectToAction(nameof(CategoryIndex));
         }
 
-        // ---------- DELETE ----------
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCategory(int id)
@@ -105,7 +102,6 @@ namespace Neksara.Controllers
             return RedirectToAction(nameof(CategoryIndex));
         }
 
-        // ---------- DETAIL ----------
         public async Task<IActionResult> CategoryDetail(int id)
         {
             var data = await _categoryService.GetDetailAsync(id);
@@ -120,22 +116,17 @@ namespace Neksara.Controllers
         public async Task<IActionResult> TopicIndex(
             string? search,
             string? sort,
-            int page = 1)
+            int? categoryId)
         {
-            var result = await _topicService.GetPagedAsync(
-                search,
-                sort,
-                page,
-                PAGE_SIZE
-            );
+            // 🔥 UPDATED: Get ALL topics tanpa paging
+            var topics = await _topicService.GetAllAsync(search, sort, categoryId);
 
             ViewBag.Search = search;
             ViewBag.Sort = sort;
-            ViewBag.CurrentPage = page;
-            ViewBag.TotalPages =
-                Math.Ceiling(result.TotalData / (double)PAGE_SIZE);
+            ViewBag.CategoryId = categoryId;
+            ViewBag.Categories = await _topicService.GetCategoriesAsync();
 
-            return View(result.Items);
+            return View(topics);
         }
 
         // ---------- CREATE ----------
@@ -183,6 +174,9 @@ namespace Neksara.Controllers
                 ViewBag.Categories = await _topicService.GetCategoriesAsync();
                 return View(model);
             }
+
+            model.UpdatedAt = DateTime.Now;
+            model.PublishedAt = null; // NON ACTIVE
 
             await _topicService.UpdateAsync(model, image, ExistingPicture);
             return RedirectToAction(nameof(TopicIndex));

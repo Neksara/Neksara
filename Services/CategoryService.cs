@@ -34,11 +34,14 @@ public class CategoryService : ICategoryService
             "za" => query.OrderByDescending(c => c.CategoryName),
             "views" => query.OrderByDescending(c =>
                 c.Topics.Where(t => !t.IsDeleted).Sum(t => t.ViewCount)),
+            "topics" => query.OrderByDescending(c =>
+                c.Topics.Count(t => !t.IsDeleted)),
+
             _ => query.OrderByDescending(c => c.CreatedAt)
         };
 
         int totalData = await query.CountAsync();
-        int totalPage = (int)Math.Ceiling(totalData / (double)pageSize);
+        int totalPage = (int)Math.Ceiling(totalData / (double)pageSize);    
 
         var items = await query
             .Skip((page - 1) * pageSize)

@@ -15,8 +15,7 @@ namespace Neksara.Models
         public int ViewCount { get; set; } = 0;
         public DateTime? PublishedAt { get; set; } // NULL = belum publish
         public bool IsDeleted { get; set; } = false;
-        public string Slug { get; set; } = string.Empty;
-
+        public DateTime? ScheduledAt { get; set; }   
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
 
