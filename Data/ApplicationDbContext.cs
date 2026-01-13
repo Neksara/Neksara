@@ -17,6 +17,7 @@ namespace Neksara.Data
         public DbSet<TopicView> TopicViews { get; set; }
         public DbSet<SearchLog> SearchLogs { get; set; }    
         public DbSet<ArchiveTopic> ArchiveTopics { get; set; }
+      public DbSet<ArchiveCategory> ArchiveCategories { get; set; }
         public DbSet<Testimoni> Testimonis { get; set; }
 
 
@@ -186,9 +187,9 @@ namespace Neksara.Data
 
             });
 
-                              // ===== ARCHIVE TOPIC =====
-                  modelBuilder.Entity<ArchiveTopic>(entity =>
-                  {
+            // ===== ARCHIVE TOPIC =====
+            modelBuilder.Entity<ArchiveTopic>(entity =>
+            {
                   entity.ToTable("ArchiveTopics");
 
                   entity.HasKey(e => e.ArchiveTopicId);
@@ -215,10 +216,29 @@ namespace Neksara.Data
                   entity.Property(e => e.ArchivedAt)
                         .HasDefaultValueSql("GETDATE()");
 
-                  entity.HasOne(e => e.Category)
-                        .WithMany()
-                        .HasForeignKey(e => e.CategoryId)
-                        .OnDelete(DeleteBehavior.Restrict);
+                  // ArchiveTopic no longer has a navigation FK to live Category;
+                  // keep CategoryId as a nullable snapshot column and do not configure a foreign key.
+                  });
+
+                  // ===== ARCHIVE CATEGORY =====
+                  modelBuilder.Entity<ArchiveCategory>(entity =>
+                  {
+                      entity.ToTable("ArchiveCategories");
+
+                      entity.HasKey(e => e.ArchiveCategoryId);
+
+                      entity.Property(e => e.CategoryName)
+                            .IsRequired()
+                            .HasMaxLength(100);
+
+                      entity.Property(e => e.Description)
+                            .HasMaxLength(255);
+
+                      entity.Property(e => e.CategoryPicture)
+                            .HasMaxLength(255);
+
+                      entity.Property(e => e.ArchivedAt)
+                            .HasDefaultValueSql("GETDATE()");
                   });
 
                 modelBuilder.Entity<Testimoni>(entity =>

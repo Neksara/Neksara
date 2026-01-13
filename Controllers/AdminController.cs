@@ -11,7 +11,7 @@ namespace Neksara.Controllers
         private readonly ICategoryService _categoryService;
         private readonly ITopicService _topicService;
 
-        private const int PAGE_SIZE = 5;
+        private const int PAGE_SIZE = 10;
 
         public AdminController(
             ICategoryService categoryService,
