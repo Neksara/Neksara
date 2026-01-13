@@ -14,26 +14,39 @@ public class AdminTestimoniController : Controller
         _service = service;
     }
 
-    // LIST SEMUA TESTIMONI
     public async Task<IActionResult> Index()
     {
         var data = await _service.GetAllAsync();
         return View(data);
     }
 
-    // APPROVE TESTIMONI
+    // ===== BULK APPROVE =====
     [HttpPost]
-    public async Task<IActionResult> Approve(int id)
+    public async Task<IActionResult> ApproveSelected(int[] selectedIds)
     {
-        await _service.ApproveAsync(id);
+        if (selectedIds?.Length > 0)
+            await _service.ApproveManyAsync(selectedIds);
+
         return RedirectToAction(nameof(Index));
     }
 
-    // TOGGLE VISIBILITY (HIDE / SHOW)
+    // ===== BULK HIDE =====
     [HttpPost]
-    public async Task<IActionResult> ToggleVisibility(int id)
+    public async Task<IActionResult> HideSelected(int[] selectedIds)
     {
-        await _service.ToggleVisibilityAsync(id);
+        if (selectedIds?.Length > 0)
+            await _service.HideManyAsync(selectedIds);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    // ===== BULK SHOW =====
+    [HttpPost]
+    public async Task<IActionResult> ShowSelected(int[] selectedIds)
+    {
+        if (selectedIds?.Length > 0)
+            await _service.ShowManyAsync(selectedIds);
+
         return RedirectToAction(nameof(Index));
     }
 }

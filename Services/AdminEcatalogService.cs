@@ -23,9 +23,12 @@ public class AdminEcatalogService : IAdminEcatalogService
     {
         var query = _context.Topics
             .Include(t => t.Category)
-            .Where(t => !t.IsDeleted);
+            .Where(t =>
+                !t.IsDeleted &&
+                t.PublishedAt == null   // 🔥 INI KUNCINYA
+            );
 
-        if (!string.IsNullOrEmpty(search))
+        if (!string.IsNullOrWhiteSpace(search))
         {
             query = query.Where(t =>
                 t.TopicName.Contains(search) ||
@@ -49,30 +52,9 @@ public class AdminEcatalogService : IAdminEcatalogService
         return (data, total);
     }
 
-    public async Task PublishAsync(int[] topicIds)
-    {
-        var topics = await _context.Topics
-            .Where(t => topicIds.Contains(t.TopicId))
-            .ToListAsync();
-
-        foreach (var t in topics)
-            t.PublishedAt = DateTime.Now;
-
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task WithdrawAsync(int[] topicIds)
-    {
-        var topics = await _context.Topics
-            .Where(t => topicIds.Contains(t.TopicId))
-            .ToListAsync();
-
-        foreach (var t in topics)
-            t.PublishedAt = null;
-
-        await _context.SaveChangesAsync();
-    }
-
+    // =========================
+    // ARCHIVE
+    // =========================
     public async Task ArchiveAsync(int[] topicIds)
     {
         var topics = await _context.Topics
@@ -89,6 +71,7 @@ public class AdminEcatalogService : IAdminEcatalogService
                 VideoUrl = t.VideoUrl,
                 CategoryId = t.CategoryId,
                 CreatedAt = t.CreatedAt,
+                UpdatedAt = t.UpdatedAt,
                 ViewCount = t.ViewCount
             });
         }
@@ -97,7 +80,9 @@ public class AdminEcatalogService : IAdminEcatalogService
         await _context.SaveChangesAsync();
     }
 
-    // 🔥 FINAL FIX — RETURN VIEWMODEL
+    // =========================
+    // DETAIL
+    // =========================
     public async Task<TopicDetailVM?> GetDetailAsync(int id)
     {
         return await _context.Topics
@@ -117,4 +102,22 @@ public class AdminEcatalogService : IAdminEcatalogService
             })
             .FirstOrDefaultAsync();
     }
+    // =========================
+// PUBLISH
+// =========================
+    public async Task PublishAsync(int[] topicIds)
+    {
+        var topics = await _context.Topics
+            .Where(t => topicIds.Contains(t.TopicId))
+            .ToListAsync();
+
+        foreach (var t in topics)
+        {
+            t.PublishedAt = DateTime.Now;
+            t.UpdatedAt = DateTime.Now;
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
 }
