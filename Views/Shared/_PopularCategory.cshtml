@@ -1,22 +1,24 @@
-<section class="py-5 bg-light">
+<section id="services" class="services section light-background">
     <div class="container">
 
-        <h4 class="fw-bold mb-4">
-            Kategori <span class="text-primary">Paling Populer</span>
-        </h4>
+        <!-- Section Title -->
+        <div class="container section-title text-left" data-aos="fade-up">
+            <h2><span class="title-main">Kategori</span> <span class="title-accent">Paling Populer</span></h2>
+            <p class="subtitle">Kategori yang paling diminati oleh karyawan</p>
+        </div><!-- End Section Title -->
 
-        <div class="row g-3">
-            @foreach (var c in ViewBag.PopularCategories)
-            {
-                <div class="col-md-3">
-                  <a asp-controller="Category"
-                    asp-action="Detail"
-                    asp-route-id="@c.CategoryId"
-                    class="btn btn-outline-primary w-100">
-                        @c.CategoryName →
-                </a>
-                </div>
-            }
+        <div class="container">
+            <div class="row g-3">
+                @foreach (var c in ViewBag.PopularCategories)
+                {
+                    <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+                        <a href="/Learning/Topics?categoryId=@c.CategoryId"
+                            class="btn btn-outline-primary w-100 stretched-link text-decoration-none">
+                            @c.CategoryName →
+                        </a>
+                    </div>
+                }
+            </div>
         </div>
 
     </div>

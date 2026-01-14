@@ -1,72 +1,52 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Neksara</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Arsha Bootstrap Template</title>
+    <meta name="description" content="@ViewData["Description"]">
+    <meta name="keywords" content="@ViewData["Keywords"]">
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Neksara.styles.css" asp-append-version="true" />
+    <!-- Favicons -->
+    <link href="~/assets/img/Neksara-logoNew.png" rel="icon">
+    <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-    <style>
-        .navbar-custom {
-            background-color: #3f7f8;
-        }
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
 
-        .navbar-custom .nav-link,
-        .navbar-custom .navbar-brand,
-        .navbar-custom .dropdown-item {
-            color: #08c0d1;
-        }
+    <!-- Vendor CSS Files -->
+    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="~/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
-        .navbar-custom .nav-link:hover,
-        .navbar-custom .dropdown-item:hover {
-            color: #eaeaea;
-            background-color: transparent;
-        }
+    <!-- Main CSS File -->
+    <link href="~/assets/css/main.css" rel="stylesheet">
 
-        .dropdown-menu {
-            background-color: #3f7f8;
-            border: none;
-        }
-    </style>
+    @await RenderSectionAsync("Styles", required: false)
 </head>
-<body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-custom shadow-sm mb-3">
-        <div class="container-fluid">
 
-            <!-- LOGO -->
-            <a class="navbar-brand d-flex align-items-center gap-2"
-               asp-controller="Home"
-               asp-action="Index">
-                <img src="/assets/img/Neksara - logo New.png"
-                     alt="Neksara Logo"
-                     height="40" />
-                <strong>Neksara</strong>
+<body class="index-page">
+    <header id="header" class="header d-flex align-items-center fixed-top">
+        <div class="container-fluid container-xl position-relative d-flex align-items-center">
+            <a href="@Url.Action("Index", "Home")" class="logo d-flex align-items-center me-auto">
+                <!-- Logo Image -->
+                <img src="~/assets/img/Neksara-logoNew.png" alt="Neksara Logo" class="logo-img me-2" >
+                <!-- Logo Text -->
+                <h1 class="sitename mb-0">Neksara</h1>
             </a>
 
-            <!-- TOGGLER -->
-            <button class="navbar-toggler text-white"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarMain">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarMain">
-                <ul class="navbar-nav ms-auto align-items-center gap-2">
-
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           asp-controller="Home"
-                           asp-action="Index">
-                            Home
-                        </a>
-                    </li>
-
-                    <!-- DROPDOWN E-LEARNING -->
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="@Url.Action("Index", "Home")" class="active">Home</a></li>
+                     <!-- DROPDOWN E-LEARNING -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle"
                            href="#"
@@ -81,26 +61,29 @@
                                 <a class="dropdown-item"
                                    asp-controller="Learning"
                                    asp-action="Categories">
-                                    📂 Kategori
+                                    Kategori
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item"
                                    asp-controller="Learning"
                                    asp-action="Topics">
-                                    📘 Topic
+                                    Topic
                                 </a>
                             </li>
                         </ul>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#" id="contactLink">
+                        <a class="nav-link" href="#footer" id="contactLink">
                                 Contact Us
                         </a>                    
                     </li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
 
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+              @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
                             <a class="btn btn-light fw-bold px-4"
@@ -118,54 +101,39 @@
                             </a>
                         </li>
                     }
-
-                </ul>
-            </div>
         </div>
-    </nav>
-</header>
+    </header>
 
-<div class="container">
-    <main role="main" class="pb-3">
+    <main class="main">
         @RenderBody()
     </main>
-</div>
 
-<!-- Footer -->
-<partial name="_Footer" />
+    <!-- Footer (bisa dipindahkan ke Partial View) -->
+    @Html.Partial("_Footer")
 
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
 
-@await RenderSectionAsync("Scripts", required: false)
-<script>
-    const contactLink = document.getElementById("contactLink");
-    const footer = document.getElementById("siteFooter");
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+        <i class="bi bi-arrow-up-short"></i>
+    </a>
 
-    // Smooth scroll ketika klik
-    contactLink.addEventListener("click", function(e) {
-        e.preventDefault();
-        if (footer) {
-            const offset = 70; // tinggi navbar
-            const topPos = footer.getBoundingClientRect().top + window.pageYOffset - offset;
-            window.scrollTo({ top: topPos, behavior: 'smooth' });
-        }
-    });
+    <!-- Preloader -->
+    <div id="preloader"></div>
+    <!-- Vendor JS Files -->
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/vendor/php-email-form/validate.js"></script>
+    <script src="~/assets/vendor/aos/aos.js"></script>
+    <script src="~/assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="~/assets/vendor/waypoints/noframework.waypoints.js"></script>
+    <script src="~/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="~/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
 
-    // Auto highlight menu ketika scroll
-    window.addEventListener("scroll", function() {
-        if (!footer) return;
+    <!-- Main JS File -->
+    <script src="~/assets/js/main.js"></script>
 
-        const offset = 80; // toleransi sebelum footer
-        const scrollPos = window.pageYOffset + offset;
-        const footerTop = footer.offsetTop;
-
-        if (scrollPos >= footerTop) {
-            contactLink.classList.add("active");
-        } else {
-            contactLink.classList.remove("active");
-        }
-    });
-</script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
+
+
 </html>
