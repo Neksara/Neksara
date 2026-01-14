@@ -14,6 +14,6 @@ public interface ITopicService
     Task ArchiveAsync(int id);
     Task<TopicDetailVM?> GetDetailAsync(int topicId);
 
-    // 🔥 NEW: ambil semua topik tanpa paging
-    Task<List<Topic>> GetAllAsync(string? search, string? sort, int? categoryId);
+    // Get topics for admin index with paging
+    Task<(List<Topic> Items, int TotalPage)> GetAllAsync(string? search, string? sort, int page, int pageSize, int? categoryId);
 }
