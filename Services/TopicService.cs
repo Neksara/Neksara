@@ -15,7 +15,6 @@ public class TopicService : ITopicService
         _context = context;
     }
 
-    // 🔥 NEW: ambil semua topik tanpa paging
     public async Task<List<Topic>> GetAllAsync(string? search, string? sort, int? categoryId)
     {
         var query = _context.Topics

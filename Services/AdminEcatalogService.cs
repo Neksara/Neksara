@@ -25,7 +25,7 @@ public class AdminEcatalogService : IAdminEcatalogService
             .Include(t => t.Category)
             .Where(t =>
                 !t.IsDeleted &&
-                t.PublishedAt == null   // 🔥 INI KUNCINYA
+                t.PublishedAt == null   
             );
 
         if (!string.IsNullOrWhiteSpace(search))
@@ -68,6 +68,7 @@ public class AdminEcatalogService : IAdminEcatalogService
                 OriginalTopicId = t.TopicId,
                 TopicName = t.TopicName,
                 Description = t.Description,
+                TopicPicture = t.TopicPicture,
                 VideoUrl = t.VideoUrl,
                 CategoryId = t.CategoryId,
                 CreatedAt = t.CreatedAt,
@@ -83,25 +84,32 @@ public class AdminEcatalogService : IAdminEcatalogService
     // =========================
     // DETAIL
     // =========================
-    public async Task<TopicDetailVM?> GetDetailAsync(int id)
-    {
-        return await _context.Topics
-            .Include(t => t.Category)
-            .Where(t => t.TopicId == id)
-            .Select(t => new TopicDetailVM
+        public async Task<TopicDetailVM?> GetDetailAsync(int id)
+        {
+            var topic = await _context.Topics
+                .Include(t => t.Category)
+                .FirstOrDefaultAsync(t => t.TopicId == id && !t.IsDeleted);
+
+            if (topic == null) return null;
+
+            var picture = topic.TopicPicture;
+
+            if (!string.IsNullOrEmpty(picture) && !picture.StartsWith("/"))
+                picture = "/" + picture;
+
+            return new TopicDetailVM
             {
-                TopicId = t.TopicId,
-                TopicName = t.TopicName,
-                CategoryName = t.Category!.CategoryName,
-                ViewCount = t.ViewCount,
-                CreatedAt = t.CreatedAt,
-                UpdatedAt = t.UpdatedAt,
-                TopicPicture = t.TopicPicture,
-                Description = t.Description,
-                VideoUrl = t.VideoUrl
-            })
-            .FirstOrDefaultAsync();
-    }
+                TopicId = topic.TopicId,
+                TopicName = topic.TopicName,
+                CategoryName = topic.Category!.CategoryName,
+                ViewCount = topic.ViewCount,
+                CreatedAt = topic.CreatedAt,
+                UpdatedAt = topic.UpdatedAt,
+                TopicPicture = picture,
+                Description = topic.Description,
+                VideoUrl = topic.VideoUrl
+            };
+        }
     // =========================
 // PUBLISH
 // =========================

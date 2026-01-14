@@ -75,6 +75,7 @@ public class AdminEcatalogController : Controller
         if (data == null)
             return NotFound();
 
-        return PartialView("_TopicDetail", data);
+        return PartialView("DetailModal", data);
     }
+    
 }

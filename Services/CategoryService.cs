@@ -196,6 +196,38 @@ public class CategoryService : ICategoryService
                     .Take(take)
                     .ToListAsync();
             }
+    public async Task<List<CategoryIndexVM>> GetAllCategoriesAsync(string? search, string? sort)
+{
+    var query = _context.Categories
+        .Include(c => c.Topics)
+        .Where(c => !c.IsDeleted);
 
+    if (!string.IsNullOrWhiteSpace(search))
+        query = query.Where(c => c.CategoryName.Contains(search));
+
+    query = sort switch
+    {
+        "az" => query.OrderBy(c => c.CategoryName),
+        "za" => query.OrderByDescending(c => c.CategoryName),
+        "views" => query.OrderByDescending(c => c.Topics.Where(t => !t.IsDeleted).Sum(t => t.ViewCount)),
+        "topics" => query.OrderByDescending(c => c.Topics.Count(t => !t.IsDeleted)),
+        _ => query.OrderByDescending(c => c.CreatedAt)
+    };
+
+    var items = await query
+        .Select(c => new CategoryIndexVM
+        {
+            CategoryId = c.CategoryId,
+            CategoryName = c.CategoryName,
+            CategoryPicture = c.CategoryPicture,
+            TotalTopics = c.Topics.Count(t => !t.IsDeleted),
+            TotalViews = c.Topics.Where(t => !t.IsDeleted).Sum(t => t.ViewCount)
+        })
+        .ToListAsync();
+
+    return items;
 }
 
+    
+
+}
