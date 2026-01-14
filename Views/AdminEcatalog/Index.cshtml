@@ -91,11 +91,11 @@
                 </td>
 
                 <td>
-                    <button type="button"
-                            class="btn btn-info btn-sm"
-                            onclick="openDetail(@t.TopicId)">
+                    <a href="#"
+                       onclick="openDetail(@t.TopicId); return false;"
+                       class="btn btn-info btn-sm">
                         👁 Detail
-                    </button>
+                    </a>
 
                     <a href="/Admin/EditTopic/@t.TopicId"
                        class="btn btn-warning btn-sm">

@@ -1,0 +1,164 @@
+@using Neksara.ViewModels
+@model List<FeedbackVM>
+
+<section class="mt-5">
+    <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="fw-bold">
+                    <span class="text-primary">💬 Feedback</span>
+                </h4>
+                <p class="text-muted mb-0">
+                    Komentar pengguna untuk topik ini.
+                </p>
+            </div>
+        </div>
+        <!-- CAROUSEL -->
+        <div id="feedbackCarousel"
+             class="carousel slide"
+             data-bs-interval="false">
+
+            <!-- WRAPPER -->
+            <div class="carousel-inner">
+                @{
+                    var totalSlide = (int)Math.Ceiling(Model.Count / 3.0);
+                }
+
+                @for (int i = 0; i < totalSlide; i++)
+                {
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                        <div class="row g-4">
+
+                            @foreach (var fb in Model.Skip(i * 3).Take(3))
+                            {
+                                <div class="col-md-4">
+                                    <div class="feedback-card h-100">
+
+                                        <!-- HEADER -->
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="feedback-avatar">
+                                                    @fb.Name.Substring(0, 1)
+                                                </div>
+                                                <div>
+                                                    <div class="fw-semibold">
+                                                        @fb.Name
+                                                    </div>
+                                                    <small class="text-muted">
+                                                        @fb.Role
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <!-- RATING -->
+                                            <div class="text-warning">
+                                                @for (int r = 1; r <= 5; r++)
+                                                {
+                                                    @(r <= fb.Rating ? "★" : "☆")
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <!-- CONTENT -->
+                                        <p class="text-muted mb-0">
+                                            @fb.Description
+                                        </p>
+
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- ARROWS -->
+            <button class="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#feedbackCarousel"
+                    data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+
+            <button class="carousel-control-next"
+                    type="button"
+                    data-bs-target="#feedbackCarousel"
+                    data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+
+            <!-- PAGINATION -->
+            <div class="carousel-indicators position-relative mt-4">
+                @for (int i = 0; i < totalSlide; i++)
+                {
+                    <button type="button"
+                            data-bs-target="#feedbackCarousel"
+                            data-bs-slide-to="@i"
+                            class="@(i == 0 ? "active" : "")">
+                    </button>
+                }
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- ================= STYLE ================= -->
+<style>
+    .feedback-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+
+    .feedback-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg,#4f46e5,#3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 18px;
+        color: #fff;
+        text-transform: uppercase;
+        flex-shrink: 0;
+    }
+
+    #feedbackCarousel {
+        position: relative;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 44px;
+        height: 44px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgb(253, 251, 251);
+        border-radius: 50%;
+        opacity: 1;
+    }
+
+    .carousel-control-prev {
+        left: -22px;
+    }
+
+    .carousel-control-next {
+        right: -22px;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        filter: invert(1);
+    }
+
+    .carousel-indicators [data-bs-target] {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #3f7f85;
+    }
+</style>

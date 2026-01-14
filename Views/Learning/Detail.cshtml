@@ -4,19 +4,20 @@
     double rating = ViewBag.AvgRating ?? 0;
 }
 
-<a href="/Learning/Topics" class="btn btn-secondary mb-3">⬅️ Kembali</a>
-<div class="card shadow">
+<a href="/Learning/Topics" class="btn btn-secondary mb-3" data-aos="fade-up">⬅️ Kembali</a>
+
+<div class="card shadow" data-aos="fade-up" data-aos-delay="100">
     <div class="card-body">
         <img src="@Model.TopicPicture" class="card-img-top topic-header">
 
-        <span class="badge bg-primary mb-2">
+        <span class="badge bg-primary mb-2" data-aos="fade-up" data-aos-delay="150">
             @Model.Category?.CategoryName
         </span>
 
-        <h3 class="mt-2">@Model.TopicName</h3>
+        <h3 class="mt-2" data-aos="fade-up" data-aos-delay="200">@Model.TopicName</h3>
 
         <!-- ⭐ RATING -->
-        <p class="mb-1">
+        <p class="mb-1" data-aos="fade-up" data-aos-delay="250">
             <strong>@rating.ToString("0.0")</strong> / 5
             <span class="text-warning ms-2">
                 @for (int i = 1; i <= 5; i++)
@@ -32,18 +33,19 @@
                 }
             </span>
         </p>
-        
-        <p class="text-muted mb-1">
+
+        <p class="text-muted mb-1" data-aos="fade-up" data-aos-delay="300">
             👁 @Model.ViewCount kali dilihat
         </p>
 
-        <p class="text-muted mb-3">
+        <p class="text-muted mb-3" data-aos="fade-up" data-aos-delay="350">
             Date publish: @(Model.PublishedAt.HasValue ? Model.PublishedAt.Value.ToString("dd MMM yyyy") : "-")
         </p>
-        <hr />
+        
+        <hr data-aos="fade-up" data-aos-delay="400" />
 
         @{
-        string? embedUrl = null;
+            string? embedUrl = null;
 
         if (!string.IsNullOrEmpty(Model.VideoUrl))
         {
@@ -99,18 +101,98 @@
             }
         }
 
-        <p style="white-space: pre-line;">
+        <p style="white-space: pre-line;" data-aos="fade-up" data-aos-delay="500">
             @Model.Description
         </p>
 
         <!-- 💬 BUTTON FEEDBACK -->
-        <button class="btn btn-outline-primary mt-3"
-                data-bs-toggle="modal"
-                data-bs-target="#feedbackModal">
+        <button class="btn btn-outline-primary mt-3" 
+                data-bs-toggle="modal" 
+                data-bs-target="#feedbackModal"
+                data-aos="fade-up" 
+                data-aos-delay="550">
             💬 Beri Feedback
         </button>
     </div>
 </div>
+
+<!-- ================= FEEDBACK CAROUSEL ================= -->
+@{
+    var feedbacks = ViewBag.Feedbacks as List<FeedbackVM> ?? new List<FeedbackVM>();
+}
+
+@if (feedbacks.Any())
+{
+    <div class="mt-5 mb-5" data-aos="fade-up">
+        <div>
+            <h3 class="fw-bold">
+                <span class="text-primary">💬 Feedback</span>
+            </h3>
+            <p class="text-muted mb-0">
+                    Komentar pengguna untuk topik ini.
+            </p>
+        </div>
+        
+        <div id="feedbackCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                @{
+                    var totalSlides = (int)Math.Ceiling(feedbacks.Count / 3.0);
+                }
+                @for (int i = 0; i < totalSlides; i++)
+                {
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                        <div class="row g-3">
+                            @foreach (var f in feedbacks.Skip(i * 3).Take(3))
+                            {
+                                <div class="col-md-4">
+                                    <div class="feedback-card h-100 p-4 border-0 shadow-sm" style="background:#fff; border-radius:16px;">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="testimonial-avatar">
+                                                    @(string.IsNullOrEmpty(f.Name) ? "A" : f.Name.Substring(0, 1))
+                                                </div>
+                                                <div style="line-height: 1.2;">
+                                                    <div class="fw-bold text-dark" style="font-size: 0.9rem;">@f.Name</div>
+                                                    <small class="text-muted" style="font-size: 0.75rem;">@f.Role</small>
+                                                </div>
+                                            </div>
+                                            <div class="text-warning small">
+                                                @for (int r = 1; r <= 5; r++)
+                                                {
+                                                    @(r <= f.Rating ? "★" : "☆")
+                                                }
+                                            </div>
+                                        </div>
+                                        <p class="text-muted mb-0 small" style="font-style: italic; font-size: 0.85rem;">
+                                            "@f.Description"
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+            
+            @if (totalSlides > 1)
+            {
+                <button class="carousel-control-prev" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="prev" style="left:-40px;">
+                    <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(1);"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="next" style="right:-40px;">
+                    <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(1);"></span>
+                </button>
+                
+                <div class="carousel-indicators position-relative mt-4">
+                    @for (int i = 0; i < totalSlides; i++)
+                    {
+                        <button type="button" data-bs-target="#feedbackCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")"></button>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
 
 <!-- ================= MODAL FEEDBACK ================= -->
 <div class="modal fade" id="feedbackModal" tabindex="-1">
@@ -158,9 +240,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button"
-                            class="btn btn-secondary"
-                            data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Batal
                     </button>
                     <button class="btn btn-primary">
@@ -174,3 +254,44 @@
     </div>
 </div>
 <!-- ================= END MODAL FEEDBACK ================= -->
+
+<style>
+    /* Card Styling */
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Testimonial Avatar */
+    .testimonial-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg,#4f46e5,#3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 16px;
+        color: #fff;
+        text-transform: uppercase;
+        flex-shrink: 0;
+    }
+
+    /* Feedback Card Refinement */
+    .feedback-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.12) !important;
+        transition: all 0.3s ease;
+    }
+
+    /* Carousel Controls - Agak ke bawah */
+    #feedbackCarousel .carousel-control-prev,
+    #feedbackCarousel .carousel-control-next {
+        top: 60%;
+    }
+</style>

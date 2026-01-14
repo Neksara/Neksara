@@ -13,7 +13,7 @@ namespace Neksara.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20260113133825_removeslug")]
-    partial class removeslug
+    partial class RemoveSlug
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

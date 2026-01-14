@@ -7,7 +7,7 @@ namespace Neksara.Services.Interfaces
     public interface IAdminTestimoniService
     {
         // ===== GET ALL TESTIMONI (ADMIN) =====
-        Task<List<Testimoni>> GetAllAsync(int? rating = null, string status = null);
+        Task<List<Testimoni>> GetAllAsync(int? rating = null, string? status = null);
 
         // ===== BULK ACTION =====
         Task ApproveManyAsync(int[] ids);

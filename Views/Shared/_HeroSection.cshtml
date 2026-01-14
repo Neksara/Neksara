@@ -1,19 +1,17 @@
-<section class="hero-section py-5">
+@* Views/Shared/_HeroSection.cshtml *@
+
+<!-- Hero Section -->
+<section id="hero" class="hero section dark-background" data-aos="fade-up">
     <div class="container">
-        <div class="row align-items-center">
-
-            <div class="col-md-6">
-                <h1 class="fw-bold">
-                    Learn a New Skill <br />
-                    Everyday, Anytime, and Anywhere.
-                </h1>
-
-                <p class="text-muted mt-3">
-                    1000+ Courses covering all tech domains for you to learn
-                    and explore new opportunities.
+        <div class="row gy-4">
+            <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center" data-aos="zoom-out">
+                <h1>Learn a New Skill<br><span class="highlight">Everyday, Anytime, and Anywhere.</span></h1>
+                <p class="hero-description text-dark">
+                    <span class="stat-number">1000+</span> Courses covering all tech domains for you to learn and explore new opportunities. 
+                    Learn from Industry Experts and become an Expert in your field.
                 </p>
 
-                <a href="/Learning/Categories" class="btn btn-primary mt-3">
+                <a href="/Learning/CategoryIndex" class="btn btn-primary mt-3">
                     Learn Now
                 </a>
 
@@ -28,13 +26,10 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-6 text-center">
-                <img src="/assets/img/hero-student.png"
-                     class="img-fluid"
-                     alt="Learning Illustration" />
+            <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-out" data-aos-delay="200">
+                <img src="~/assets/img/ElemenWebsiteNeksara.png" class="img-fluid animated" alt="Online Learning">
             </div>
-
         </div>
     </div>
 </section>
+<!-- /Hero Section -->

@@ -5,7 +5,7 @@ public class TopicDetailVM
     public int TopicId { get; set; }
     public string TopicName { get; set; } = string.Empty;
 
-    public string CategoryName { get; set; }
+    public string CategoryName { get; set; } = string.Empty;
 
     public string? TopicPicture { get; set; }
     public string Description { get; set; } = string.Empty;

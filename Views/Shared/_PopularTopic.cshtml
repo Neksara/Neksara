@@ -4,146 +4,97 @@
     int pageSize = 4;
 }
 
-<section class="py-5">
-    <div class="container position-relative">
+<section id="recent-blog-postst" class="recent-blog-postst section light-background" style="background-color:#9fbec2;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-3 d-flex" data-aos="fade-right">
+                <div class="section-title topic-title-wrapper">
+                    <h2 class="topic-title" style="margin-bottom: 15px;">
+                        <span class="title-main">Topik</span>
+                        <span class="title-accent">Paling Populer</span>
+                    </h2>
+                </div>
+            </div>
 
-        <h4 class="fw-bold mb-4">
-            Topik <span class="text-primary">Paling Populer</span>
-        </h4>
-
-        @if (topics != null && topics.Any())
-        {
-            <div class="position-relative">
-
-                <!-- ================= CARD GRID ================= -->
-                <div class="row g-4" id="popularTopicGrid">
-                    @for (int i = 0; i < topics.Count; i++)
+            <div class="col-lg-9">
+                <div class="topics-wrapper">
+                    @if (topics != null && topics.Any())
                     {
-                        var t = topics[i];
-
-                        <div class="col-md-3 popular-topic-item"
-                             data-index="@i">
-                            <div class="card h-100 shadow-sm">
-
-                                <img src="@t.TopicPicture"
-                                     class="card-img-top"
-                                     alt="@t.TopicName"
-                                     style="height:180px; object-fit:cover;" />
-
-                                <div class="card-body">
-
-                                    <span class="badge bg-secondary mb-2">
-                                        @t.CategoryName
-                                    </span>
-
-                                    <h6 class="fw-bold mt-2">
-                                        @t.TopicName
-                                    </h6>
-
-                                    <!-- ⭐ RATING -->
-                                    <p class="mb-1">
-                                        <strong>@t.Rating.ToString("0.0")</strong> / 5
-                                        <span class="text-warning ms-1">
-                                            @for (int s = 1; s <= 5; s++)
-                                            {
-                                                if (s <= Math.Floor(t.Rating))
-                                                { <text>★</text> }
-                                                else
-                                                { <text>☆</text> }
-                                            }
-                                        </span>
-                                        <small class="text-muted">
-                                            (@t.ReviewCount)
-                                        </small>
-                                    </p>
-
-                                    <small class="text-muted">
-                                        👁 @t.ViewCount Views
-                                    </small>
+                        <div class="row gx-4 gy-4">
+                            @for (int i = 0; i < Math.Min(pageSize, topics.Count); i++)
+                            {
+                                var t = topics[i];
+                                <div class="col-xl-3 col-lg-4 col-md-6 popular-topic-item" data-index="@i">
+                                    <div class="card h-100 shadow-sm">
+                                        <img src="@t.TopicPicture" class="card-img-top" alt="@t.TopicName" style="height:180px; object-fit:cover;" />
+                                        <div class="card-body">
+                                            <span class="badge bg-secondary mb-2">@t.CategoryName</span>
+                                            <h6 class="fw-bold mt-2">@t.TopicName</h6>
+                                            <p class="mb-1">
+                                                <strong>@t.Rating.ToString("0.0")</strong> / 5
+                                                <span class="text-warning ms-1">
+                                                    @for (int s = 1; s <= 5; s++) { if (s <= Math.Floor(t.Rating)) { <text>★</text> } else { <text>☆</text> } }
+                                                </span>
+                                                <small class="text-muted">(@t.ReviewCount)</small>
+                                            </p>
+                                            <small class="text-muted">👁 @t.ViewCount Views</small>
+                                        </div>
+                                        <div class="card-footer bg-white border-0">
+                                            <a href="/Learning/Detail/@t.TopicId" class="btn btn-sm btn-primary w-100">📖 Lihat Materi</a>
+                                        </div>
+                                    </div>
                                 </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Belum ada topik populer.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@* 
+                                            <hr>
 
-                                <div class="card-footer bg-white border-0">
-                                    <a href="/Learning/Detail/@t.TopicId"
-                                       class="btn btn-sm btn-primary w-100">
-                                        📖 Lihat Materi
-                                    </a>
+                                            <a href="blog-details.html" class="readmore stretched-link">
+                                                <span class="learn-now-text">Lihat Materi</span>
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+
+                                            <div class="meta-bottom">
+                                                <span class="meta-view">
+                                                    <span class="meta-text">400 view</span>
+                                                    <i class="bi bi-eye"></i>
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
 
+                            <div class="topics-arrows-center">
+                                <button class="arrow-btn prev">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                <button class="arrow-btn next active">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
                             </div>
                         </div>
                     }
+
                 </div>
-
-                <!-- ================= NAV BUTTON ================= -->
-                <button id="btnPrev"
-                        class="btn btn-outline-secondary position-absolute top-50 start-0 translate-middle-y">
-                    ◀
-                </button>
-
-                <button id="btnNext"
-                        class="btn btn-outline-secondary position-absolute top-50 end-0 translate-middle-y">
-                    ▶
-                </button>
-
-                <!-- ================= DOT PAGINATION ================= -->
-                <div class="d-flex justify-content-center mt-4 gap-2"
-                     id="topicDots">
-                </div>
-
             </div>
+
+        </div>
         }
         else
         {
             <p class="text-muted">Belum ada topik populer.</p>
         }
     </div>
-</section>
-
-<!-- ================= SCRIPT ================= -->
-<script>
-    const items = document.querySelectorAll('.popular-topic-item');
-    const pageSize = @pageSize;
-    const totalPages = Math.ceil(items.length / pageSize);
-    let currentPage = 0;
-
-    const dotsContainer = document.getElementById('topicDots');
-
-    function renderDots() {
-        dotsContainer.innerHTML = '';
-        for (let i = 0; i < totalPages; i++) {
-            const dot = document.createElement('span');
-            dot.innerHTML = '●';
-            dot.style.cursor = 'pointer';
-            dot.style.fontSize = '14px';
-            dot.style.color = i === currentPage ? '#0d6efd' : '#ccc';
-            dot.onclick = () => goToPage(i);
-            dotsContainer.appendChild(dot);
-        }
-    }
-
-    function renderPage() {
-        items.forEach((item, index) => {
-            const start = currentPage * pageSize;
-            const end = start + pageSize;
-            item.style.display =
-                index >= start && index < end ? 'block' : 'none';
-        });
-        renderDots();
-    }
-
-    function goToPage(page) {
-        if (page < 0 || page >= totalPages) return;
-        currentPage = page;
-        renderPage();
-    }
-
-    document.getElementById('btnPrev').onclick = () => {
-        if (currentPage > 0) goToPage(currentPage - 1);
-    };
-
-    document.getElementById('btnNext').onclick = () => {
-        if (currentPage < totalPages - 1) goToPage(currentPage + 1);
-    };
-
-    renderPage();
-</script>
+</section> *@
