@@ -1,10 +1,11 @@
 @model List<Neksara.Models.Topic>
+
 @{
     ViewData["Title"] = "E-Catalog";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h3 class="mb-3">📦 E-Katalog Konten</h3>
+<h3 class="mb-3">📦 Content Release</h3>
 
 <!-- FILTER -->
 <form method="get" class="row g-2 mb-3">
@@ -12,21 +13,22 @@
         <input name="search"
                value="@ViewBag.Search"
                class="form-control"
-               placeholder="Cari Topik / Kategori">
+               placeholder="Cari Topik / Kategori" />
     </div>
+
     <div class="col-md-2">
         <button class="btn btn-primary w-100">🔍 Cari</button>
     </div>
+
     <div class="col-md-2">
         <select name="sort"
-            class="form-control"
-            onchange="this.form.submit()">
+                class="form-control"
+                onchange="this.form.submit()">
             <option value="">Default</option>
             <option value="az" selected="@(ViewBag.Sort == "az")">A - Z</option>
             <option value="za" selected="@(ViewBag.Sort == "za")">Z - A</option>
         </select>
     </div>
-    <input type="hidden" name="search" value="@ViewBag.Search" />
 </form>
 
 <form method="post">
@@ -40,13 +42,9 @@
         </button>
 
         <button formaction="/AdminEcatalog/Publish"
-                class="btn btn-success">
+                class="btn btn-success"
+                onclick="return confirm('Publish topik terpilih?')">
             🚀 Publish
-        </button>
-
-        <button formaction="/AdminEcatalog/Withdraw"
-                class="btn btn-warning">
-            ⏸ Withdraw
         </button>
 
         <button formaction="/AdminEcatalog/Delete"
@@ -69,6 +67,7 @@
                 <th width="160">Aksi</th>
             </tr>
         </thead>
+
         <tbody>
 @foreach (var t in Model)
 {
@@ -79,20 +78,18 @@
                            name="topicIds"
                            value="@t.TopicId" />
                 </td>
+
                 <td>@t.TopicName</td>
                 <td>@t.Category?.CategoryName</td>
+
                 <td>@t.CreatedAt.ToString("dd MMM yyyy")</td>
-                <td>@(t.PublishedAt?.ToString("dd MMM yyyy") ?? "-")</td>
+
+                <td>-</td>
+
                 <td>
-                    @if (t.PublishedAt.HasValue)
-                    {
-                        <span class="badge bg-success">Active</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-secondary">Not Active</span>
-                    }
+                    <span class="badge bg-secondary">Not Active</span>
                 </td>
+
                 <td>
                     <button type="button"
                             class="btn btn-info btn-sm"
@@ -110,6 +107,24 @@
         </tbody>
     </table>
 </form>
+
+<!-- PAGINATION -->
+@if (ViewBag.TotalPages > 1)
+{
+<nav class="d-flex justify-content-center">
+    <ul class="pagination">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link"
+                   href="?page=@i&search=@ViewBag.Search&sort=@ViewBag.Sort">
+                    @i
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+}
 
 <!-- MODAL -->
 <div class="modal fade" id="detailModal" tabindex="-1">

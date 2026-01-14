@@ -1,6 +1,6 @@
-@using Neksara.Models
+@using Neksara.ViewModels
 @{
-    var topics = ViewBag.PopularTopics as List<Topic>;
+    var topics = ViewBag.PopularTopics as List<TopicCardVM>;
     int pageSize = 4;
 }
 
@@ -20,6 +20,7 @@
                     <!-- Rating Stars and Count -->
                     @if (topics != null && topics.Any())
                     {
+<<<<<<< HEAD
                         var averageRating = topics
                             .Where(t => t.Feedbacks != null && t.Feedbacks.Any())
                             .Select(t => t.Feedbacks.Average(f => f.Rating))
@@ -43,6 +44,58 @@
                                         <i class="bi bi-star text-warning"></i>
                                     }
                                 }
+=======
+                        var t = topics[i];
+
+                        <div class="col-md-3 popular-topic-item"
+                             data-index="@i">
+                            <div class="card h-100 shadow-sm">
+
+                                <img src="@t.TopicPicture"
+                                     class="card-img-top"
+                                     alt="@t.TopicName"
+                                     style="height:180px; object-fit:cover;" />
+
+                                <div class="card-body">
+
+                                    <span class="badge bg-secondary mb-2">
+                                        @t.CategoryName
+                                    </span>
+
+                                    <h6 class="fw-bold mt-2">
+                                        @t.TopicName
+                                    </h6>
+
+                                    <!-- ⭐ RATING -->
+                                    <p class="mb-1">
+                                        <strong>@t.Rating.ToString("0.0")</strong> / 5
+                                        <span class="text-warning ms-1">
+                                            @for (int s = 1; s <= 5; s++)
+                                            {
+                                                if (s <= Math.Floor(t.Rating))
+                                                { <text>★</text> }
+                                                else
+                                                { <text>☆</text> }
+                                            }
+                                        </span>
+                                        <small class="text-muted">
+                                            (@t.ReviewCount)
+                                        </small>
+                                    </p>
+
+                                    <small class="text-muted">
+                                        👁 @t.ViewCount Views
+                                    </small>
+                                </div>
+
+                                <div class="card-footer bg-white border-0">
+                                    <a href="/Learning/Detail/@t.TopicId"
+                                       class="btn btn-sm btn-primary w-100">
+                                        📖 Lihat Materi
+                                    </a>
+                                </div>
+
+>>>>>>> ab47105e5f79c40375b6296f61d3626beddcbb66
                             </div>
                             <span class="rating-count" style="color: #666; font-size: 14px; font-weight: 600;">
                                 @averageRating.ToString("0.0")
@@ -51,6 +104,7 @@
                     }
                 </div>
             </div>
+<<<<<<< HEAD
 
             <!-- RIGHT: CARD + ARROWS -->
             <div class="col-lg-9">
@@ -224,5 +278,12 @@
             </div>
 
         </div>
+=======
+        }
+        else
+        {
+            <p class="text-muted">Belum ada topik populer.</p>
+        }
+>>>>>>> ab47105e5f79c40375b6296f61d3626beddcbb66
     </div>
 </section>

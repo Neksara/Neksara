@@ -1,8 +1,10 @@
 @model List<Neksara.ViewModels.CategoryCardVM>
 @{
     ViewData["Title"] = "Kategori E-Learning";
+    int? selectedId = ViewBag.SelectedCategoryId as int?;
 }
 
+<<<<<<< HEAD
 <!-- Search Section -->
 <div class="search-section bg-white py-5">
     <div class="container">
@@ -24,11 +26,90 @@
                         </button>
                     </div>
                 </div>
+=======
+<h2 class="fw-bold mb-4">📂 Kategori E-Learning</h2>
+
+<!-- ================= DROPDOWN FILTER ================= -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <select class="form-select"
+                onchange="location = this.value">
+            <option value="/Learning/Categories">
+                🔽 Semua Kategori
+            </option>
+
+            @foreach (var c in Model)
+{
+    if (selectedId == c.CategoryId)
+    {
+        <option value="/Learning/Categories?categoryId=@c.CategoryId" selected>
+            @c.CategoryName
+        </option>
+    }
+    else
+    {
+        <option value="/Learning/Categories?categoryId=@c.CategoryId">
+            @c.CategoryName
+        </option>
+    }
+}        </select>
+    </div>
+</div>
+
+@if (selectedId == null)
+{
+<!-- ================= SEARCH + SORT ================= -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <input type="text"
+                    id="searchInput"
+                    class="form-control"
+                    placeholder="🔍 Cari kategori..." />
+            </div>
+
+            <div class="col-md-3">
+                <select id="sortSelect" class="form-select">
+                    <option value="az">A - Z</option>
+                    <option value="za">Z - A</option>
+                </select>
+            </div>
+        </div>
+        }
+
+        <!-- ================= CARD GRID ================= -->
+        <div class="row g-4" id="categoryGrid">
+        @foreach (var c in Model)
+        {
+            <div class="col-md-4 category-item"
+                data-name="@c.CategoryName">
+            <div class="card h-100 shadow-sm">
+
+                <img src="@c.CategoryPicture"
+                    class="card-img-top"
+                    alt="@c.CategoryName"
+                    style="height:200px; object-fit:cover;" />
+
+            <div class="card-body">
+                <h5 class="fw-bold">@c.CategoryName</h5>
+
+                <p class="text-muted">
+                    @(string.IsNullOrEmpty(c.Description)
+                        ? "-"
+                        : c.Description.Length > 100
+                            ? c.Description.Substring(0, 100) + "..."
+                            : c.Description)
+                </p>
+
+                <span class="badge bg-primary">
+                    📘 @c.TotalTopics Topik
+                </span>
+>>>>>>> ab47105e5f79c40375b6296f61d3626beddcbb66
             </div>
         </div>
     </div>
 </div>
 
+<<<<<<< HEAD
 <!-- Categories Section -->
 <section id="services" class="services section light-background">
     <div class="container">
@@ -330,3 +411,36 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 });
 </script>
+=======
+@if (selectedId == null)
+{
+<!-- ================= SCRIPT ================= -->
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    const items = document.querySelectorAll('.category-item');
+    const grid = document.getElementById('categoryGrid');
+
+    searchInput.addEventListener('keyup', () => {
+        const keyword = searchInput.value.toLowerCase();
+        items.forEach(item => {
+            const name = item.dataset.name.toLowerCase();
+            item.style.display = name.includes(keyword) ? 'block' : 'none';
+        });
+    });
+
+    sortSelect.addEventListener('change', () => {
+        const sorted = [...items].sort((a, b) => {
+            const nameA = a.dataset.name.toLowerCase();
+            const nameB = b.dataset.name.toLowerCase();
+            return sortSelect.value === 'az'
+                ? nameA.localeCompare(nameB)
+                : nameB.localeCompare(nameA);
+        });
+
+        grid.innerHTML = '';
+        sorted.forEach(i => grid.appendChild(i));
+    });
+</script>
+}
+>>>>>>> ab47105e5f79c40375b6296f61d3626beddcbb66

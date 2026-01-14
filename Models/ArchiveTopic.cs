@@ -15,10 +15,12 @@ namespace Neksara.Models
         public string VideoUrl { get; set; } = string.Empty;
         public int ViewCount { get; set; }
         public string CategoryPicture { get; set; } = string.Empty;
-        public int CategoryId { get; set; }
-        public Category? Category { get; set; }
+        // keep optional category id but do NOT create FK to live Category table
+        public int? CategoryId { get; set; }
+        // store category name snapshot for archive
+        public string CategoryName { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
-         public DateTime UpdatedAt { get; set; }
+         public DateTime? UpdatedAt { get; set; }
         public DateTime ArchivedAt { get; set; } = DateTime.Now;
     }
 }

@@ -34,11 +34,14 @@ public class CategoryService : ICategoryService
             "za" => query.OrderByDescending(c => c.CategoryName),
             "views" => query.OrderByDescending(c =>
                 c.Topics.Where(t => !t.IsDeleted).Sum(t => t.ViewCount)),
+            "topics" => query.OrderByDescending(c =>
+                c.Topics.Count(t => !t.IsDeleted)),
+
             _ => query.OrderByDescending(c => c.CreatedAt)
         };
 
         int totalData = await query.CountAsync();
-        int totalPage = (int)Math.Ceiling(totalData / (double)pageSize);
+        int totalPage = (int)Math.Ceiling(totalData / (double)pageSize);    
 
         var items = await query
             .Skip((page - 1) * pageSize)
@@ -146,10 +149,54 @@ public class CategoryService : ICategoryService
 
     public async Task SoftDeleteAsync(int id)
     {
-        var data = await _context.Categories.FindAsync(id);
+        var data = await _context.Categories
+            .Include(c => c.Topics)
+            .FirstOrDefaultAsync(c => c.CategoryId == id);
+
         if (data == null) return;
 
-        data.IsDeleted = true;
+        // Archive all topics under this category
+        var topicsToArchive = data.Topics.Where(t => !t.IsDeleted).ToList();
+        foreach (var t in topicsToArchive)
+        {
+            _context.ArchiveTopics.Add(new ArchiveTopic
+            {
+                OriginalTopicId = t.TopicId,
+                TopicName = t.TopicName,
+                Description = t.Description,
+                TopicPicture = t.TopicPicture,
+                VideoUrl = t.VideoUrl,
+                // do not keep FK reference to Category — snapshot name and picture
+                CategoryId = null,
+                CategoryName = data.CategoryName,
+                CategoryPicture = data.CategoryPicture,
+                CreatedAt = t.CreatedAt,
+                UpdatedAt = t.UpdatedAt,
+                ViewCount = t.ViewCount,
+                ArchivedAt = DateTime.Now
+            });
+        }
+
+        if (topicsToArchive.Any())
+        {
+            _context.Topics.RemoveRange(topicsToArchive);
+        }
+
+        // Archive the category itself
+        _context.ArchiveCategories.Add(new ArchiveCategory
+        {
+            OriginalCategoryId = data.CategoryId,
+            CategoryName = data.CategoryName,
+            Description = data.Description,
+            CategoryPicture = data.CategoryPicture,
+            CreatedAt = data.CreatedAt,
+            UpdatedAt = data.UpdatedAt,
+            ArchivedAt = DateTime.Now
+        });
+
+        // Remove the original category
+        _context.Categories.Remove(data);
+
         await _context.SaveChangesAsync();
     }
 

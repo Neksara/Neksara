@@ -50,6 +50,48 @@ namespace Neksara.Migrations
                     b.ToTable("Admins");
                 });
 
+            modelBuilder.Entity("Neksara.Models.ArchiveCategory", b =>
+                {
+                    b.Property<int>("ArchiveCategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ArchiveCategoryId"));
+
+                    b.Property<DateTime>("ArchivedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CategoryPicture")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("OriginalCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ArchiveCategoryId");
+
+                    b.ToTable("ArchiveCategories", (string)null);
+                });
+
             modelBuilder.Entity("Neksara.Models.ArchiveTopic", b =>
                 {
                     b.Property<int>("ArchiveTopicId")
@@ -63,8 +105,12 @@ namespace Neksara.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CategoryPicture")
                         .IsRequired()
@@ -91,7 +137,7 @@ namespace Neksara.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("VideoUrl")
@@ -105,8 +151,6 @@ namespace Neksara.Migrations
                         .HasDefaultValue(0);
 
                     b.HasKey("ArchiveTopicId");
-
-                    b.HasIndex("CategoryId");
 
                     b.ToTable("ArchiveTopics", (string)null);
                 });
@@ -143,10 +187,6 @@ namespace Neksara.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -331,9 +371,8 @@ namespace Neksara.Migrations
                     b.Property<DateTime?>("PublishedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("ScheduledAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("TopicName")
                         .IsRequired()
@@ -436,17 +475,6 @@ namespace Neksara.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("Neksara.Models.ArchiveTopic", b =>
-                {
-                    b.HasOne("Neksara.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Neksara.Models.Feedback", b =>

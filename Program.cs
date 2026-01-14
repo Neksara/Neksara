@@ -32,6 +32,9 @@ builder.Services.AddAuthorization();
 // ===== CONTROLLERS & VIEWS =====
 builder.Services.AddControllersWithViews();
 
+// ===== MEMORY CACHE =====
+builder.Services.AddMemoryCache();
+
 // ===== CACHE & SESSION =====
 builder.Services.AddDistributedMemoryCache(); // wajib kalau mau pakai session
 builder.Services.AddSession(options =>

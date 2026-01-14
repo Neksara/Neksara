@@ -3,9 +3,53 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h3>🗄️ Arsip Topik</h3>
+<h3>🗄️ Arsip</h3>
 
-<form method="get" class="mb-3 d-flex gap-2">
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        ✅ @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Archived Categories -->
+<h5>Arsip Kategori</h5>
+<table class="table table-bordered mb-4">
+    <thead>
+        <tr>
+            <th>Kategori</th>
+            <th>Deskripsi</th>
+            <th>Archived At</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var c in (List<ArchiveCategory>)ViewBag.ArchiveCategories)
+    {
+        <tr>
+            <td>@c.CategoryName</td>
+            <td>@c.Description</td>
+            <td>@c.ArchivedAt.ToString("dd MMM yyyy")</td>
+            <td class="d-flex gap-2">
+                <form asp-action="RestoreCategory" method="post">
+                    <input type="hidden" name="id" value="@c.ArchiveCategoryId" />
+                    <button class="btn btn-success btn-sm">🔄 Restore</button>
+                </form>
+                <form asp-action="HardDeleteArchiveCategory" method="post">
+                    <input type="hidden" name="id" value="@c.ArchiveCategoryId" />
+                    <button class="btn btn-danger btn-sm">🗑️ Delete Permanen</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<!-- Archived Topics -->
+<h5>Arsip Topik</h5>
+
+@* <form method="get" class="mb-3 d-flex gap-2">
     <select name="categoryId" class="form-control" style="max-width:250px">
         <option value="">-- Semua Kategori --</option>
         @foreach (var c in ViewBag.Categories)
@@ -17,15 +61,7 @@
         }
     </select>
     <button class="btn btn-primary">Filter</button>
-</form>
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        ✅ @TempData["Success"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-}
+</form> *@
 
 <table class="table table-bordered">
     <thead>
@@ -42,10 +78,10 @@
     {
         <tr>
             <td>@t.TopicName</td>
-            <td>@t.Category?.CategoryName</td>
+            <td>@t.CategoryName</td>
             <td>@t.ViewCount</td>
             <td>@t.ArchivedAt.ToString("dd MMM yyyy")</td>
-            <td>
+            <td class="d-flex gap-2">
                 <form asp-action="Restore" method="post">
                     <input type="hidden" name="id" value="@t.ArchiveTopicId" />
                     <button class="btn btn-success btn-sm">🔄 Restore</button>
