@@ -1,3 +1,38 @@
+<<<<<<< HEAD
+<footer id="footer" class="footer text-white" style="background-color:#9fbec2;">
+  <div class="container py-5">
+    <div class="row">
+
+      <!-- Brand -->
+      <div class="col-md-4 mb-4">
+
+        <!-- Logo -->
+        <img src="~/assets/img/Neksara-logoNew.png" alt="Neksara" class="mb-3" style="height: 200px;" />
+
+      </div>
+
+      <!-- Explore -->
+      <div class="col-md-2 mb-4">
+        <h6 class="fw-bold">Explore</h6>
+        <ul class="list-unstyled">
+          <li><a asp-controller="Home" asp-action="Index" class="text-white text-decoration-none">Home</a></li>
+          <li><a asp-controller="Course" asp-action="Index" class="text-white text-decoration-none">E-Learning</a></li>
+          <li><a asp-controller="Home" asp-action="Contact"
+              class="text-white text-decoration-none open-contact-modal">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Category -->
+      <div class="col-md-3 mb-4">
+        <h6 class="fw-bold">Kategori</h6>
+        <ul class="list-unstyled">
+          <li>Development</li>
+          <li>Programming</li>
+          <li>Design</li>
+          <li>Arsitek</li>
+        </ul>
+      </div>
+=======
 <footer id="siteFooter"
         class="text-light pt-5 pb-4"
         style="background-color:#3f7f85;">
@@ -95,13 +130,31 @@
                     </a>
                 </div>
             </div>
+>>>>>>> ab47105e5f79c40375b6296f61d3626beddcbb66
 
+      <!-- Newsletter -->
+      <div class="col-md-3">
+        <h6 class="fw-bold">Contact Us</h6>
+        <p>Call: +123-2322-23232</p>
+        <p class="small">
+          Growth is a choice. Learning is the path.<br />
+          Platform e-learning untuk meningkatkan skill digital.
+        </p>
+        <div class="d-flex gap-2">
+          <a href="#" class="text-white"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-white"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="text-white"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
         </div>
 
-        <hr class="border-light opacity-25">
+      </div>
 
-        <div class="text-center small">
-            © @DateTime.Now.Year Neksara. All rights reserved.
-        </div>
     </div>
+
+    <hr class="border-light">
+
+    <div class="text-center small">
+      © @DateTime.Now.Year <strong>Neksara</strong>. All Rights Reserved
+    </div>
+  </div>
 </footer>

@@ -3,6 +3,7 @@ using Neksara.Data;
 using Neksara.Models;
 using Neksara.Services.Interfaces;
 using Neksara.ViewModels;
+using System.Text.RegularExpressions;
 
 namespace Neksara.Services;
 
@@ -15,7 +16,8 @@ public class TopicService : ITopicService
         _context = context;
     }
 
-    public async Task<List<Topic>> GetAllAsync(string? search, string? sort, int? categoryId)
+    // Get topics for admin index with paging
+    public async Task<(List<Topic> Items, int TotalPage)> GetAllAsync(string? search, string? sort, int page, int pageSize, int? categoryId)
     {
         var query = _context.Topics
             .Include(t => t.Category)
@@ -36,7 +38,15 @@ public class TopicService : ITopicService
             _ => query.OrderByDescending(t => t.CreatedAt)
         };
 
-        return await query.ToListAsync();
+        var total = await query.CountAsync();
+        var totalPage = (int)Math.Ceiling(total / (double)pageSize);
+
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (items, totalPage);
     }
 
     public async Task<List<Category>> GetCategoriesAsync()
@@ -65,6 +75,8 @@ public class TopicService : ITopicService
 
     public async Task CreateAsync(Topic model, IFormFile? image)
     {
+        model.VideoUrl = SanitizeVideoInput(model.VideoUrl);
+
         if (image != null)
         {
             var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
@@ -95,7 +107,7 @@ public class TopicService : ITopicService
 
         topic.TopicName = model.TopicName;
         topic.Description = model.Description;
-        topic.VideoUrl = model.VideoUrl;
+        topic.VideoUrl = SanitizeVideoInput(model.VideoUrl);
         topic.CategoryId = model.CategoryId;
         topic.PublishedAt = null;
         topic.UpdatedAt = DateTime.Now;
@@ -119,19 +131,42 @@ public class TopicService : ITopicService
         await _context.SaveChangesAsync();
     }
 
+    private string? SanitizeVideoInput(string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return input;
+
+        // Remove any script tags
+        var noScripts = Regex.Replace(input, "<script[\\s\\S]*?>[\\s\\S]*?<\\/script>", string.Empty, RegexOptions.IgnoreCase);
+
+        // Remove javascript: URIs to be safe
+        noScripts = Regex.Replace(noScripts, "javascript:\\s*", string.Empty, RegexOptions.IgnoreCase);
+
+        // Trim length to reasonable limit (e.g., 2000 chars)
+        if (noScripts.Length > 2000) return noScripts.Substring(0, 2000);
+
+        return noScripts;
+    }
+
     public async Task ArchiveAsync(int id)
     {
-        var topic = await _context.Topics.FirstOrDefaultAsync(t => t.TopicId == id);
+        var topic = await _context.Topics
+            .Include(t => t.Category)
+            .FirstOrDefaultAsync(t => t.TopicId == id);
         if (topic == null) return;
 
         _context.ArchiveTopics.Add(new ArchiveTopic
         {
+            OriginalTopicId = topic.TopicId,
             TopicName = topic.TopicName,
             Description = topic.Description,
             TopicPicture = topic.TopicPicture,
             VideoUrl = topic.VideoUrl,
-            CategoryId = topic.CategoryId,
+            // avoid referencing live Category FK — store snapshot instead
+            CategoryId = null,
+            CategoryName = topic.Category?.CategoryName ?? string.Empty,
+            CategoryPicture = topic.Category?.CategoryPicture ?? string.Empty,
             CreatedAt = topic.CreatedAt,
+            UpdatedAt = topic.UpdatedAt,
             ViewCount = topic.ViewCount,
             ArchivedAt = DateTime.Now
         });

@@ -2,22 +2,105 @@
     ViewData["Title"] = "Login";
 }
 
-<h2>Login</h2>
+<div class="login-wrapper" style="background: linear-gradient(135deg, #9fbec2 0%, #b8d0d4 50%, #e8f1f3 100%); min-height: 100vh; display: flex; align-items: center; padding: 40px 20px;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-7">
+                <!-- Login Card -->
+                <div class="card shadow animate__animated animate__fadeInUp" style="border-radius: 16px; border: none; overflow: hidden; margin-bottom: 30px;">
 
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">@ViewBag.Error</div>
-}
+                    <!-- Card Body -->
+                    <div class="card-body p-4 p-lg-5">
+                        <!-- Error Message -->
+                        @if (ViewBag.Error != null)
+                        {
+                            <div class="alert alert-danger animate__animated animate__shakeX" role="alert" style="border-radius: 10px; border: none; background: #ffe6e6; color: #d32f2f;">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
+                            </div>
+                        }
 
-<form asp-action="Login" method="post">
-    <div class="mb-3">
-        <label>Username</label>
-        <input type="text" name="username" class="form-control" required />
+                        <!-- Login Form -->
+                        <form asp-action="Login" method="post" class="needs-validation" novalidate>
+                            <!-- Username Input -->
+                            <div class="mb-4">
+                                <label class="form-label mb-2" style="font-weight: 600; color: #37517e;">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-right: none; border-radius: 8px 0 0 8px;">
+                                        <i class="bi bi-person text-muted"></i>
+                                    </span>
+                                    <input type="text" name="username" class="form-control" required 
+                                           placeholder="Masukkan username"
+                                           style="border-radius: 0 8px 8px 0; border-left: none; padding: 12px 15px; border: 1px solid #dee2e6; transition: all 0.3s ease;">
+                                </div>
+                                <div class="invalid-feedback">Username harus diisi.</div>
+                            </div>
+
+                            <!-- Password Input -->
+                            <div class="mb-4">
+                                <label class="form-label mb-2" style="font-weight: 600; color: #37517e;">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-right: none; border-radius: 8px 0 0 8px;">
+                                        <i class="bi bi-lock text-muted"></i>
+                                    </span>
+                                    <input type="password" name="password" class="form-control" required 
+                                           placeholder="Masukkan password"
+                                           style="border-radius: 0 8px 8px 0; border-left: none; padding: 12px 15px; border: 1px solid #dee2e6; transition: all 0.3s ease;">
+                                </div>
+                                <div class="invalid-feedback">Password harus diisi.</div>
+                            </div>
+
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn w-100 py-3" 
+                                    style="background: linear-gradient(90deg, #9fbec2 0%, #7aa4a9 100%); color: white; font-weight: 600; font-size: 16px; border: none; border-radius: 10px; transition: all 0.3s ease;">
+                                <i class="bi bi-box-arrow-in-right me-2"></i> Login
+                            </button>
+                           
+                        </form>
+                    </div>
+
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label>Password</label>
-        <input type="password" name="password" class="form-control" required />
-    </div>
-    <button type="submit" class="btn btn-success w-100">Login</button>
-</form>
+</div>
 
+<script>
+    // Form validation
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animasi untuk input saat fokus
+        const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.borderColor = '#9fbec2';
+                this.style.boxShadow = '0 0 0 3px rgba(159, 190, 194, 0.2)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.borderColor = '#dee2e6';
+                this.style.boxShadow = 'none';
+            });
+        });
+
+        // Form validation
+        const form = document.querySelector('.needs-validation');
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+
+        // Button hover effect
+        const submitBtn = document.querySelector('button[type="submit"]');
+        submitBtn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 8px 20px rgba(159, 190, 194, 0.4)';
+        });
+        
+        submitBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+    });
+</script>

@@ -12,17 +12,19 @@
     <div class="col-12 col-md-5">
         <input type="text"
                id="searchInput"
+               name="search"
+               value="@ViewBag.Search"
                class="form-control"
                placeholder="🔍 Cari kategori..." />
     </div>
 
     <!-- SORT -->
-    <select id="sortSelect" class="form-select w-auto">
+    <select id="sortSelect" name="sort" class="form-select w-auto">
         <option value="">Default</option>
-        <option value="az">A - Z</option>
-        <option value="za">Z - A</option>
-        <option value="views">View Terbanyak</option>
-        <option value="topics">Topik Terbanyak</option>
+        <option value="az" selected="@(ViewBag.Sort == "az")">A - Z</option>
+        <option value="za" selected="@(ViewBag.Sort == "za")">Z - A</option>
+        <option value="views" selected="@(ViewBag.Sort == "views")">View Terbanyak</option>
+        <option value="topics" selected="@(ViewBag.Sort == "topics")">Topik Terbanyak</option>
     </select>
 
     <a href="/Admin/CreateCategory"
@@ -92,47 +94,49 @@
 }
     </tbody>
 </table>
+</table>
 
-<!-- ================= SCRIPT SEARCH & SORT ================= -->
+@{
+    var current = (int?)(ViewBag.CurrentPage ?? 1) ?? 1;
+    var total = (int?)(ViewBag.TotalPages ?? 1) ?? 1;
+}
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <li class="page-item @(current == 1 ? "disabled" : "")">
+            <a class="page-link" href="?search=@ViewBag.Search&sort=@ViewBag.Sort&page=@(current-1)">Previous</a>
+        </li>
+
+        @for (int i = 1; i <= total; i++)
+        {
+            <li class="page-item @(i == current ? "active" : "")">
+                <a class="page-link" href="?search=@ViewBag.Search&sort=@ViewBag.Sort&page=@i">@i</a>
+            </li>
+        }
+
+        <li class="page-item @(current == total ? "disabled" : "")">
+            <a class="page-link" href="?search=@ViewBag.Search&sort=@ViewBag.Sort&page=@(current+1)">Next</a>
+        </li>
+    </ul>
+</nav>
+
 <script>
     const searchInput = document.getElementById('searchInput');
     const sortSelect = document.getElementById('sortSelect');
-    const tableBody = document.getElementById('categoryTable');
 
-    function getRows() {
-        return Array.from(document.querySelectorAll('.category-row'));
+    function navigateWithFilters(page = 1) {
+        const params = new URLSearchParams();
+        const s = searchInput.value;
+        const sort = sortSelect.value;
+
+        if (s) params.set('search', s);
+        if (sort) params.set('sort', sort);
+        params.set('page', page);
+
+        window.location.search = params.toString();
     }
 
-    // SEARCH
-    searchInput.addEventListener('keyup', () => {
-        const keyword = searchInput.value.toLowerCase();
-
-        getRows().forEach(row => {
-            const name = row.dataset.name;
-            row.style.display = name.includes(keyword) ? '' : 'none';
-        });
-    });
-
-    // SORT
-    sortSelect.addEventListener('change', () => {
-        const rows = getRows();
-
-        rows.sort((a, b) => {
-            switch (sortSelect.value) {
-                case 'az':
-                    return a.dataset.name.localeCompare(b.dataset.name);
-                case 'za':
-                    return b.dataset.name.localeCompare(a.dataset.name);
-                case 'views':
-                    return b.dataset.views - a.dataset.views;
-                case 'topics':
-                    return b.dataset.topics - a.dataset.topics;
-                default:
-                    return 0;
-            }
-        });
-
-        tableBody.innerHTML = '';
-        rows.forEach(r => tableBody.appendChild(r));
+    searchInput.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') navigateWithFilters(1);
     });
 </script>

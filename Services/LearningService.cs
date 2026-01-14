@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Neksara.Data;
+using Microsoft.Extensions.Caching.Memory;
 using Neksara.Models;
 using Neksara.ViewModels;
 
@@ -8,10 +9,12 @@ namespace Neksara.Services
     public class LearningService : ILearningService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMemoryCache _cache;
 
-        public LearningService(ApplicationDbContext context)
+        public LearningService(ApplicationDbContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         // ================= CATEGORY CARD =================
@@ -110,6 +113,16 @@ namespace Neksara.Services
         {
             topic.ViewCount++;
             await _context.SaveChangesAsync();
+
+            // Invalidate popular topics cache (take=8) so homepage reflects new view counts
+            try
+            {
+                _cache.Remove("PopularTopics_take_8");
+            }
+            catch
+            {
+                // ignore cache errors
+            }
         }
 
         public async Task<double> GetAverageRatingAsync(int topicId)

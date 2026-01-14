@@ -2,6 +2,29 @@
 @{
     ViewData["Title"] = "Topik E-Learning";
 }
+<<<<<<< HEAD
+
+<!-- Search Section -->
+<div class="search-section bg-white py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <br>
+                <div class="search-wrapper shadow rounded-4 p-4 p-lg-5">
+                    <!-- Search Bar -->
+                    <div class="input-group input-group-lg mb-4">
+                        <span class="input-group-text bg-light border-0 px-4">
+                            <i class="bi bi-search text-muted fs-5"></i>
+                        </span>
+                        <input type="text" class="form-control border-0 bg-light py-3" id="searchInput"
+                            placeholder="Contoh: Web Development, Data Science, UI/UX Design...">
+                        <button class="btn btn-primary px-4" type="button" id="searchButton">
+                            <i class="bi bi-search me-2"></i> Cari
+                        </button>
+                    </div>
+                </div>
+            </div>
+=======
 
 <h2 class="fw-bold mb-4">📘 Topik Pembelajaran</h2>
 
@@ -89,11 +112,269 @@
                     📖 Pelajari
                 </a>
             </div>
+>>>>>>> ab47105e5f79c40375b6296f61d3626beddcbb66
         </div>
     </div>
-}
 </div>
 
+<<<<<<< HEAD
+<!-- Topics Section -->
+<section id="topics" class="recent-blog-postst section light-background">
+    <div class="container">
+
+        <!-- Header Section -->
+        <div class="row align-items-center mb-4">
+            <!-- Bagian Kiri: Judul Topik -->
+            <div class="col-lg-6 col-md-6">
+                <div class="section-header-left" data-aos="fade-up">
+                    <h2>Topik</h2>
+                </div>
+            </div>
+
+            <!-- Bagian Kanan: Filter -->
+            <div class="col-lg-6 col-md-8 offset-md-2">
+                <div class="topics-filter" data-aos="fade-up" data-aos-delay="100">
+                    <div class="d-flex justify-content-end align-items-center gap-1">
+                        <!-- Filter Populer -->
+                        <div class="filter-item">
+                            <button class="btn btn-sm filter-btn filter-popular active" type="button"
+                                data-filter="popular">
+                                <i class="bi bi-fire me-1"></i>Populer
+                            </button>
+                        </div>
+
+                        <div class="filter-item">
+                            <button class="btn btn-sm filter-btn" type="button" data-filter="rating">
+                                <i class="bi bi-star-fill me-1"></i>Rating Tertinggi
+                            </button>
+                        </div>
+
+                        <div class="filter-item">
+                            <button class="btn btn-sm filter-btn" type="button" data-filter="az">
+                                <i class="bi bi-sort-alpha-down me-1"></i>A-Z
+                            </button>
+                        </div>
+
+                        <div class="filter-item">
+                            <button class="btn btn-sm filter-btn" type="button" data-filter="za">
+                                <i class="bi bi-sort-alpha-down-alt me-1"></i>Z-A
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= CARD GRID ================= -->
+
+        <div class="row" id="topicGrid">
+            @foreach (var t in Model.Topics)
+            {
+                <div class="col-xl-3 col-lg-4 col-md-6 topic-card-item" data-aos="fade-up" data-aos-delay="400"
+                    data-name="@t.TopicName" data-rating="@t.Rating" data-view="@t.ViewCount">
+
+                    <div class="post-item h-100">
+
+                        <div class="post-img position-relative overflow-hidden">
+                            <img src="@t.TopicPicture" class="img-fluid" alt="@t.TopicName"
+                                style="height:180px; object-fit:cover; width:100%;">
+                            <span class="post-date">@t.CategoryName</span>
+                        </div>
+
+                        <div class="post-content d-flex flex-column">
+
+                            <h3 class="post-title">
+                                @t.TopicName
+                            </h3>
+
+                            <!-- Rating Stars -->
+                            <div class="post-rating d-flex align-items-center mt-2 mb-3" style="gap: 5px;">
+                                <div class="star-rating-small">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= Math.Floor(t.Rating))
+                                        {
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 14px;"></i>
+                                        }
+                                        else if (i == Math.Ceiling(t.Rating) && t.Rating % 1 > 0)
+                                        {
+                                            <i class="bi bi-star-half text-warning" style="font-size: 14px;"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-star text-warning" style="font-size: 14px;"></i>
+                                        }
+                                    }
+                                </div>
+                                <span class="rating-count-small" style="color: #666; font-size: 13px; font-weight: 500;">
+                                    @t.Rating.ToString("0.0")
+                                </span>
+                                <span class="review-count" style="color: #888; font-size: 12px; margin-left: 3px;">
+                                    (@t.ReviewCount)
+                                </span>
+                            </div>
+
+                            <hr>
+
+                            <a href="/Learning/Detail/@t.TopicId" class="readmore stretched-link">
+                                <span class="learn-now-text">Learn Now</span>
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+
+                            <div class="meta-bottom">
+                                <span class="meta-date">
+                                    <i class="bi bi-calendar3"></i>
+                                    <span class="meta-text">
+                                        @(t.PublishedAt.HasValue? t.PublishedAt.Value.ToString("dd/MM/yyyy") : "-")
+                                    </span>
+                                </span>
+
+                                <span class="meta-view">
+                                    <span class="meta-text">@t.ViewCount view@(t.ViewCount != 1 ? "s" : "")</span>
+                                    <i class="bi bi-eye"></i>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- ================= PAGINATION ================= -->
+        @if (Model.TotalPages > 1)
+        {
+            <nav class="mt-5">
+                <ul class="pagination justify-content-center">
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="/Learning/Topics?page=@i&categoryId=@Model.CurrentCategory">
+                                @i
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+
+    </div>
+</section>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        let items = [...document.querySelectorAll('.topic-card-item')];
+        const grid = document.getElementById('topicGrid');
+
+        // Fungsi untuk mengupdate tampilan tombol aktif
+        function updateActiveButton(activeButton) {
+            filterButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            activeButton.classList.add('active');
+        }
+
+        // Fungsi untuk sorting
+        function sortItems(criteria) {
+            let sorted = [];
+
+            switch (criteria) {
+                case 'rating':
+                    sorted = items.sort((a, b) =>
+                        parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating));
+                    break;
+
+                case 'az':
+                    sorted = items.sort((a, b) =>
+                        a.dataset.name.localeCompare(b.dataset.name));
+                    break;
+
+                case 'za':
+                    sorted = items.sort((a, b) =>
+                        b.dataset.name.localeCompare(a.dataset.name));
+                    break;
+
+                default: // popular
+                    sorted = items.sort((a, b) =>
+                        parseInt(b.dataset.view) - parseInt(a.dataset.view));
+            }
+
+            // Clear grid dan append item yang sudah diurutkan
+            grid.innerHTML = '';
+            sorted.forEach(item => {
+                grid.appendChild(item);
+            });
+            
+            // Update items array dengan urutan baru
+            items = [...sorted];
+        }
+
+        // Fungsi untuk pencarian
+        function performSearch() {
+            const keyword = searchInput.value.toLowerCase();
+            let hasVisibleItems = false;
+
+            items.forEach(item => {
+                const name = item.dataset.name.toLowerCase();
+                const categoryElement = item.querySelector('.post-date');
+                const category = categoryElement ? categoryElement.textContent.toLowerCase() : '';
+
+                if (keyword === '' || name.includes(keyword) || category.includes(keyword)) {
+                    item.style.display = 'block';
+                    hasVisibleItems = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Jika tidak ada item yang cocok, tampilkan pesan
+            const noResultsMessage = document.getElementById('noResultsMessage');
+            if (!hasVisibleItems) {
+                if (!noResultsMessage) {
+                    const message = document.createElement('div');
+                    message.id = 'noResultsMessage';
+                    message.className = 'col-12 text-center py-5';
+                    message.innerHTML = `
+                        <i class="bi bi-search display-4 text-muted mb-3"></i>
+                        <h4 class="text-muted">Tidak ada topik yang ditemukan</h4>
+                        <p class="text-muted">Coba kata kunci lain atau lihat semua topik</p>
+                    `;
+                    grid.parentNode.insertBefore(message, grid.nextSibling);
+                }
+            } else if (noResultsMessage) {
+                noResultsMessage.remove();
+            }
+        }
+
+        // Event listener untuk tombol filter
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const filterType = this.dataset.filter;
+                updateActiveButton(this);
+                sortItems(filterType);
+            });
+        });
+
+        // SEARCH functionality untuk input
+        if (searchInput) {
+            searchInput.addEventListener('keyup', performSearch);
+        }
+
+        // SEARCH functionality untuk tombol
+        if (searchButton) {
+            searchButton.addEventListener('click', performSearch);
+        }
+
+        // Inisialisasi dengan filter popular
+        sortItems('popular');
+    });
+</script>
+=======
 <!-- ================= MODAL FILTER ================= -->
 <div class="modal fade" id="categoryFilterModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -218,3 +499,4 @@ document.getElementById('btnCancelFilter').onclick = () => {
     ).hide();
 };
 </script>
+>>>>>>> ab47105e5f79c40375b6296f61d3626beddcbb66

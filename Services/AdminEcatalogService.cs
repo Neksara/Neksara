@@ -70,7 +70,9 @@ public class AdminEcatalogService : IAdminEcatalogService
                 Description = t.Description,
                 TopicPicture = t.TopicPicture,
                 VideoUrl = t.VideoUrl,
-                CategoryId = t.CategoryId,
+                CategoryId = null,
+                CategoryName = t.Category?.CategoryName ?? string.Empty,
+                CategoryPicture = t.Category?.CategoryPicture ?? string.Empty,
                 CreatedAt = t.CreatedAt,
                 UpdatedAt = t.UpdatedAt,
                 ViewCount = t.ViewCount

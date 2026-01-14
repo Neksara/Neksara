@@ -12,30 +12,66 @@
     <div class="col-12 col-md-5">
         <input type="text"
                id="searchInput"
+               name="search"
+               value="@ViewBag.Search"
                class="form-control"
                placeholder="🔍 Cari topik atau kategori..." />
     </div>
 
     <!-- FILTER KATEGORI -->
     <div class="col-12 col-md-3">
-        <select id="categoryFilter" class="form-select">
-            <option value="">Semua Kategori</option>
+        <select id="categoryFilter" name="categoryId" class="form-select">
+            <option value="" selected="@(ViewBag.CategoryId == null)">Semua Kategori</option>
             @foreach (var c in ViewBag.Categories)
             {
-                <option value="@c.CategoryName">
+                <option value="@c.CategoryId" selected="@(ViewBag.CategoryId != null && (int)ViewBag.CategoryId == c.CategoryId)">
                     @c.CategoryName
                 </option>
             }
         </select>
     </div>
 
+
+    @* <div class="col-12 col-md-3">
+        <select id="categoryFilter" name="category" class="form-select">
+            <option value="">Semua Kategori</option>
+            @foreach (var c in ViewBag.Categories)
+            {
+                <option value="@c.CategoryName" selected="@(ViewBag.SelectedCategoryId != null && ViewBag.SelectedCategoryId == c.CategoryId)">
+                    @c.CategoryName
+                </option>
+            }
+        </select>
+    </div> *@
+
     <!-- SORT -->
     <div class="col-12 col-md-2">
-        <select id="sortSelect" class="form-select">
-            <option value="default">Default</option>
-            <option value="az">A - Z</option>
-            <option value="za">Z - A</option>
-            <option value="views">View Terbanyak</option>
+        <select id="sortSelect" name="sort" class="form-select">
+            <option value="">Default</option>
+            @if (ViewBag.Sort == "az")
+            {
+                <option value="az" selected>A - Z</option>
+            }
+            else
+            {
+                <option value="az">A - Z</option>
+            }
+            @if (ViewBag.Sort == "za")
+            {
+                <option value="za" selected>Z - A</option>
+            }
+            else
+            {
+                <option value="za">Z - A</option>
+            }
+            @if (ViewBag.Sort == "views")
+            {
+                <option value="views" selected>View Terbanyak</option>
+            }
+            else
+            {
+                <option value="views">View Terbanyak</option>
+            }
         </select>
     </div>
 
@@ -71,7 +107,7 @@
             data-category="@t.Category?.CategoryName"
             data-views="@t.ViewCount">
 
-            <td><strong>@t.TopicName</strong></td>
+            <td>@t.TopicName</td>
 
             <td>
                 <span class="badge bg-secondary">
@@ -133,51 +169,74 @@
     </tbody>
 </table>
 
-<!-- ================= SCRIPT ================= -->
+<!-- ================= PAGINATION ================= -->
+@{
+    var current = (int?)(ViewBag.CurrentPage ?? 1) ?? 1;
+    var total = (int?)(ViewBag.TotalPages ?? 1) ?? 1;
+}
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <li class="page-item @(current == 1 ? "disabled" : "")">
+            <a class="page-link" href="?search=@ViewBag.Search&sort=@ViewBag.Sort&categoryId=@ViewBag.CategoryId&page=@(current-1)">Previous</a>
+        </li>
+
+        @for (int i = 1; i <= total; i++)
+        {
+                <li class="page-item @(i == current ? "active" : "")">
+                <a class="page-link" href="?search=@ViewBag.Search&sort=@ViewBag.Sort&categoryId=@ViewBag.CategoryId&page=@i">@i</a>
+            </li>
+        }
+
+        <li class="page-item @(current == total ? "disabled" : "")">
+            <a class="page-link" href="?search=@ViewBag.Search&sort=@ViewBag.Sort&categoryId=@ViewBag.CategoryId&page=@(current+1)">Next</a>
+        </li>
+    </ul>
+</nav>
+
+@* <nav aria-label="Page navigation">
+    <ul class="pagination">
+        <li class="page-item @(current == 1 ? "disabled" : "")">
+            <a class="page-link" href="?search=@ViewBag.Search&sort=@ViewBag.Sort&categoryId=@ViewBag.CategoryId&page=@(current-1)">Previous</a>
+        </li>
+
+        @for (int i = 1; i <= total; i++)
+        {
+            <li class="page-item @(i == current ? "active" : "")">
+                <a class="page-link" href="?search=@ViewBag.Search&sort=@ViewBag.Sort&categoryId=@ViewBag.CategoryId&page=@i">@i</a>
+            </li>
+        }
+
+        <li class="page-item @(current == total ? "disabled" : "")">
+            <a class="page-link" href="?search=@ViewBag.Search&sort=@ViewBag.Sort&categoryId=@ViewBag.CategoryId&page=@(current+1)">Next</a>
+        </li>
+    </ul>
+</nav> *@
+
+<!-- ================= SCRIPT: submit filters to server ================= -->
 <script>
     const searchInput = document.getElementById('searchInput');
     const categoryFilter = document.getElementById('categoryFilter');
     const sortSelect = document.getElementById('sortSelect');
-    const rows = document.querySelectorAll('.topic-row');
-    const tableBody = document.getElementById('topicTable');
 
-    function filterTable() {
-        const keyword = searchInput.value.toLowerCase();
-        const category = categoryFilter.value.toLowerCase();
+    function navigateWithFilters(page = 1) {
+        const params = new URLSearchParams();
+        const s = searchInput.value;
+        const sort = sortSelect.value;
+        const cat = categoryFilter.value;
 
-        rows.forEach(row => {
-            const name = row.dataset.name.toLowerCase();
-            const cat = row.dataset.category.toLowerCase();
+        if (s) params.set('search', s);
+        if (sort) params.set('sort', sort);
+        if (cat) params.set('categoryId', cat);
+        params.set('page', page);
 
-            const matchKeyword =
-                name.includes(keyword) || cat.includes(keyword);
-
-            const matchCategory =
-                category === '' || cat === category;
-
-            row.style.display =
-                matchKeyword && matchCategory ? '' : 'none';
-        });
+        window.location.search = params.toString();
     }
 
-    searchInput.addEventListener('keyup', filterTable);
-    categoryFilter.addEventListener('change', filterTable);
-
-    sortSelect.addEventListener('change', () => {
-        const sorted = [...rows].sort((a, b) => {
-            if (sortSelect.value === 'az')
-                return a.dataset.name.localeCompare(b.dataset.name);
-
-            if (sortSelect.value === 'za')
-                return b.dataset.name.localeCompare(a.dataset.name);
-
-            if (sortSelect.value === 'views')
-                return b.dataset.views - a.dataset.views;
-
-            return 0;
-        });
-
-        tableBody.innerHTML = '';
-        sorted.forEach(r => tableBody.appendChild(r));
+    searchInput.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') navigateWithFilters(1);
     });
+
+    categoryFilter.addEventListener('change', () => navigateWithFilters(1));
+    sortSelect.addEventListener('change', () => navigateWithFilters(1));
 </script>
