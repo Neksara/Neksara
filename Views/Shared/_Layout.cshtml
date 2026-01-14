@@ -5,20 +5,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] - Arsha Bootstrap Template</title>
+    <title>@ViewData["Title"] - Neksara</title>
     <meta name="description" content="@ViewData["Description"]">
     <meta name="keywords" content="@ViewData["Keywords"]">
 
-<<<<<<< HEAD
     <!-- Favicons -->
     <link href="~/assets/img/Neksara-logoNew.png" rel="icon">
     <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-=======
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Neksara.styles.css" asp-append-version="true" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
->>>>>>> ab47105e5f79c40375b6296f61d3626beddcbb66
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -67,7 +65,7 @@
                             <li>
                                 <a class="dropdown-item"
                                    asp-controller="Learning"
-                                   asp-action="Categories">
+                                   asp-action="CategoryIndex">
                                     Kategori
                                 </a>
                             </li>
@@ -82,7 +80,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#footer" id="contactLink">
+                        <a class="nav-link" href="#siteFooter" id="contactLink">
                                 Contact Us
                         </a>                    
                     </li>
@@ -90,7 +88,7 @@
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
 
-              @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+              @if (User?.Identity?.IsAuthenticated == true && User?.IsInRole("Admin") == true)
                     {
                         <li class="nav-item">
                             <a class="btn btn-light fw-bold px-4"
@@ -116,7 +114,7 @@
     </main>
 
     <!-- Footer (bisa dipindahkan ke Partial View) -->
-    @Html.Partial("_Footer")
+    <partial name="_Footer" />
 
 
     <!-- Scroll Top -->

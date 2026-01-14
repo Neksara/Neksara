@@ -13,7 +13,7 @@ namespace Neksara.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20260108114144_updatetabletopic")]
-    partial class updatetabletopic
+    partial class UpdateTableTopic
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

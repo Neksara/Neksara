@@ -8,7 +8,7 @@
 
 <div class="card shadow" data-aos="fade-up" data-aos-delay="100">
     <div class="card-body">
-        @* <img src="@Model.TopicPicture" class="card-img-top topic-header"> *@
+        <img src="@Model.TopicPicture" class="card-img-top topic-header">
 
         <span class="badge bg-primary mb-2" data-aos="fade-up" data-aos-delay="150">
             @Model.Category?.CategoryName
@@ -47,14 +47,6 @@
         @{
             string? embedUrl = null;
 
-<<<<<<< HEAD
-            if (!string.IsNullOrEmpty(Model.VideoUrl))
-            {
-                embedUrl = Model.VideoUrl
-                .Replace("watch?v=", "embed/")
-                .Replace("youtu.be/", "www.youtube.com/embed/");
-            }
-=======
         if (!string.IsNullOrEmpty(Model.VideoUrl))
         {
             var url = Model.VideoUrl.Trim();
@@ -90,17 +82,10 @@
                 embedUrl = url;
             }
         }
->>>>>>> ab47105e5f79c40375b6296f61d3626beddcbb66
         }
 
         @if (!string.IsNullOrEmpty(Model.VideoUrl))
         {
-<<<<<<< HEAD
-            <div class="ratio ratio-16x9 mb-4" style="max-width: 800px; margin: 0 auto;" 
-                 data-aos="fade-up" data-aos-delay="450">
-                <iframe src="@embedUrl" allowfullscreen></iframe>
-            </div>
-=======
             var trimmed = Model.VideoUrl.TrimStart();
             if (trimmed.StartsWith("<iframe", System.StringComparison.OrdinalIgnoreCase))
             {
@@ -114,7 +99,6 @@
                     <iframe src="@embedUrl" allowfullscreen></iframe>
                 </div>
             }
->>>>>>> ab47105e5f79c40375b6296f61d3626beddcbb66
         }
 
         <p style="white-space: pre-line;" data-aos="fade-up" data-aos-delay="500">

@@ -14,7 +14,7 @@ public class AdminTestimoniService : IAdminTestimoniService
         _context = context;
     }
 
-    public async Task<List<Testimoni>> GetAllAsync(int? rating = null, string status = null)
+    public async Task<List<Testimoni>> GetAllAsync(int? rating = null, string? status = null)
     {
         return await _context.Testimonis
             .OrderByDescending(t => t.CreatedAt)

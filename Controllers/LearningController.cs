@@ -10,7 +10,8 @@ namespace Neksara.Controllers
     {
         private readonly ILearningService _service;
         private readonly IMemoryCache _cache;
-        private const int PageSize = 8;
+        private const int PageSize = 12;
+        private const int CategoryPageSize = 12;
         private const int TopicListCacheSeconds = 60;
 
         [ActivatorUtilitiesConstructor]
@@ -21,7 +22,7 @@ namespace Neksara.Controllers
         }
 
         // ================= KATEGORI PAGE =================
-        public async Task<IActionResult> Categories(int? categoryId)
+        public async Task<IActionResult> CategoryIndex(int? categoryId, int page = 1)
         {
             var categories = await _service.GetCategoryCardsAsync();
 
@@ -32,9 +33,29 @@ namespace Neksara.Controllers
                     .ToList();
             }
 
+            var totalItems = categories.Count;
+            var totalPages = (int)Math.Ceiling(totalItems / (double)CategoryPageSize);
+            
+            // Ensure valid page
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            var pagedCategories = categories
+                .Skip((page - 1) * CategoryPageSize)
+                .Take(CategoryPageSize)
+                .ToList();
+
+            var vm = new CategoryListVM
+            {
+                Categories = pagedCategories,
+                CurrentPage = page,
+                TotalPages = totalPages,
+                SelectedCategoryId = categoryId
+            };
+
             ViewBag.SelectedCategoryId = categoryId;
 
-            return View(categories);
+            return View("Categories", vm);
         }
 
         // ================= TOPIC PAGE =================
@@ -53,6 +74,12 @@ namespace Neksara.Controllers
             }
 
             return View(vm);
+        }
+
+        // Provide a default Index route that redirects to Topics
+        public IActionResult Index(int? categoryId, int page = 1)
+        {
+            return RedirectToAction("Topics", new { categoryId = categoryId, page = page });
         }
 
         // ================= DETAIL TOPIC =================

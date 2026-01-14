@@ -8,9 +8,9 @@ namespace Neksara.Models
         public int TestimoniId { get; set; }
 
         [Required]
-        public string TestimoniName { get; set; }
+        public string TestimoniName { get; set; } = string.Empty;
 
-        public string TestimoniRole { get; set; }
+        public string TestimoniRole { get; set; } = string.Empty;
 
         public int TestimoniRating { get; set; } = 0;
 

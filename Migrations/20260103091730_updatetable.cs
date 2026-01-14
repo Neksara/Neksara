@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Neksara.Migrations
 {
     /// <inheritdoc />
-    public partial class updatetable : Migration
+    public partial class UpdateTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

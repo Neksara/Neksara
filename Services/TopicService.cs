@@ -25,7 +25,7 @@ public class TopicService : ITopicService
 
         if (!string.IsNullOrWhiteSpace(search))
             query = query.Where(t => t.TopicName.Contains(search) ||
-                                     t.Category.CategoryName.Contains(search));
+                                     (t.Category != null && t.Category.CategoryName.Contains(search)));
 
         if (categoryId.HasValue)
             query = query.Where(t => t.CategoryId == categoryId.Value);
@@ -64,7 +64,7 @@ public class TopicService : ITopicService
         {
             TopicId = topic.TopicId,
             TopicName = topic.TopicName,
-            CategoryName = topic.Category!.CategoryName,
+            CategoryName = topic.Category?.CategoryName ?? string.Empty,
             TopicPicture = topic.TopicPicture,
             Description = topic.Description,
             VideoUrl = topic.VideoUrl,
@@ -131,9 +131,9 @@ public class TopicService : ITopicService
         await _context.SaveChangesAsync();
     }
 
-    private string? SanitizeVideoInput(string? input)
+    private string SanitizeVideoInput(string? input)
     {
-        if (string.IsNullOrWhiteSpace(input)) return input;
+        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
 
         // Remove any script tags
         var noScripts = Regex.Replace(input, "<script[\\s\\S]*?>[\\s\\S]*?<\\/script>", string.Empty, RegexOptions.IgnoreCase);

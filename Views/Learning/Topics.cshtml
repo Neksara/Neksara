@@ -2,244 +2,92 @@
 @{
     ViewData["Title"] = "Topik E-Learning";
 }
-<<<<<<< HEAD
 
-<!-- Search Section -->
-<div class="search-section bg-white py-5">
+<div class="container-fluid content-padding" style="padding-top: 120px;">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <br>
-                <div class="search-wrapper shadow rounded-4 p-4 p-lg-5">
-                    <!-- Search Bar -->
-                    <div class="input-group input-group-lg mb-4">
-                        <span class="input-group-text bg-light border-0 px-4">
-                            <i class="bi bi-search text-muted fs-5"></i>
-                        </span>
-                        <input type="text" class="form-control border-0 bg-light py-3" id="searchInput"
-                            placeholder="Contoh: Web Development, Data Science, UI/UX Design...">
-                        <button class="btn btn-primary px-4" type="button" id="searchButton">
-                            <i class="bi bi-search me-2"></i> Cari
-                        </button>
-                    </div>
-                </div>
+        <h2 class="fw-bold mb-4">📘 Topik Pembelajaran</h2>
+
+        <!-- ================= FILTER BAR ================= -->
+        <div class="row mb-4 align-items-end position-relative" style="z-index: 10;">
+            <div class="col-lg-6 col-md-6 mb-2 mb-md-0">
+                <input type="text" id="searchInput" class="form-control" placeholder="🔍 Cari topik..." />
             </div>
-=======
-
-<h2 class="fw-bold mb-4">📘 Topik Pembelajaran</h2>
-
-<!-- ================= FILTER BAR ================= -->
-<div class="row mb-4 align-items-end">
-    <div class="col-md-5">
-        <input type="text"
-               id="searchInput"
-               class="form-control"
-               placeholder="🔍 Cari topik..." />
-    </div>
-
-    <div class="col-md-3">
-        <select id="sortSelect" class="form-select">
-            <option value="popular">🔥 Terpopuler</option>
-            <option value="rating">⭐ Rating Tertinggi</option>
-            <option value="az">A - Z</option>
-            <option value="za">Z - A</option>
-        </select>
-    </div>
-
-    <div class="col-md-4">
-        <!-- BUTTON MODAL -->
-        <button class="btn btn-outline-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#categoryFilterModal">
-            🏷 Filter Kategori
-        </button>
-    </div>
-</div>
-
-<!-- ================= CARD GRID ================= -->
-<div class="row g-4" id="topicGrid">
-@foreach (var t in Model.Topics)
-{
-    <div class="col-md-3 topic-item"
-         data-name="@t.TopicName"
-         data-rating="@t.Rating"
-         data-view="@t.ViewCount"
-         data-category="@t.CategoryName">
-
-        <div class="card h-100 shadow-sm">
-
-            <img src="@t.TopicPicture"
-                 class="card-img-top"
-                 alt="@t.TopicName"
-                 style="height:180px; object-fit:cover;" />
-
-            <div class="card-body">
-
-                <span class="badge bg-secondary mb-2">
-                    @t.CategoryName
-                </span>
-
-                <h6 class="fw-bold mt-2">@t.TopicName</h6>
-
-                <p class="mb-1">
-                    <strong>@t.Rating.ToString("0.0")</strong> / 5
-                    <span class="text-warning ms-1">
-                        @for (int i = 1; i <= 5; i++)
-                        {
-                            if (i <= Math.Floor(t.Rating))
-                            { <text>★</text> }
-                            else
-                            { <text>☆</text> }
-                        }
-                    </span>
-                    <small class="text-muted">
-                        (@t.ReviewCount)
-                    </small>
-                </p>
-
-                <p class="text-muted mb-2">
-                    📅 @(t.PublishedAt?.ToString("dd MMM yyyy") ?? "-")
-                </p>
-
-                <small class="text-muted">
-                    👁 @t.ViewCount views
-                </small>
+            <div class="col-lg-3 col-md-3">
+                <select id="sortSelect" class="form-select">
+                    <option value="popular">🔥 Terpopuler</option>
+                    <option value="rating">⭐ Rating Tertinggi</option>
+                    <option value="az">A - Z</option>
+                    <option value="za">Z - A</option>
+                </select>
             </div>
-
-            <div class="card-footer bg-white border-0">
-                <a href="/Learning/Detail/@t.TopicId"
-                   class="btn btn-sm btn-primary w-100">
-                    📖 Pelajari
-                </a>
-            </div>
->>>>>>> ab47105e5f79c40375b6296f61d3626beddcbb66
-        </div>
-    </div>
-</div>
-
-<<<<<<< HEAD
-<!-- Topics Section -->
-<section id="topics" class="recent-blog-postst section light-background">
-    <div class="container">
-
-        <!-- Header Section -->
-        <div class="row align-items-center mb-4">
-            <!-- Bagian Kiri: Judul Topik -->
-            <div class="col-lg-6 col-md-6">
-                <div class="section-header-left" data-aos="fade-up">
-                    <h2>Topik</h2>
-                </div>
-            </div>
-
-            <!-- Bagian Kanan: Filter -->
-            <div class="col-lg-6 col-md-8 offset-md-2">
-                <div class="topics-filter" data-aos="fade-up" data-aos-delay="100">
-                    <div class="d-flex justify-content-end align-items-center gap-1">
-                        <!-- Filter Populer -->
-                        <div class="filter-item">
-                            <button class="btn btn-sm filter-btn filter-popular active" type="button"
-                                data-filter="popular">
-                                <i class="bi bi-fire me-1"></i>Populer
-                            </button>
-                        </div>
-
-                        <div class="filter-item">
-                            <button class="btn btn-sm filter-btn" type="button" data-filter="rating">
-                                <i class="bi bi-star-fill me-1"></i>Rating Tertinggi
-                            </button>
-                        </div>
-
-                        <div class="filter-item">
-                            <button class="btn btn-sm filter-btn" type="button" data-filter="az">
-                                <i class="bi bi-sort-alpha-down me-1"></i>A-Z
-                            </button>
-                        </div>
-
-                        <div class="filter-item">
-                            <button class="btn btn-sm filter-btn" type="button" data-filter="za">
-                                <i class="bi bi-sort-alpha-down-alt me-1"></i>Z-A
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
+            <div class="col-lg-3 col-md-3">
+                <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#categoryFilterModal">🏷 Filter Kategori</button>
             </div>
         </div>
 
         <!-- ================= CARD GRID ================= -->
-
-        <div class="row" id="topicGrid">
-            @foreach (var t in Model.Topics)
+        <div class="row g-3" id="topicGrid">
+            @if (!Model.Topics.Any())
             {
-                <div class="col-xl-3 col-lg-4 col-md-6 topic-card-item" data-aos="fade-up" data-aos-delay="400"
-                    data-name="@t.TopicName" data-rating="@t.Rating" data-view="@t.ViewCount">
-
-                    <div class="post-item h-100">
-
-                        <div class="post-img position-relative overflow-hidden">
-                            <img src="@t.TopicPicture" class="img-fluid" alt="@t.TopicName"
-                                style="height:180px; object-fit:cover; width:100%;">
-                            <span class="post-date">@t.CategoryName</span>
-                        </div>
-
-                        <div class="post-content d-flex flex-column">
-
-                            <h3 class="post-title">
-                                @t.TopicName
-                            </h3>
-
-                            <!-- Rating Stars -->
-                            <div class="post-rating d-flex align-items-center mt-2 mb-3" style="gap: 5px;">
-                                <div class="star-rating-small">
-                                    @for (int i = 1; i <= 5; i++)
-                                    {
-                                        if (i <= Math.Floor(t.Rating))
-                                        {
-                                            <i class="bi bi-star-fill text-warning" style="font-size: 14px;"></i>
-                                        }
-                                        else if (i == Math.Ceiling(t.Rating) && t.Rating % 1 > 0)
-                                        {
-                                            <i class="bi bi-star-half text-warning" style="font-size: 14px;"></i>
-                                        }
-                                        else
-                                        {
-                                            <i class="bi bi-star text-warning" style="font-size: 14px;"></i>
-                                        }
-                                    }
-                                </div>
-                                <span class="rating-count-small" style="color: #666; font-size: 13px; font-weight: 500;">
-                                    @t.Rating.ToString("0.0")
-                                </span>
-                                <span class="review-count" style="color: #888; font-size: 12px; margin-left: 3px;">
-                                    (@t.ReviewCount)
-                                </span>
-                            </div>
-
-                            <hr>
-
-                            <a href="/Learning/Detail/@t.TopicId" class="readmore stretched-link">
-                                <span class="learn-now-text">Learn Now</span>
-                                <i class="bi bi-arrow-right"></i>
-                            </a>
-
-                            <div class="meta-bottom">
-                                <span class="meta-date">
-                                    <i class="bi bi-calendar3"></i>
-                                    <span class="meta-text">
-                                        @(t.PublishedAt.HasValue? t.PublishedAt.Value.ToString("dd/MM/yyyy") : "-")
-                                    </span>
-                                </span>
-
-                                <span class="meta-view">
-                                    <span class="meta-text">@t.ViewCount view@(t.ViewCount != 1 ? "s" : "")</span>
-                                    <i class="bi bi-eye"></i>
-                                </span>
-                            </div>
-
-                        </div>
+                <div class="col-12 text-center py-5">
+                    <div class="alert alert-light border" role="alert">
+                        <i class="bi bi-info-circle fs-1 text-muted mb-3"></i>
+                        <h4 class="alert-heading">Topik Kosong</h4>
+                        <p>Tidak ada topik dalam kategori ini.</p>
+                        <a href="/Learning/CategoryIndex" class="btn btn-outline-primary mt-3">Kembali ke Kategori</a>
                     </div>
                 </div>
             }
+            else
+            {
+                @foreach (var t in Model.Topics)
+                {
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 topic-item" data-name="@t.TopicName" data-rating="@t.Rating" data-view="@t.ViewCount" data-category="@t.CategoryName">
+                    <div class="card h-100 border-0 shadow-sm hover-lift" style="transition: transform 0.2s, box-shadow 0.2s;">
+                        <div class="position-relative">
+                            <img src="@t.TopicPicture" class="card-img-top rounded-top" alt="@t.TopicName" style="height:140px; object-fit:cover;" />
+                            <span class="badge bg-white text-dark position-absolute top-0 start-0 m-2 shadow-sm border" style="font-size: 0.75rem;">@t.CategoryName</span>
+                        </div>
+                        
+                        <div class="card-body p-3 d-flex flex-column">
+                            <h6 class="fw-bold text-dark mb-1 text-truncate" title="@t.TopicName" style="font-size: 0.95rem;">@t.TopicName</h6>
+                            
+                            <div class="mb-2 small" style="font-size: 0.8rem;">
+                                <span class="fw-bold text-dark">@t.Rating.ToString("0.0")</span> 
+                                <span class="text-warning mx-1">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= Math.Floor(t.Rating)) { <text>★</text> }
+                                        else { <text>☆</text> }
+                                    }
+                                </span>
+                                <span class="text-muted">(@t.ReviewCount)</span>
+                            </div>
+
+                            <div class="mt-auto d-flex justify-content-between align-items-center small text-muted" style="font-size: 0.75rem;">
+                                <span><i class="bi bi-calendar3 me-1"></i>@(t.PublishedAt?.ToString("dd MMM yyyy") ?? "-")</span>
+                                <span><i class="bi bi-eye me-1"></i>@t.ViewCount</span>
+                            </div>
+                        </div>
+
+                        <div class="card-footer bg-white border-0 p-2 text-center">
+                            <a href="/Learning/Detail/@t.TopicId" class="btn btn-primary w-100 btn-sm rounded-pill py-1 fw-bold" style="font-size: 0.85rem;">
+                                <i class="bi bi-journal-bookmark me-1"></i> Pelajari
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                }
+            }
+        </div>
+        
+        <!-- Client-side No Results (Hidden by default) -->
+        <div id="noResults" class="text-center py-5 d-none">
+            <div class="alert alert-light border" role="alert">
+                <i class="bi bi-search fs-1 text-muted mb-3"></i>
+                <h4 class="alert-heading">Topik Tidak Ditemukan</h4>
+                <p>Coba kata kunci atau filter lain.</p>
+            </div>
         </div>
 
         <!-- ================= PAGINATION ================= -->
@@ -250,147 +98,26 @@
                     @for (int i = 1; i <= Model.TotalPages; i++)
                     {
                         <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                            <a class="page-link" href="/Learning/Topics?page=@i&categoryId=@Model.CurrentCategory">
-                                @i
-                            </a>
+                            <a class="page-link" href="/Learning/Topics?page=@i&categoryId=@Model.CurrentCategory">@i</a>
                         </li>
                     }
                 </ul>
             </nav>
         }
-
     </div>
-</section>
+</div>
 
-<!-- ================= SCRIPT ================= -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const searchInput = document.getElementById('searchInput');
-        const searchButton = document.getElementById('searchButton');
-        let items = [...document.querySelectorAll('.topic-card-item')];
-        const grid = document.getElementById('topicGrid');
-
-        // Fungsi untuk mengupdate tampilan tombol aktif
-        function updateActiveButton(activeButton) {
-            filterButtons.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            activeButton.classList.add('active');
-        }
-
-        // Fungsi untuk sorting
-        function sortItems(criteria) {
-            let sorted = [];
-
-            switch (criteria) {
-                case 'rating':
-                    sorted = items.sort((a, b) =>
-                        parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating));
-                    break;
-
-                case 'az':
-                    sorted = items.sort((a, b) =>
-                        a.dataset.name.localeCompare(b.dataset.name));
-                    break;
-
-                case 'za':
-                    sorted = items.sort((a, b) =>
-                        b.dataset.name.localeCompare(a.dataset.name));
-                    break;
-
-                default: // popular
-                    sorted = items.sort((a, b) =>
-                        parseInt(b.dataset.view) - parseInt(a.dataset.view));
-            }
-
-            // Clear grid dan append item yang sudah diurutkan
-            grid.innerHTML = '';
-            sorted.forEach(item => {
-                grid.appendChild(item);
-            });
-            
-            // Update items array dengan urutan baru
-            items = [...sorted];
-        }
-
-        // Fungsi untuk pencarian
-        function performSearch() {
-            const keyword = searchInput.value.toLowerCase();
-            let hasVisibleItems = false;
-
-            items.forEach(item => {
-                const name = item.dataset.name.toLowerCase();
-                const categoryElement = item.querySelector('.post-date');
-                const category = categoryElement ? categoryElement.textContent.toLowerCase() : '';
-
-                if (keyword === '' || name.includes(keyword) || category.includes(keyword)) {
-                    item.style.display = 'block';
-                    hasVisibleItems = true;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-
-            // Jika tidak ada item yang cocok, tampilkan pesan
-            const noResultsMessage = document.getElementById('noResultsMessage');
-            if (!hasVisibleItems) {
-                if (!noResultsMessage) {
-                    const message = document.createElement('div');
-                    message.id = 'noResultsMessage';
-                    message.className = 'col-12 text-center py-5';
-                    message.innerHTML = `
-                        <i class="bi bi-search display-4 text-muted mb-3"></i>
-                        <h4 class="text-muted">Tidak ada topik yang ditemukan</h4>
-                        <p class="text-muted">Coba kata kunci lain atau lihat semua topik</p>
-                    `;
-                    grid.parentNode.insertBefore(message, grid.nextSibling);
-                }
-            } else if (noResultsMessage) {
-                noResultsMessage.remove();
-            }
-        }
-
-        // Event listener untuk tombol filter
-        filterButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const filterType = this.dataset.filter;
-                updateActiveButton(this);
-                sortItems(filterType);
-            });
-        });
-
-        // SEARCH functionality untuk input
-        if (searchInput) {
-            searchInput.addEventListener('keyup', performSearch);
-        }
-
-        // SEARCH functionality untuk tombol
-        if (searchButton) {
-            searchButton.addEventListener('click', performSearch);
-        }
-
-        // Inisialisasi dengan filter popular
-        sortItems('popular');
-    });
-</script>
-=======
 <!-- ================= MODAL FILTER ================= -->
 <div class="modal fade" id="categoryFilterModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-
             <div class="modal-header">
                 <h5 class="modal-title">🏷 Pilih Kategori</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-
             <div class="modal-body">
-                <div id="categoryCheckboxes" class="d-flex flex-column gap-2">
-                    <!-- JS akan generate semua kategori -->
-                </div>
+                <div id="categoryCheckboxes" class="d-flex flex-column gap-2"></div>
             </div>
-
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="btnCancelFilter">Cancel</button>
                 <button class="btn btn-primary" id="btnApplyFilter">Apply</button>
@@ -399,104 +126,114 @@
     </div>
 </div>
 
-<!-- ================= PAGINATION ================= -->
-@if (Model.TotalPages > 1)
-{
-    <nav class="mt-5">
-        <ul class="pagination justify-content-center">
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                    <a class="page-link"
-                       href="/Learning/Topics?page=@i&categoryId=@Model.CurrentCategory">
-                        @i
-                    </a>
-                </li>
-            }
-        </ul>
-    </nav>
-}
-
 <!-- ================= SCRIPT ================= -->
 <script>
-const items = [...document.querySelectorAll('.topic-item')];
-const grid = document.getElementById('topicGrid');
-const searchInput = document.getElementById('searchInput');
-const sortSelect = document.getElementById('sortSelect');
+    document.addEventListener('DOMContentLoaded', function () {
+        const items = [...document.querySelectorAll('.topic-item')];
+        const grid = document.getElementById('topicGrid');
+        const searchInput = document.getElementById('searchInput');
+        const sortSelect = document.getElementById('sortSelect');
 
-const uniqueCategories = [...new Set(items.map(i => i.dataset.category))];
-const categoryBox = document.getElementById('categoryCheckboxes');
+        const uniqueCategories = [...new Set(items.map(i => i.dataset.category))];
+        const categoryBox = document.getElementById('categoryCheckboxes');
 
-// Ambil CurrentCategory dari server
-const currentCategory = '@(Model.CurrentCategory?.ToString() ?? "")';
+        // Ambil CurrentCategory dari server
+        const currentCategory = '@(Model.CurrentCategory?.ToString() ?? "")';
 
-// Generate semua kategori di modal dan cek otomatis jika ada filter
-uniqueCategories.forEach(cat => {
-    const isChecked = (cat === currentCategory) ? 'checked' : '';
-    const html = `
-        <label class="form-check">
-            <input class="form-check-input category-check"
-                   type="checkbox"
-                   value="${cat}" ${isChecked}>
-            <span class="form-check-label">${cat}</span>
-        </label>`;
-    categoryBox.innerHTML += html;
-});
+        // Generate semua kategori di modal dan cek otomatis jika ada filter
+        uniqueCategories.forEach(cat => {
+            const isChecked = (cat === currentCategory) ? 'checked' : '';
+            const html = `
+                <label class="form-check">
+                    <input class="form-check-input category-check"
+                           type="checkbox"
+                           value="${cat}" ${isChecked}>
+                    <span class="form-check-label">${cat}</span>
+                </label>`;
+            if (categoryBox) categoryBox.innerHTML += html;
+        });
 
-// ===== SEARCH =====
-searchInput.addEventListener('keyup', () => {
-    const key = searchInput.value.toLowerCase();
-    items.forEach(i => {
-        i.style.display =
-            i.dataset.name.toLowerCase().includes(key) ? 'block' : 'none';
+        // ===== SEARCH =====
+        if (searchInput) {
+            searchInput.addEventListener('keyup', () => {
+                const key = searchInput.value.toLowerCase();
+                items.forEach(i => {
+                    i.style.display =
+                        i.dataset.name.toLowerCase().includes(key) ? 'block' : 'none';
+                });
+                checkEmpty();
+            });
+        }
+
+        // ===== SORT =====
+        if (sortSelect) {
+            sortSelect.addEventListener('change', () => {
+                let sorted = [...items];
+                if (sortSelect.value === 'rating')
+                    sorted.sort((a, b) => b.dataset.rating - a.dataset.rating);
+                else if (sortSelect.value === 'az')
+                    sorted.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
+                else if (sortSelect.value === 'za')
+                    sorted.sort((a, b) => b.dataset.name.localeCompare(a.dataset.name));
+                else
+                    sorted.sort((a, b) => b.dataset.view - a.dataset.view);
+
+                grid.innerHTML = '';
+                sorted.forEach(i => grid.appendChild(i));
+            });
+        }
+
+        // ===== CATEGORY FILTER APPLY =====
+        const btnApply = document.getElementById('btnApplyFilter');
+        if (btnApply) {
+            btnApply.onclick = () => {
+                const selected = [...document.querySelectorAll('.category-check:checked')]
+                    .map(c => c.value);
+
+                items.forEach(i => {
+                    i.style.display =
+                        selected.length === 0 || selected.includes(i.dataset.category)
+                        ? 'block'
+                        : 'none';
+                });
+
+                checkEmpty();
+
+                bootstrap.Modal.getInstance(
+                    document.getElementById('categoryFilterModal')
+                ).hide();
+            };
+        }
+
+        // ===== CATEGORY FILTER CANCEL =====
+        const btnCancel = document.getElementById('btnCancelFilter');
+        if (btnCancel) {
+            btnCancel.onclick = () => {
+                // Uncheck semua checkbox
+                document.querySelectorAll('.category-check')
+                    .forEach(c => c.checked = false);
+
+                // Show semua topik
+                items.forEach(i => i.style.display = 'block');
+                
+                checkEmpty();
+
+                bootstrap.Modal.getInstance(
+                    document.getElementById('categoryFilterModal')
+                ).hide();
+            };
+        }
+
+        function checkEmpty() {
+            const visibleItems = items.filter(i => i.style.display !== 'none');
+            const noResults = document.getElementById('noResults');
+            if (noResults) {
+                if (visibleItems.length === 0 && items.length > 0) {
+                    noResults.classList.remove('d-none');
+                } else {
+                    noResults.classList.add('d-none');
+                }
+            }
+        }
     });
-});
-
-// ===== SORT =====
-sortSelect.addEventListener('change', () => {
-    let sorted = [...items];
-    if (sortSelect.value === 'rating')
-        sorted.sort((a, b) => b.dataset.rating - a.dataset.rating);
-    else if (sortSelect.value === 'az')
-        sorted.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
-    else if (sortSelect.value === 'za')
-        sorted.sort((a, b) => b.dataset.name.localeCompare(a.dataset.name));
-    else
-        sorted.sort((a, b) => b.dataset.view - a.dataset.view);
-
-    grid.innerHTML = '';
-    sorted.forEach(i => grid.appendChild(i));
-});
-
-// ===== CATEGORY FILTER APPLY =====
-document.getElementById('btnApplyFilter').onclick = () => {
-    const selected = [...document.querySelectorAll('.category-check:checked')]
-        .map(c => c.value);
-
-    items.forEach(i => {
-        i.style.display =
-            selected.length === 0 || selected.includes(i.dataset.category)
-            ? 'block'
-            : 'none';
-    });
-
-    bootstrap.Modal.getInstance(
-        document.getElementById('categoryFilterModal')
-    ).hide();
-};
-
-// ===== CATEGORY FILTER CANCEL =====
-document.getElementById('btnCancelFilter').onclick = () => {
-    // Uncheck semua checkbox
-    document.querySelectorAll('.category-check')
-        .forEach(c => c.checked = false);
-
-    // Show semua topik
-    items.forEach(i => i.style.display = 'block');
-
-    bootstrap.Modal.getInstance(
-        document.getElementById('categoryFilterModal')
-    ).hide();
-};
 </script>
->>>>>>> ab47105e5f79c40375b6296f61d3626beddcbb66
