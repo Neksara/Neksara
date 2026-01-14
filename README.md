@@ -1,8 +1,75 @@
-Instruction :
-Before entering the application, please query the database.
-copy this to query to table Neksara.
+Neksara — learning content platform
+===================================
 
-INSERT INTO Users
-(Username, Email, Password, Role, CreatedAt)
-VALUES
-('admin', 'admin@gmail.com','admin123', 'Admin', GETDATE());
+Short: an ASP.NET Core MVC site for publishing learning Topics grouped into Categories, with admin CRUD, archive/restore, and simple caching for user pages.
+
+Quick start (local)
+-------------------
+Prerequisites:
+- .NET 8 SDK
+- SQL Server (or update connection string to a local DB)
+
+1. Configure connection string in `appsettings.json` (key `DefaultConnection`).
+2. Build and run with hot reload:
+
+```bash
+dotnet build
+dotnet watch
+```
+
+3. Seed an admin user (optional): the project seeds a default admin if `Users` empty, but you can insert one manually:
+
+```sql
+INSERT INTO Users (Username, Email, Password, Role, CreatedAt)
+VALUES ('admin', 'admin@example.com', 'admin123', 'Admin', GETDATE());
+```
+
+Important workflows for demo
+----------------------------
+- Admin → Create Category + Create 2 Topics (one topic may include a `VideoUrl` — either a YouTube URL or a full `<iframe>` embed for providers like Wordwall).
+- Admin → Delete Category: archives the category and its topics into `ArchiveCategories` / `ArchiveTopics` (snapshots saved).
+- Admin → Archive page: view archived categories and topics separately.
+- Admin → Restore Topic: restores the topic and undeletes/creates its category; archived category entry is removed (Option A behavior).
+
+Caching behaviour
+-----------------
+- Topic lists (user-facing `Learning/Topics`) are cached per category/page for 60 seconds. Key format: `TopicList_{category}_page_{n}` (`Controllers/LearningController.cs`).
+- Homepage popular topics cached 60s (key `PopularTopics_take_{n}` in `Controllers/HomeController.cs`).
+- When a topic detail is opened, `IncrementViewCountAsync` increases the view count and invalidates the homepage popular cache so changes appear immediately (`Services/LearningService.cs`).
+
+Video embeds and admin iframe support
+-----------------------------------
+- Admin create/edit now accepts either a URL or a full `<iframe>` embed in the `VideoUrl` field (textarea). See `Views/Admin/CreateTopic.cshtml` and `Views/Admin/EditTopic.cshtml`.
+- Server sanitizes the input by stripping `<script>` tags and `javascript:` URIs before saving (`Services/TopicService.cs`). The detail view (`Views/Learning/Detail.cshtml`) will render raw iframe HTML if the stored value begins with `<iframe`.
+- Note: some providers (Wordwall) may still block framing (X-Frame-Options/CSP). In that case open the resource in a new tab.
+
+Database & migrations
+---------------------
+- Migrations are under the `Migrations/` folder. Recent important migration: `MakeArchiveIndependent` — it removed a restrictive FK between `ArchiveTopics` and `Category`, made `ArchiveTopics.CategoryId` nullable and added `CategoryName` snapshot.
+- The app runs `context.Database.Migrate()` on startup (`Program.cs`).
+
+Key files to show in demo
+-------------------------
+- `Program.cs` — DI, cache registration, migrate/seed
+- `Controllers/LearningController.cs` — topic list caching
+- `Controllers/HomeController.cs` — popular topics cache
+- `Services/LearningService.cs` — view increment + cache invalidation
+- `Services/TopicService.cs` — create/update, video sanitization, archive logic
+- `Controllers/AdminArchiveController.cs` — archive & restore flows
+- `Views/Learning/Detail.cshtml` — embed rendering logic
+
+Recommended next steps / improvements
+------------------------------------
+- Harden sanitization (allowlist iframe attrs, strip on-attributes) or use a robust sanitizer library.
+- Add admin-side live preview for embed (JS preview before saving).
+- Centralize cache keys and durations in a config class or `appsettings.json`.
+- Add unit/integration tests for archive/restore and caching behaviour.
+
+If you want, I can also generate:
+- a short PPTX/MD slide deck from the presentation outline, or
+- a demo script with exact clicks/screens to show during the demo.
+
+Contact / Notes
+---------------
+If you need a one-page cheat-sheet for the demo or a generated slide deck, tell me which format (PPTX or Markdown slides) and I will create it.
+

@@ -116,17 +116,19 @@ namespace Neksara.Controllers
         public async Task<IActionResult> TopicIndex(
             string? search,
             string? sort,
-            int? categoryId)
+            int? categoryId,
+            int page = 1)
         {
-            // 🔥 UPDATED: Get ALL topics tanpa paging
-            var topics = await _topicService.GetAllAsync(search, sort, categoryId);
+            var result = await _topicService.GetAllAsync(search, sort, page, PAGE_SIZE, categoryId);
 
             ViewBag.Search = search;
             ViewBag.Sort = sort;
             ViewBag.CategoryId = categoryId;
             ViewBag.Categories = await _topicService.GetCategoriesAsync();
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = result.TotalPage;
 
-            return View(topics);
+            return View(result.Items);
         }
 
         // ---------- CREATE ----------

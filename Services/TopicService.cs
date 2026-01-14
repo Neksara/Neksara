@@ -16,8 +16,8 @@ public class TopicService : ITopicService
         _context = context;
     }
 
-    // 🔥 NEW: ambil semua topik tanpa paging
-    public async Task<List<Topic>> GetAllAsync(string? search, string? sort, int? categoryId)
+    // Get topics for admin index with paging
+    public async Task<(List<Topic> Items, int TotalPage)> GetAllAsync(string? search, string? sort, int page, int pageSize, int? categoryId)
     {
         var query = _context.Topics
             .Include(t => t.Category)
@@ -38,7 +38,15 @@ public class TopicService : ITopicService
             _ => query.OrderByDescending(t => t.CreatedAt)
         };
 
-        return await query.ToListAsync();
+        var total = await query.CountAsync();
+        var totalPage = (int)Math.Ceiling(total / (double)pageSize);
+
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (items, totalPage);
     }
 
     public async Task<List<Category>> GetCategoriesAsync()
