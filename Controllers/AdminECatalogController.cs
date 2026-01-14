@@ -77,4 +77,5 @@ public class AdminEcatalogController : Controller
 
         return PartialView("_DetailModal", data);
     }
+    
 }

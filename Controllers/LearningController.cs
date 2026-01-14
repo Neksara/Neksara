@@ -85,14 +85,32 @@ namespace Neksara.Controllers
         // ================= DETAIL TOPIC =================
         public async Task<IActionResult> Detail(int id)
         {
-            var topic = await _service.GetTopicDetailAsync(id);
-            if (topic == null) return NotFound();
+            var cacheKey = $"TopicDetail_{id}";
+
+            if (!_cache.TryGetValue<Topic>(cacheKey, out var topic))
+            {
+                topic = await _service.GetTopicDetailAsync(id);
+                if (topic == null) return NotFound();
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromSeconds(60)); // Cache detail for 60s
+                _cache.Set(cacheKey, topic, cacheOptions);
+            }
+
+            // Parallelize auxiliary data fetching
+            var ratingTask = _service.GetAverageRatingAsync(id);
+            var reviewersTask = _service.GetTotalReviewerAsync(id);
+            var feedbacksTask = _service.GetVisibleFeedbacksAsync(id);
+
+            await Task.WhenAll(ratingTask, reviewersTask, feedbacksTask);
+
+            ViewBag.AvgRating = await ratingTask;
+            ViewBag.TotalReviewer = await reviewersTask;
+            ViewBag.Feedbacks = await feedbacksTask;
 
             await _service.IncrementViewCountAsync(topic);
-            ViewBag.AvgRating = await _service.GetAverageRatingAsync(id);
 
             return View(topic);
         }
-
     }
 }

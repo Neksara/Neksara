@@ -42,7 +42,11 @@
             {
                 @foreach (var t in Model.Topics)
                 {
-                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 topic-item" data-name="@t.TopicName" data-rating="@t.Rating" data-view="@t.ViewCount" data-category="@t.CategoryName">
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 topic-item" 
+                     data-name="@t.TopicName" 
+                     data-rating="@t.Rating.ToString(System.Globalization.CultureInfo.InvariantCulture)" 
+                     data-view="@t.ViewCount" 
+                     data-category="@t.CategoryName">
                     <div class="card h-100 border-0 shadow-sm hover-lift" style="transition: transform 0.2s, box-shadow 0.2s;">
                         <div class="position-relative">
                             <img src="@t.TopicPicture" class="card-img-top rounded-top" alt="@t.TopicName" style="height:140px; object-fit:cover;" />
@@ -199,9 +203,10 @@
 
                 checkEmpty();
 
-                bootstrap.Modal.getInstance(
+                const modal = bootstrap.Modal.getOrCreateInstance(
                     document.getElementById('categoryFilterModal')
-                ).hide();
+                );
+                modal.hide();
             };
         }
 
@@ -218,9 +223,10 @@
                 
                 checkEmpty();
 
-                bootstrap.Modal.getInstance(
+                const modal = bootstrap.Modal.getOrCreateInstance(
                     document.getElementById('categoryFilterModal')
-                ).hide();
+                );
+                modal.hide();
             };
         }
 
