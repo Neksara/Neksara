@@ -7,15 +7,13 @@ public interface ICategoryService
 {
     // INDEX ADMIN (SORT + SEARCH + PAGING)
     Task<(List<CategoryIndexVM> Items, int TotalPage)>
-        GetCategoryIndexAsync(string? search, string? sort, int page, int pageSize);
-
+    GetCategoryIndexAsync(string? search, string? sort, int page, int pageSize);
+    Task<List<CategoryIndexVM>> GetAllCategoriesAsync(string? search, string? sort);
     // DASHBOARD SUMMARY
     Task<(List<CategoryIndexVM> data, int totalData)>
-        GetCategorySummaryAsync(string search, string? sort, int page, int pageSize);
-
+    GetCategorySummaryAsync(string search, string? sort, int page, int pageSize);
     // DETAIL
     Task<CategoryDetailVM?> GetDetailAsync(int categoryId);
-
     // CRUD
     Task CreateAsync(Category category, IFormFile? image);
     Task<Category?> GetByIdAsync(int id);

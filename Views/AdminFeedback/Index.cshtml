@@ -39,25 +39,29 @@
         </select>
 
         <!-- SELECT ALL -->
-        <button type="button"
-                id="btnSelectAll"
-                class="btn btn-outline-primary btn-sm">
-            ☑️ Select All
-        </button>
+    <button type="button"
+            id="btnSelectAll"
+            class="btn btn-outline-primary btn-sm">
+        ☑️ Select All
+    </button>
 
-        <!-- APPROVE -->
-        <button asp-action="ApproveSelected"
-                class="btn btn-success btn-sm"
-                onclick="return confirm('Approve feedback terpilih?')">
-            ✅ Approve
-        </button>
+    <button asp-action="ApproveSelected"
+            class="btn btn-success btn-sm"
+            onclick="return confirm('Approve testimoni terpilih?')">
+        ✅ Approve
+    </button>
 
-        <!-- HIDE -->
-        <button asp-action="HideSelected"
-                class="btn btn-danger btn-sm"
-                onclick="return confirm('Hide feedback terpilih?')">
-            🚫 Hide
-        </button>
+    <button asp-action="HideSelected"
+            class="btn btn-danger btn-sm"
+            onclick="return confirm('Hide testimoni terpilih?')">
+        🚫 Hide
+    </button>
+
+    <button asp-action="ShowSelected"
+            class="btn btn-primary btn-sm"
+            onclick="return confirm('Show testimoni terpilih?')">
+        👁 Show
+    </button>
     </div>
 
     <!-- ================= TABLE ================= -->
@@ -104,16 +108,21 @@
                     }
                 </td>
 
-                <td>
-                    @if (f.Status == "Approved")
-                    {
-                        <span class="badge bg-success">Approved</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-warning text-dark">Pending</span>
-                    }
-                </td>
+            <td>
+                @if (f.IsApproved)
+                {
+                    <span class="badge bg-success">Approved</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning">Pending</span>
+                }
+
+                @if (!f.IsVisible)
+                {
+                    <span class="badge bg-danger ms-1">Hidden</span>
+                }
+            </td>            
             </tr>
         }
         </tbody>

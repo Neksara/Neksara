@@ -37,24 +37,14 @@ namespace Neksara.Controllers
         // =========================
         // CATEGORY
         // =========================
-        public async Task<IActionResult> CategoryIndex(
-            string? search,
-            string? sort,
-            int page = 1)
+        public async Task<IActionResult> CategoryIndex(string? search, string? sort)
         {
-            var result = await _categoryService.GetCategoryIndexAsync(
-                search,
-                sort,
-                page,
-                PAGE_SIZE
-            );
+            var result = await _categoryService.GetAllCategoriesAsync(search, sort);
 
             ViewBag.Search = search;
             ViewBag.Sort = sort;
-            ViewBag.CurrentPage = page;
-            ViewBag.TotalPages = result.TotalPage;
 
-            return View(result.Items);
+            return View(result);
         }
 
         [HttpGet]

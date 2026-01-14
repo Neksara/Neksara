@@ -179,6 +179,36 @@ namespace Neksara.Services
                 })
                 .ToListAsync();
         }
+        // ================= FEEDBACK YANG DITAMPILKAN =================
+public async Task<List<FeedbackVM>> GetVisibleFeedbacksAsync(int topicId)
+{
+    return await _context.Feedbacks
+        .Where(f =>
+            f.TargetType == "Topic" &&
+            f.TargetId == topicId &&
+            f.IsApproved &&
+            f.IsVisible // 🔥 HANYA APPROVE + SHOW
+        )
+        .OrderByDescending(f => f.CreatedAt)
+        .Select(f => new FeedbackVM
+        {
+            Name = f.Name,
+            Role = f.Role,
+            Rating = f.Rating,
+            Description = f.Description
+        })
+        .ToListAsync();
+}
+
+// ================= TOTAL REVIEWER (APPROVE + HIDDEN) =================
+public async Task<int> GetTotalReviewerAsync(int topicId)
+{
+    return await _context.Feedbacks.CountAsync(f =>
+        f.TargetType == "Topic" &&
+        f.TargetId == topicId &&
+        f.IsApproved // 🔥 HIDDEN TETAP KEHITUNG
+    );
+}
 
     }
     

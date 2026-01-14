@@ -62,10 +62,12 @@ namespace Neksara.Controllers
             if (topic == null) return NotFound();
 
             await _service.IncrementViewCountAsync(topic);
+
             ViewBag.AvgRating = await _service.GetAverageRatingAsync(id);
+            ViewBag.TotalReviewer = await _service.GetTotalReviewerAsync(id);
+            ViewBag.Feedbacks = await _service.GetVisibleFeedbacksAsync(id);
 
             return View(topic);
         }
-
     }
 }
