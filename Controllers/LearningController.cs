@@ -98,16 +98,10 @@ namespace Neksara.Controllers
                 _cache.Set(cacheKey, topic, cacheOptions);
             }
 
-            // Parallelize auxiliary data fetching
-            var ratingTask = _service.GetAverageRatingAsync(id);
-            var reviewersTask = _service.GetTotalReviewerAsync(id);
-            var feedbacksTask = _service.GetVisibleFeedbacksAsync(id);
-
-            await Task.WhenAll(ratingTask, reviewersTask, feedbacksTask);
-
-            ViewBag.AvgRating = await ratingTask;
-            ViewBag.TotalReviewer = await reviewersTask;
-            ViewBag.Feedbacks = await feedbacksTask;
+            // Sequential fetching to avoid DbContext concurrency issues (DbContext is not thread-safe)
+            ViewBag.AvgRating = await _service.GetAverageRatingAsync(id);
+            ViewBag.TotalReviewer = await _service.GetTotalReviewerAsync(id);
+            ViewBag.Feedbacks = await _service.GetVisibleFeedbacksAsync(id);
 
             await _service.IncrementViewCountAsync(topic);
 
